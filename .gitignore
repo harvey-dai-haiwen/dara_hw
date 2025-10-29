@@ -35,6 +35,18 @@ uv.lock
 
 dara_downloaded_cifs/
 
+# Database files (too large for git)
+icsd_cifs/
+cod_cifs/
+mp_cifs/
+mp_test_cifs/
+indexes/
+
+# Temporary test files
+tmp_*.py
+filtered_*.json.gz
+filtered_*.parquet
+
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.

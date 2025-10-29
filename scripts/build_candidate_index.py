@@ -60,11 +60,29 @@ def try_get_from_series(series: pd.Series, candidates: list[str]) -> Any:
 def load_icsd(csv_path: Path) -> list[dict[str, Any]]:
     df = pd.read_csv(csv_path, dtype=str, low_memory=False)
     records: list[dict[str, Any]] = []
-    for _, row in df.iterrows():
+    # normalize commonly-used column names if present (case-insensitive search)
+    # prefer columns that include the word 'formula' (e.g., 'SumFormula')
+    formula_col = next((c for c in df.columns if "formula" in c.lower()), None)
+    if formula_col and "formula" not in df.columns:
+        df["formula"] = df[formula_col]
+
+    # density columns (CalculatedDensity, MeasuredDensity etc.)
+    density_col = next((c for c in df.columns if "density" in c.lower()), None)
+    if density_col and "density" not in df.columns:
+        df["density"] = df[density_col]
+
+    # id column fallback
+    id_col = next((c for c in df.columns if c.lower() in ("id", "collectioncode", "icsd_id")), None)
+    if id_col and "id" not in df.columns:
+        df["id"] = df[id_col]
+
+    # detect if the CSV contains an inline CIF text column named 'cif'
+    has_inline_cif = "cif" in df.columns
+    for idx, row in df.iterrows():
         formula = try_get_from_series(row, COMMON_FORMULA_COLS) or None
         elems = parse_elements_from_formula(formula)
         rec = {
-            "id": try_get_from_series(row, COMMON_ID_COLS) or str(row.name),
+            "id": try_get_from_series(row, COMMON_ID_COLS) or str(idx),
             "source": "ICSD",
             "formula": formula,
             "elements": elems,
@@ -74,6 +92,24 @@ def load_icsd(csv_path: Path) -> list[dict[str, Any]]:
             "spacegroup": try_get_from_series(row, COMMON_SPACEGROUP_COLS),
             "path": try_get_from_series(row, COMMON_PATH_COLS),
         }
+        # If the CSV contains inline CIF text, store it as a temporary file path if possible
+        if has_inline_cif:
+            try:
+                cif_text = row.get("cif") if isinstance(row, dict) else row.get("cif")
+            except Exception:
+                cif_text = None
+            if cif_text and isinstance(cif_text, str) and cif_text.strip():
+                # write to a temporary file (will be moved later if export requested)
+                tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".cif")
+                try:
+                    tmp.write(cif_text.encode("utf-8"))
+                    tmp.close()
+                    rec["path"] = str(Path(tmp.name).resolve())
+                except Exception:
+                    try:
+                        tmp.close()
+                    except Exception:
+                        pass
         records.append(rec)
     return records
 
