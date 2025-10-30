@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.2hw] - 2025-10-30
+
+This is a hardware-lab tailored fork aligned to the original Dara 1.1.x line for version consistency. It includes documentation and workflow improvements without changing core public APIs.
+
+### Added
+- Streamlined phase analysis notebook (`notebooks/streamlined_phase_analysis.ipynb`) with exportable reports
+- Database helper scripts:
+  - `scripts/setup_databases.ps1` (one-shot ICSD/COD/MP setup on Windows)
+  - `scripts/check_data_status.py` (index and CIF folder sanity check)
+- Environment bootstrap guide (`docs/environment_setup.md`)
+- Full-refresh database guide (`docs/database_update.md`)
+
+### Changed
+- README restructured to make 3.0-style Quick Start primary, with Advanced section for full-refresh indexing
+- `.gitignore` hardened to exclude all CIFs and index directories by default
+- Preserved legacy landing page as `README_original.md`
+
+### Notes
+- Package version set to `1.1.2hw` for lab-local distribution; if publishing to PyPI, consider a distinct package name to avoid conflicts with upstream
+- Large datasets (CIF folders and indexes) are intentionally not tracked in Git
+
 ## [3.0.0] - 2025-10-29
 
 ### 🎉 Major Features
