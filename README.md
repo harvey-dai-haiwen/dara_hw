@@ -2,13 +2,21 @@
 
 # Dara 3.0 — Streamlined XRD and Multi-Database Workflow
 
-This release-centered README explains how to set up the environment, configure the three databases (ICSD, COD, MP), build compatible indexes, and run the streamlined phase analysis notebook.
-
-If you want the legacy landing page, see `README_original.md`.
+This README focuses on what’s new in 3.0 and how to use Dara quickly. Advanced database rebuild (全量更新) instructions are at the end. For the legacy landing page, see `README_original.md`.
 
 ---
 
-## 1) Environment setup (uv recommended)
+## ⭐ What’s new
+
+- Unified multi-database workflow (ICSD, COD, MP) with one streamlined notebook
+- MP integration with experimental/theoretical labels and stability filtering
+- UV-based reproducible setup; helpers to build/verify indexes
+
+---
+
+## 1) Quick Start (recommended path)
+
+1. Environment setup (uv)
 
 ```powershell
 git clone https://github.com/idocx/dara.git
@@ -22,13 +30,7 @@ uv pip install jupyterlab ipykernel
 python -m ipykernel install --user --name=dara-uv --display-name="Dara (uv)"
 ```
 
-Details and troubleshooting: `docs/environment_setup.md`.
-
----
-
-## 2) Database layout (not in Git)
-
-Place data outside Git (these folders are `.gitignore`d):
+2. Place existing databases and indexes (do not add to Git)
 
 ```
 dara/
@@ -36,17 +38,78 @@ dara/
 ├── icsd_cifs/                 # ICSD CIF files (≈10 GB)
 ├── mp_cifs/                   # MP CIF files (~2 GB)
 └── indexes/
-        ├── cod_index_filled.parquet
-        ├── icsd_index_filled.parquet
-        ├── mp_index.parquet
-        └── merged_index.parquet
+    ├── cod_index_filled.parquet
+    ├── icsd_index_filled.parquet
+    ├── mp_index.parquet
+    └── merged_index.parquet
 ```
 
-We do not commit these to GitHub. See `.gitignore` and the section below on how to build them.
+Optional: link external data folders using symlinks on Windows PowerShell (Admin):
+
+```powershell
+New-Item -ItemType SymbolicLink -Path .\cod_cifs -Target "D:\\Data\\COD\\cifs"
+New-Item -ItemType SymbolicLink -Path .\icsd_cifs -Target "D:\\Data\\ICSD\\cifs"
+New-Item -ItemType SymbolicLink -Path .\mp_cifs   -Target "D:\\Data\\MP\\cifs"
+```
+
+3. Verify data presence
+
+```powershell
+python .\scripts\check_data_status.py
+```
+
+4. Run the streamlined notebook
+
+```powershell
+jupyter lab
+```
+
+Open `notebooks/streamlined_phase_analysis.ipynb`, select the "Dara (uv)" kernel, and run:
+- Part 1: Pattern + environment configuration
+- Part 2: Single-database phase search (COD/ICSD/MP/NONE) + exports
+- Part 3: BGMN refinement + exports
+
+Reports are saved under `~/Documents/dara_analysis/<ChemicalSystem>/reports/`.
+
+More environment details and troubleshooting: `docs/environment_setup.md`.
 
 ---
 
-## 3) Build compatible indexes (全量更新)
+---
+
+## 🔧 Useful utilities
+
+- `scripts/dara_adapter.py` – prepare CIF path lists for DARA `additional_phases`
+- `scripts/database_interface.py` – unified filters across ICSD/COD/MP
+- `scripts/list_xrd_elements.py` – regenerate `dataset/xrd_elements.csv`
+- Helpers:
+    - `scripts/setup_databases.ps1` – one-shot database setup (Windows PowerShell)
+    - `scripts/check_data_status.py` – sanity check for indexes and CIF folders
+
+---
+
+## 🛡 Keep large data out of Git
+
+We ignore CIF folders and indexes by default via `.gitignore`:
+
+```
+cod_cifs/
+icsd_cifs/
+mp_cifs/
+indexes/
+*.cif
+```
+
+If some were accidentally tracked, run (keep local files):
+
+```powershell
+git rm -r --cached cod_cifs icsd_cifs mp_cifs indexes
+git commit -m "chore: untrack large datasets; keep files locally"
+```
+
+---
+
+## 🧠 Advanced: Rebuild databases (全量更新)
 
 All scripts live in `scripts/`. Summary commands for Windows PowerShell are shown; see `docs/database_update.md` for full instructions and validation steps.
 
@@ -103,49 +166,4 @@ python scripts/merge_indices.py \
 
 Validate with: `scripts/verify_indices.py`, `verify_mp_index.py`, and `verify_merged.py`.
 
----
-
-## 4) Run the streamlined notebook
-
-```powershell
-jupyter lab
-```
-
-Open `notebooks/streamlined_phase_analysis.ipynb`, select the "Dara (uv)" kernel, and run cells sequentially:
-
-- Part 1: Pattern + environment configuration
-- Part 2: Single-database phase search (COD/ICSD/MP/NONE) + exports
-- Part 3: BGMN refinement + exports
-
-Reports are saved under `~/Documents/dara_analysis/<ChemicalSystem>/reports/`.
-
----
-
-## 5) Keep large data out of Git
-
-We ignore CIF folders and indexes by default via `.gitignore`:
-
-```
-cod_cifs/
-icsd_cifs/
-mp_cifs/
-indexes/
-*.cif
-```
-
-If some were accidentally tracked, run (keep local files):
-
-```powershell
-git rm -r --cached cod_cifs icsd_cifs mp_cifs indexes
-git commit -m "chore: untrack large datasets; keep files locally"
-```
-
----
-
-## 6) Useful utilities
-
-- `scripts/dara_adapter.py` – prepare CIF path lists for DARA `additional_phases`
-- `scripts/database_interface.py` – unified filters across ICSD/COD/MP
-- `scripts/list_xrd_elements.py` – regenerate `dataset/xrd_elements.csv`
-
-Full docs: `docs/database_update.md`, `docs/environment_setup.md`, and `RELEASE_v3.0.md`.
+Full docs: `docs/database_update.md` and `docs/environment_setup.md`.
