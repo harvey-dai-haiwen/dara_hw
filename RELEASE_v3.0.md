@@ -79,6 +79,26 @@ Reports are written to `~/Documents/dara_analysis/<ChemicalSystem>/reports/`. Th
 
 ---
 
+## ▶️ Quick Start Helpers
+
+- Use the PowerShell helper to set up databases end-to-end:
+
+```powershell
+# Edit paths as needed (ICSD CSV, COD archive, MP pickle)
+pwsh -File .\scripts\setup_databases.ps1 \
+   -IcsdCsvPath "D:\\Data\\ICSD\\[Kedar_Group_ONLY]_ICSD2024_summary_2024.2_v5.3.0.csv" \
+   -CodArchivePath "D:\\Data\\COD\\cod-cifs-mysql.txz" \
+   -MpPicklePath "D:\\Data\\MP\\df_MP_20250211.pkl"
+```
+
+- Check status at any time:
+
+```powershell
+python .\scripts\check_data_status.py
+```
+
+---
+
 ## 📊 Database Statistics
 
 | Database | Entries | Spacegroup | CIF Path | Experimental | Theoretical |
@@ -111,9 +131,11 @@ Reports are written to `~/Documents/dara_analysis/<ChemicalSystem>/reports/`. Th
 - ✅ `scripts/verify_mp_index.py` - MP-specific validation
 - ✅ `scripts/generate_report.py` - Quality reports
 
-### Documentation
+### Documentation & Helpers
 - ✅ `docs/environment_setup.md` - UV-based environment bootstrap and verification
 - ✅ `docs/database_update.md` - ICSD/COD/MP 全量更新 guide
+- ✅ `scripts/setup_databases.ps1` - One-shot database setup helper (Windows PowerShell)
+- ✅ `scripts/check_data_status.py` - Sanity check for indexes and CIF folders
 - ✅ `scripts/README.md` - Complete usage documentation (600+ lines)
 - ✅ `CHANGELOG.md` - Version history
 - ✅ `.gitignore` - Updated to exclude large data files
