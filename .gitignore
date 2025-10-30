@@ -42,6 +42,9 @@ mp_cifs/
 mp_test_cifs/
 indexes/
 
+# Explicitly ignore any loose CIF files anywhere
+*.cif
+
 # Temporary test files
 tmp_*.py
 filtered_*.json.gz

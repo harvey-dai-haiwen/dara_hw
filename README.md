@@ -1,68 +1,151 @@
 ![DARA logo](docs/_static/logo-with-text.svg)
 
-# DARA: Data-driven automated Rietveld analysis for phase search and refinement
+# Dara 3.0 — Streamlined XRD and Multi-Database Workflow
 
-Automated phase search with BGMN.
+This release-centered README explains how to set up the environment, configure the three databases (ICSD, COD, MP), build compatible indexes, and run the streamlined phase analysis notebook.
 
-## ✨ What's New
-
-**Version 3.0** (October 2025) - Multi-Database Integration
-- 🗃️ **Materials Project (MP) Support**: 169,385 structures with experimental/theoretical classification
-- 🔬 **Experimental/Theoretical Filtering**: Distinguish between experimental and DFT-computed structures
-- ⚡ **Thermodynamic Stability**: Filter phases by `energy_above_hull` for battery/catalyst research
-- 🎯 **Unified Query Interface**: Single API for ICSD, COD, and MP databases
-- 📊 **900k+ Total Structures**: ICSD (229k) + COD (502k) + MP (169k)
-
-See [CHANGELOG.md](CHANGELOG.md) for detailed changes.
+If you want the legacy landing page, see `README_original.md`.
 
 ---
 
-## 📚 Database Support
+## 1) Environment setup (uv recommended)
 
-DARA now integrates three major crystal structure databases:
+```powershell
+git clone https://github.com/idocx/dara.git
+cd dara
 
-| Database | Entries | Type | Spacegroup Coverage |
-|----------|---------|------|---------------------|
-| **ICSD** | 229,487 | Experimental | 97.2% |
-| **COD** | 501,975 | Experimental | 98.5% |
-| **Materials Project (MP)** | 169,385 | Mixed (35% Exp + 65% Theory) | 100% |
-| **Total** | 900,847 | - | 98.6% |
+uv venv .venv --python 3.11
+.\.venv\Scripts\Activate.ps1
 
-**Quick Example:**
-```python
-from scripts.dara_adapter import prepare_phases_for_dara
-
-# Get stable Li-Mn-O phases from Materials Project
-cif_paths = prepare_phases_for_dara(
-    index_path='indexes/mp_index.parquet',
-    required_elements=['Li', 'Mn', 'O'],
-    include_theoretical=True,
-    max_e_above_hull=0.1  # Only stable/metastable phases
-)
-
-# Use in DARA PhaseSearchMaker
-from dara import PhaseSearchMaker
-maker = PhaseSearchMaker(
-    required_elements=['Li', 'Mn', 'O'],
-    additional_phases=cif_paths
-)
+uv pip install -e ".[docs]"
+uv pip install jupyterlab ipykernel
+python -m ipykernel install --user --name=dara-uv --display-name="Dara (uv)"
 ```
 
-See [scripts/README.md](scripts/README.md) for complete database documentation.
+Details and troubleshooting: `docs/environment_setup.md`.
 
 ---
 
-## Installation
-```bash
-pip install dara-xrd
+## 2) Database layout (not in Git)
+
+Place data outside Git (these folders are `.gitignore`d):
+
+```
+dara/
+├── cod_cifs/                  # COD CIF files (≈100 GB)
+├── icsd_cifs/                 # ICSD CIF files (≈10 GB)
+├── mp_cifs/                   # MP CIF files (~2 GB)
+└── indexes/
+        ├── cod_index_filled.parquet
+        ├── icsd_index_filled.parquet
+        ├── mp_index.parquet
+        └── merged_index.parquet
 ```
 
-For more details about installation, please refer to [installation guide](https://idocx.github.io/dara/install.html).
+We do not commit these to GitHub. See `.gitignore` and the section below on how to build them.
 
-## Web Server
-Dara ships with a browser-based web server for an out-of-box experience of Dara. To launch the webserver, run
-```bash
-dara server
+---
+
+## 3) Build compatible indexes (全量更新)
+
+All scripts live in `scripts/`. Summary commands for Windows PowerShell are shown; see `docs/database_update.md` for full instructions and validation steps.
+
+### ICSD index
+```powershell
+# 1) Build raw index
+python scripts/index_icsd.py \
+    --csv "D:\\Data\\ICSD\\[Kedar_Group_ONLY]_ICSD2024_summary_2024.2_v5.3.0.csv" \
+    --out indexes/icsd_index.parquet
+
+# 2) Extract CIFs + fill spacegroups
+python scripts/extract_icsd_cifs.py \
+    --csv "D:\\Data\\ICSD\\[Kedar_Group_ONLY]_ICSD2024_summary_2024.2_v5.3.0.csv" \
+    --index indexes/icsd_index.parquet \
+    --cif-dir icsd_cifs \
+    --out indexes/icsd_index_filled.parquet
 ```
 
-Then you can open http://localhost:8898 to see an application that can submit, manage, and view jobs.
+### COD index
+```powershell
+# 1) Extract COD archive
+tar -xJf D:\\Data\\COD\\cod-cifs-mysql.txz -C cod_cifs
+
+# 2) Build parallel index
+python scripts/index_cod_parallel.py \
+    --cif-dir cod_cifs \
+    --out indexes/cod_index.parquet \
+    --workers 16
+
+# 3) Fill spacegroups (sequential for stability)
+python scripts/fill_spacegroup_cod.py \
+    --index indexes/cod_index.parquet \
+    --cif-dir cod_cifs \
+    --out indexes/cod_index_filled.parquet \
+    --workers 1
+```
+
+### Materials Project (MP) index
+```powershell
+python scripts/index_mp.py \
+    --input "D:\\Data\\MP\\df_MP_20250211.pkl" \
+    --output indexes/mp_index.parquet \
+    --cif-dir mp_cifs
+```
+
+### Merge indices
+```powershell
+python scripts/merge_indices.py \
+    --parquets indexes/icsd_index_filled.parquet indexes/cod_index_filled.parquet indexes/mp_index.parquet \
+    --out-parquet indexes/merged_index.parquet \
+    --out-json indexes/merged_index.json.gz \
+    --out-sqlite indexes/merged_index.sqlite
+```
+
+Validate with: `scripts/verify_indices.py`, `verify_mp_index.py`, and `verify_merged.py`.
+
+---
+
+## 4) Run the streamlined notebook
+
+```powershell
+jupyter lab
+```
+
+Open `notebooks/streamlined_phase_analysis.ipynb`, select the "Dara (uv)" kernel, and run cells sequentially:
+
+- Part 1: Pattern + environment configuration
+- Part 2: Single-database phase search (COD/ICSD/MP/NONE) + exports
+- Part 3: BGMN refinement + exports
+
+Reports are saved under `~/Documents/dara_analysis/<ChemicalSystem>/reports/`.
+
+---
+
+## 5) Keep large data out of Git
+
+We ignore CIF folders and indexes by default via `.gitignore`:
+
+```
+cod_cifs/
+icsd_cifs/
+mp_cifs/
+indexes/
+*.cif
+```
+
+If some were accidentally tracked, run (keep local files):
+
+```powershell
+git rm -r --cached cod_cifs icsd_cifs mp_cifs indexes
+git commit -m "chore: untrack large datasets; keep files locally"
+```
+
+---
+
+## 6) Useful utilities
+
+- `scripts/dara_adapter.py` – prepare CIF path lists for DARA `additional_phases`
+- `scripts/database_interface.py` – unified filters across ICSD/COD/MP
+- `scripts/list_xrd_elements.py` – regenerate `dataset/xrd_elements.csv`
+
+Full docs: `docs/database_update.md`, `docs/environment_setup.md`, and `RELEASE_v3.0.md`.
