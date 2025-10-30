@@ -33,6 +33,52 @@
 
 ---
 
+## ⚙️ Setup & Environment
+
+### UV Quick Start
+
+```powershell
+git clone https://github.com/idocx/dara.git
+cd dara
+
+uv venv .venv --python 3.11
+.\.venv\Scripts\Activate.ps1
+
+uv pip install -e ".[docs]"
+uv pip install jupyterlab ipykernel
+python -m ipykernel install --user --name=dara-uv --display-name="Dara (uv)"
+```
+
+> Full environment guidance lives in [`docs/environment_setup.md`](docs/environment_setup.md) including prerequisites, verification commands, optional test extras, and troubleshooting tips for Windows clusters.
+
+---
+
+## 🔄 Database Full Refresh Workflow (全量更新)
+
+We documented the end-to-end rebuild process for ICSD, COD, and MP in [`docs/database_update.md`](docs/database_update.md). Highlights:
+
+1. **ICSD** — start from the `[Kedar_Group_ONLY]_ICSD2024_summary_2024.2_v5.3.0.csv` export, run `index_icsd.py`, then `extract_icsd_cifs.py` to materialize CIFs and filled indices.
+2. **COD** — unpack `cod-cifs-mysql.txz`, build the parallel index via `index_cod_parallel.py`, then fill missing space groups sequentially with `fill_spacegroup_cod.py`.
+3. **MP** — convert `df_MP_20250211.pkl` using `index_mp.py`, which also writes per-entry CIF files and classifies experimental/theoretical records.
+4. **Merge** — combine the refreshed parquet files through `merge_indices.py`, producing parquet/json/sqlite outputs consumed by `dara_adapter.py`.
+
+Each step includes validation commands (`verify_indices.py`, `verify_mp_index.py`, `verify_merged.py`) plus post-refresh housekeeping (checksums, dataset metadata regeneration).
+
+---
+
+## 🧪 Streamlined Phase Analysis Notebook
+
+The primary user workflow now ships as `notebooks/streamlined_phase_analysis.ipynb`:
+
+1. Configure the XRD pattern, working directories, and database selection.
+2. Run a single-database phase search (COD/ICSD/MP/NONE) with optional custom CIFs.
+3. Inspect multiple solutions, visualize fits, and export phase-search reports.
+4. Select a solution for BGMN refinement, adjust parameters, and export comprehensive refinement reports (plots, CSVs, JSON stats, CIF copies).
+
+Reports are written to `~/Documents/dara_analysis/<ChemicalSystem>/reports/`. The notebook depends on the indexes produced by the full-refresh workflow above and the UV environment configuration.
+
+---
+
 ## 📊 Database Statistics
 
 | Database | Entries | Spacegroup | CIF Path | Experimental | Theoretical |
@@ -66,7 +112,8 @@
 - ✅ `scripts/generate_report.py` - Quality reports
 
 ### Documentation
-- ✅ `README.md` - Updated with database overview
+- ✅ `docs/environment_setup.md` - UV-based environment bootstrap and verification
+- ✅ `docs/database_update.md` - ICSD/COD/MP 全量更新 guide
 - ✅ `scripts/README.md` - Complete usage documentation (600+ lines)
 - ✅ `CHANGELOG.md` - Version history
 - ✅ `.gitignore` - Updated to exclude large data files
