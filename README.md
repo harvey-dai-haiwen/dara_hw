@@ -1,6 +1,4 @@
-![DARA logo](docs/_static/logo-with-text.svg)
-
-# Dara 3.0 — Streamlined XRD and Multi-Database Workflow
+# Dara v1.1.2hw — Streamlined XRD and Multi-Database Workflow
 
 This README focuses on what’s new in 3.0 and how to use Dara quickly. Advanced database rebuild (全量更新) instructions are at the end. For the legacy landing page, see `README_original.md`.
 
@@ -11,6 +9,8 @@ This README focuses on what’s new in 3.0 and how to use Dara quickly. Advanced
 - Unified multi-database workflow (ICSD, COD, MP) with one streamlined notebook
 - MP integration with experimental/theoretical labels and stability filtering
 - UV-based reproducible setup; helpers to build/verify indexes
+- Original Dara functions fully retained, including XRD automatic search phase and refinement
+- Rights reserved by original developers of Dara and databases
 
 ---
 
