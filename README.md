@@ -1,6 +1,6 @@
 # Dara v1.1.2hw — Streamlined XRD and Multi-Database Workflow
 
-This README focuses on what’s new in 3.0 and how to use Dara quickly. Advanced database rebuild (全量更新) instructions are at the end. For the legacy landing page, see `README_original.md`.
+This README focuses on what’s new in 1.1.2hw and how to use Dara quickly. Advanced database rebuild (全量更新) instructions are at the end. For the legacy landing page, see `README_original.md`.
 
 ---
 
