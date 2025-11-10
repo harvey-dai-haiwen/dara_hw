@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.2+hw_v0.2] - 2025-11-10
+
+### Fixed
+- **UV Environment**: Ensured all dependencies work out-of-the-box with `uv sync`
+  - Explicitly declared `pyarrow>=22.0.0` for parquet database support
+  - Verified all 27 critical dependencies (numpy, pandas, pymatgen, ray, etc.)
+  - Added `verify_dependencies.py` script for installation verification
+
+### Added
+- **UV Setup Guide**: Comprehensive `UV_SETUP_GUIDE.md` for one-command environment setup
+  - Quick start instructions for Windows/macOS/Linux
+  - Troubleshooting guide for common issues
+  - CI/CD integration examples
+  - Migration guide from conda/pip
+
+### Changed
+- **Version format**: Changed from `1.1.2hw` to `1.1.2+hw` (PEP 440 local version identifier)
+- **Documentation**: Improved dependency management documentation
+
+---
+
 ## [1.1.2hw] - 2025-10-30
 
 This is a hardware-lab tailored fork aligned to the original Dara 1.1.x line for version consistency. It includes documentation and workflow improvements without changing core public APIs.

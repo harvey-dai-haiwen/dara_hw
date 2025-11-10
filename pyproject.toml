@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "dara-xrd"
 description = "Data-driven automated Rietveld analysis using BGMN."
 readme = "README.md"
-version = "1.1.2hw"
+version = "1.1.2+hw"
 keywords = [
     "rietveld",
     "search-match",
@@ -56,6 +56,7 @@ dependencies = [
     "mp_api>=0.45.0",
     "python-multipart>=0.0.19",
     "uvicorn>=0.34.0",
+    "pyarrow>=22.0.0",
 ]
 
 [project.optional-dependencies]
@@ -213,4 +214,4 @@ testpaths = "tests"
 "dara.server.ui.public" = ["**"]
 
 [tool.setuptools-git-versioning]
-enabled = true
+enabled = false
