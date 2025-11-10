@@ -26,15 +26,21 @@ def prepare_phases_for_dara(
     include_theoretical: bool = False,
     max_e_above_hull: float | None = None,
     max_phases: int | None = None,
+    use_chemical_system: bool = True,
 ) -> list[str]:
     """
     Filter database index and return CIF paths for DARA PhaseSearchMaker.
     
     Args:
         index_path: Path to .parquet/.sqlite/.json.gz index file
-        required_elements: Must contain ALL these elements
-        optional_elements: May contain ANY of these (in addition to required)
-        exclude_elements: Must NOT contain any of these
+        required_elements: Elements defining the chemical system (Ge-Zn-O).
+                          When use_chemical_system=True (default), this includes all
+                          subsystems: unary (Ge, Zn, O), binary (GeZn, ZnO, GeO), 
+                          ternary (GeZnO), etc. Phases with other elements are excluded.
+                          When use_chemical_system=False, phases must contain ALL
+                          these elements (old exact-match behavior).
+        optional_elements: (Only when use_chemical_system=False) May contain ANY of these
+        exclude_elements: Must NOT contain any of these (applied after other filters)
         formula_pattern: Formula substring to match (case-insensitive)
         density_range: (min, max) density range in g/cm³
         sources: Filter by source ('ICSD', 'COD', 'MP')
@@ -42,6 +48,9 @@ def prepare_phases_for_dara(
         include_theoretical: Include theoretical structures (MP only, default False)
         max_e_above_hull: Max energy above hull in eV/atom (MP only, for stability filter)
         max_phases: Maximum number of phases to return
+        use_chemical_system: If True (default), required_elements defines a chemical system
+                            and includes all subsystems (Ge, Zn, O → Ge, Zn, O, GeZn, ZnO, GeO, GeZnO).
+                            If False, uses old exact-match behavior (must contain ALL required_elements).
     
     Returns:
         List of CIF file paths
@@ -50,21 +59,21 @@ def prepare_phases_for_dara(
         >>> from scripts.dara_adapter import prepare_phases_for_dara
         >>> from dara.jobs import PhaseSearchMaker
         >>> 
-        >>> # Get candidate phases containing Fe and O
+        >>> # Chemical system approach (NEW DEFAULT): Get all Ge-Zn-O subsystems
+        >>> # Includes: Ge, Zn, O, GeZn, ZnO, GeO, GeZnO (excludes anything with other elements)
         >>> phases = prepare_phases_for_dara(
-        ...     'indexes/merged_index.parquet',
-        ...     required_elements=['Fe', 'O'],
-        ...     exclude_elements=['Pb'],
-        ...     density_range=(4.0, 6.0),
+        ...     'indexes/cod_index_filled.parquet',
+        ...     required_elements=['Ge', 'Zn', 'O'],
         ...     max_phases=500
         ... )
         >>> 
-        >>> # Use in DARA phase search
-        >>> psm = PhaseSearchMaker()
-        >>> result = psm.make(
-        ...     xrd_data='my_pattern.xy',
-        ...     additional_phases=phases,
-        ...     search_kwargs={'max_phases': 4}
+        >>> # Old exact-match behavior: must contain ALL required elements
+        >>> phases = prepare_phases_for_dara(
+        ...     'indexes/cod_index_filled.parquet',
+        ...     required_elements=['Fe', 'O'],
+        ...     exclude_elements=['Pb'],
+        ...     use_chemical_system=False,
+        ...     max_phases=500
         ... )
     """
     db = StructureDatabaseIndex(index_path)
@@ -72,12 +81,21 @@ def prepare_phases_for_dara(
     # Apply filters
     filtered = db.df
     
-    if required_elements or optional_elements or exclude_elements:
+    # Element filtering: chemical system (new default) vs exact match (old behavior)
+    if use_chemical_system and required_elements:
+        # Chemical system filter: include all subsystems
+        filtered = db.filter_by_elements(allowed=required_elements)
+    elif required_elements or optional_elements:
+        # Old exact-match behavior
         filtered = db.filter_by_elements(
             required=required_elements,
             optional=optional_elements,
-            exclude=exclude_elements
+            exclude=None  # Apply exclude separately below
         )
+    
+    # Apply exclude filter (always applied, regardless of mode)
+    if exclude_elements:
+        filtered = db.filter_by_elements(exclude=exclude_elements)
     
     if formula_pattern:
         filtered = db.filter_by_formula(formula_pattern)

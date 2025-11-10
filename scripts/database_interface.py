@@ -77,22 +77,31 @@ class StructureDatabaseIndex:
         self,
         required: list[str] | None = None,
         optional: list[str] | None = None,
-        exclude: list[str] | None = None
+        exclude: list[str] | None = None,
+        allowed: list[str] | None = None
     ) -> pd.DataFrame:
         """
         Filter by element composition.
         
         Args:
-            required: Must contain all these elements
-            optional: May contain any of these (in addition to required)
+            required: Must contain ALL these elements (exact requirement)
+            optional: May contain ANY of these (in addition to required)
             exclude: Must NOT contain any of these
+            allowed: ALL phase elements must be subset of this list (chemical system filter)
+                    This is for filtering by chemical system: e.g., allowed=['Ge','Zn','O']
+                    will include Ge, Zn, O, GeZn, ZnO, GeO, GeZnO but exclude anything
+                    containing other elements. Mutually exclusive with required/optional.
         
         Returns:
             Filtered DataFrame
         
         Example:
             >>> db = StructureDatabaseIndex('indexes/merged_index.parquet')
+            >>> # Exact requirement: must contain both Fe AND O
             >>> fe_o = db.filter_by_elements(required=['Fe', 'O'], exclude=['Pb'])
+            >>> 
+            >>> # Chemical system: include all subsystems (Ge, Zn, O, GeZn, ZnO, GeO, GeZnO)
+            >>> ge_zn_o_system = db.filter_by_elements(allowed=['Ge', 'Zn', 'O'])
         """
         df = self.df.copy()
         
@@ -105,12 +114,20 @@ class StructureDatabaseIndex:
                 )
             )
         
-        if required:
-            df = df[df['elements'].apply(lambda x: all(e in x for e in required) if isinstance(x, list) else False)]
-        
-        if optional:
-            # Must contain at least one optional element (in addition to required)
-            df = df[df['elements'].apply(lambda x: any(e in x for e in optional) if isinstance(x, list) else False)]
+        # Chemical system filter: all phase elements must be subset of allowed
+        if allowed:
+            allowed_set = set(allowed)
+            df = df[df['elements'].apply(
+                lambda x: set(x).issubset(allowed_set) if isinstance(x, list) and len(x) > 0 else False
+            )]
+        else:
+            # Original behavior
+            if required:
+                df = df[df['elements'].apply(lambda x: all(e in x for e in required) if isinstance(x, list) else False)]
+            
+            if optional:
+                # Must contain at least one optional element (in addition to required)
+                df = df[df['elements'].apply(lambda x: any(e in x for e in optional) if isinstance(x, list) else False)]
         
         if exclude:
             df = df[df['elements'].apply(lambda x: not any(e in x for e in exclude) if isinstance(x, list) else True)]
