@@ -46,7 +46,10 @@ dependencies = [
     "scikit-learn>=1.3.2",
     "pydantic>=2.11.7",
     "pydantic-settings>=2.10.1",
-    "ray>=2.51.0",
+    # Ray is optional for parallel processing (Windows: use 2.10.0, Linux/Mac: 2.51.1)
+    # Will auto-fallback to serial processing if Ray initialization fails
+    "ray>=2.10.0,<2.51.0; platform_system == 'Windows'",
+    "ray>=2.51.0; platform_system != 'Windows'",
     "grpcio>=1.54.0",
     "pybaselines>=1.1.0",
     "spglib>=2.5.0",
