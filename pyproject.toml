@@ -80,7 +80,10 @@ strict = [
     "scikit-learn==1.3.2",
     "pydantic==2.11.7",
     "pydantic-settings==2.10.1",
-    "ray==2.51.1",
+    # Ray version is platform-specific (defined in main dependencies)
+    # Windows: 2.50.1, Linux/Mac: 2.51.1
+    "ray==2.50.1; platform_system == 'Windows'",
+    "ray==2.51.1; platform_system != 'Windows'",
     "grpcio==1.76.0",
     "numpy==1.26.4",
     "pybaselines==1.1.0",
