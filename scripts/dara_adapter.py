@@ -11,7 +11,12 @@ from pathlib import Path
 from typing import Sequence
 
 import pandas as pd
-from database_interface import StructureDatabaseIndex
+
+# Import from scripts directory
+try:
+    from database_interface import StructureDatabaseIndex
+except ImportError:
+    from scripts.database_interface import StructureDatabaseIndex
 
 
 def prepare_phases_for_dara(
