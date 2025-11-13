@@ -16,17 +16,95 @@ Dara is designed for <strong>automated phase identification and refinement</stro
 
 ## Overview
 
-The Dara server provides a web-based interface for automated phase identification from powder X-ray diffraction (XRD) data.
+The Dara server provides two web-based interfaces for automated phase identification from powder X-ray diffraction (XRD) data:
+
+1. **Local Database Search** (Port 8899) - **NEW & RECOMMENDED**
+2. **Original Reaction Predictor** (Port 8898) - Legacy interface
 
 ## Getting Started
+
 You'll see the main interface with navigation options:
 
-- **Submit**: Upload and analyze new XRD patterns
+- **Submit**: Upload and analyze new XRD patterns (Original interface)
+- **Search**: Use the new local database search (Recommended)
 - **Results**: Browse all submitted analyses
-- **Tutorial**: A short tutorial as you are reading.
-- **Documentation**: The documentation for the Dara package.
+- **Tutorial**: This tutorial page
+- **Documentation**: The documentation for the Dara package
 
-## Submitting an Analysis
+---
+
+## NEW: Local Database Search (Recommended)
+
+The **Local Database Search** provides a streamlined workflow for phase identification using local crystallographic databases.
+
+### Step 1: Navigate to Search Page
+
+Click on "Search" in the navigation menu or the blue banner on the Submit page.
+
+### Step 2: Upload Your XRD Pattern
+
+**Supported File Formats:**
+- `.xy` - Two-column ASCII format (2θ, intensity)
+- `.txt` - Text files with diffraction data
+- `.xye` - Three-column format (2θ, intensity, error)
+- `.xrdml` - PANalytical/Malvern Panalytical XML format
+- `.raw` - Rigaku/Bruker raw data format
+
+### Step 3: Select Database
+
+Choose from three local databases:
+- **COD** (Crystallography Open Database) - ~502K entries
+- **ICSD** (Inorganic Crystal Structure Database) - ~229K entries  
+- **MP** (Materials Project) - ~169K entries with DFT-calculated patterns
+- **NONE** - Use only custom uploaded CIF files
+
+### Step 4: Specify Required Elements
+
+**Required Elements:**
+Enter the chemical elements that should be present in your sample. The search will automatically include all subsystems.
+
+**Example:** If you enter `Y Mo O`, the search will include:
+- Unary: Y, Mo, O
+- Binary: Y-Mo, Y-O, Mo-O
+- Ternary: Y-Mo-O
+
+**Important:** Typically you only need to specify **required elements**. The exclude elements field is optional and rarely needed.
+
+**Formatting:**
+- Space-separated: `Y Mo O`
+- Comma-separated: `Y,Mo,O`
+- Mixed: `Y, Mo, O`
+
+### Step 5: Optional Parameters
+
+**Exclude Elements (Usually Not Needed):**
+Only use this if you want to explicitly filter out phases containing specific elements. For most searches, just specifying required elements is sufficient.
+
+**Materials Project Options (MP database only):**
+- **Experimental Phases Only**: Check to include only experimentally verified phases
+- **Max Energy Above Hull**: Set stability threshold (default: 0.1 eV/atom)
+
+**Custom CIF Files:**
+Upload your own CIF files to include custom phases in the search.
+
+### Step 6: Configure Instrument
+
+**Wavelength:**
+- Select from common sources: Cu, Co, Cr, Fe, Mo
+- Or enter a custom value in Ångströms
+
+**Instrument Profile:**
+Select your diffractometer configuration from the dropdown.
+
+### Step 7: Submit Search
+
+Click "Submit Search Task" to queue your analysis. The task will be processed in the background, and you'll be redirected to view the results.
+
+---
+
+## Original Submission Interface (Legacy)
+
+This is the original Dara interface with reaction prediction capabilities.
 
 ### Step 1: Navigate to Submit Page
 

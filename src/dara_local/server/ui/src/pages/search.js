@@ -112,17 +112,17 @@ function LocalSearch() {
       const data = await response.json();
 
       if (response.ok && data.wf_id) {
-        messageApi.success('任务已提交到队列！');
+        messageApi.success('Task submitted to queue!');
         // Navigate to task page
         setTimeout(() => {
           navigate(`/task?task_id=${data.wf_id}`);
         }, 1000);
       } else {
-        setMsg(data.detail || data.error || '提交失败');
+        setMsg(data.detail || data.error || 'Submission failed');
       }
     } catch (error) {
       console.error('Submit error:', error);
-      setMsg(error.message || '提交失败');
+      setMsg(error.message || 'Submission failed');
     } finally {
       setSubmitting(false);
     }
@@ -136,20 +136,20 @@ function LocalSearch() {
   };
 
   return (
-    <Layout hasSider={false} title="本地数据库检索">
+    <Layout hasSider={false} title="Local Database Search">
       {contextHolder}
       <Container>
         <div className="nav-links">
-          <a href="/task">查看任务列表</a>
-          <a href="/">原始提交页面</a>
+          <a href="/task">View Task List</a>
+          <a href="/">Original Submit Page</a>
         </div>
 
         {msg && <Alert message={msg} type="error" showIcon closable style={{ width: '100%', maxWidth: '800px', marginBottom: '16px' }} />}
 
         <div className="form-container">
-          <h1>本地数据库相检索</h1>
+          <h1>Local Database Phase Search</h1>
           <p style={{ color: '#666', marginBottom: '24px' }}>
-            支持 COD、ICSD、MP 数据库选择，化学系统过滤，自定义 CIF 上传
+            Search COD, ICSD, or MP databases with chemical system filtering and custom CIF upload support
           </p>
 
           <Form
@@ -171,31 +171,31 @@ function LocalSearch() {
             }}
           >
             <Form.Item
-              label="用户名"
+              label="Username"
               name="user"
-              rules={[{ required: true, message: '请输入用户名' }]}
+              rules={[{ required: true, message: 'Please enter a username' }]}
             >
-              <Input placeholder="用于任务跟踪" />
+              <Input placeholder="For task tracking" />
             </Form.Item>
 
             <Form.Item
-              label="XRD 数据文件"
+              label="XRD Pattern File"
               name="pattern_file"
               valuePropName="fileList"
               getValueFromEvent={normFile}
-              rules={[{ required: true, message: '请上传 XRD 文件' }]}
+              rules={[{ required: true, message: 'Please upload an XRD file' }]}
             >
               <Upload
                 beforeUpload={() => false}
                 maxCount={1}
                 accept=".xy,.xrdml,.raw,.txt,.xye"
               >
-                <Button icon={<UploadOutlined />}>选择文件 (.xy, .xrdml, .raw)</Button>
+                <Button icon={<UploadOutlined />}>Choose File (.xy, .xrdml, .raw)</Button>
               </Upload>
             </Form.Item>
 
             <Form.Item
-              label="数据库选择"
+              label="Database Selection"
               name="database"
               rules={[{ required: true }]}
             >
@@ -207,35 +207,35 @@ function LocalSearch() {
             </Form.Item>
 
             <Form.Item
-              label="必含元素"
+              label="Required Elements"
               name="required_elements"
-              rules={[{ required: true, message: '请输入元素符号' }]}
-              tooltip="空格或逗号分隔，例如: Y Mo O 或 Y,Mo,O"
+              rules={[{ required: true, message: 'Please enter element symbols' }]}
+              tooltip="Space or comma separated, e.g.: Y Mo O or Y,Mo,O. Phases containing ONLY these elements (and their subsets) will be included."
             >
-              <Input placeholder="例如: Y Mo O" />
+              <Input placeholder="e.g.: Y Mo O" />
             </Form.Item>
 
             <Form.Item
-              label="排除元素（可选）"
+              label="Exclude Elements (Optional)"
               name="exclude_elements"
-              tooltip="包含这些元素的相会被过滤掉"
+              tooltip="Phases containing any of these elements will be excluded. Typically not needed - just specify required elements."
             >
-              <Input placeholder="例如: Pb Cd" />
+              <Input placeholder="e.g.: Pb Cd" />
             </Form.Item>
 
             {database === 'MP' && (
               <>
                 <Form.Item
-                  label="仅实验相"
+                  label="Experimental Phases Only"
                   name="mp_experimental_only"
                   valuePropName="checked"
                 >
                   <input type="checkbox" />
-                  <span style={{ marginLeft: 8 }}>勾选后仅包含实验验证的相</span>
+                  <span style={{ marginLeft: 8 }}>Only include experimentally verified phases</span>
                 </Form.Item>
 
                 <Form.Item
-                  label="最大能量阈值 (eV/atom)"
+                  label="Max Energy Above Hull (eV/atom)"
                   name="mp_max_e_above_hull"
                 >
                   <InputNumber min={0} max={1} step={0.05} style={{ width: '100%' }} />
@@ -244,14 +244,14 @@ function LocalSearch() {
             )}
 
             <Form.Item
-              label="波长"
+              label="Wavelength"
               name="wavelength"
             >
-              <Input placeholder="Cu, Co, Cr, Fe, Mo 或数值（Å）" />
+              <Input placeholder="Cu, Co, Cr, Fe, Mo or value (Å)" />
             </Form.Item>
 
             <Form.Item
-              label="仪器配置"
+              label="Instrument Profile"
               name="instrument_profile"
             >
               <Select>
@@ -262,14 +262,14 @@ function LocalSearch() {
             </Form.Item>
 
             <Form.Item
-              label="最大相数"
+              label="Max Phases"
               name="max_phases"
             >
               <InputNumber min={10} max={5000} style={{ width: '100%' }} />
             </Form.Item>
 
             <Form.Item
-              label="自定义 CIF 文件（可选）"
+              label="Custom CIF Files (Optional)"
               name="additional_phases"
               valuePropName="fileList"
               getValueFromEvent={normFile}
@@ -279,7 +279,7 @@ function LocalSearch() {
                 multiple
                 accept=".cif"
               >
-                <Button icon={<UploadOutlined />}>上传 CIF 文件</Button>
+                <Button icon={<UploadOutlined />}>Upload CIF Files</Button>
               </Upload>
             </Form.Item>
 
@@ -291,7 +291,7 @@ function LocalSearch() {
                 size="large"
                 block
               >
-                {submitting ? '提交中...' : '提交检索任务'}
+                {submitting ? 'Submitting...' : 'Submit Search Task'}
               </Button>
             </Form.Item>
           </Form>

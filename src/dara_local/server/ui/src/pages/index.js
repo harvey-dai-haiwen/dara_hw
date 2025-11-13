@@ -177,18 +177,18 @@ function Submission() {
       {contextHolder}
       <Container>
         <div style={{ marginBottom: '20px', padding: '16px', background: '#e6f7ff', borderRadius: '8px', width: '60%' }}>
-          <h3 style={{ margin: '0 0 12px 0' }}>🎯 新功能：本地数据库检索</h3>
+          <h3 style={{ margin: '0 0 12px 0' }}>🎯 New Feature: Local Database Search</h3>
           <p style={{ margin: '0 0 8px 0' }}>
-            支持 COD、ICSD、MP 数据库选择和化学系统过滤
+            Search COD, ICSD, and MP databases with chemical system filtering
           </p>
           <a href="/search" style={{ fontSize: '16px', fontWeight: 'bold' }}>
-            → 前往本地数据库检索页面
+            → Go to Local Database Search Page
           </a>
         </div>
         {
           msg ? <Alert message={msg} type="error" showIcon closable style={{ width: '50%' }} /> : <></>
         }
-        <h1>Submit refinement run to Dara system (原始反应预测)</h1>
+        <h1>Submit refinement run to Dara system (Original Reaction Predictor)</h1>
         <Form
           {...layout}
           style={{ width: '60%' }}
