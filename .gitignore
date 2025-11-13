@@ -45,6 +45,8 @@ mp_test_cifs/
 # indexes/ - Keep this! Users need the index files
 indexes/temp/
 indexes/*.tmp
+# Ignore large parquet index files (too large for git)
+indexes/*.parquet
 
 # Explicitly ignore any loose CIF files anywhere
 *.cif
