@@ -7,6 +7,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.2hw_v0.3] - 2025-11-13
+
+### Fixed
+- **Web UI Loading Bug**: Fixed infinite loading spinner when displaying task results
+  - Moved return statement outside for loop in `/api/task/{task_id}` endpoint
+  - Added proper None handling for `final_result` and `predict_kwargs`
+  - Fixed COD numeric filename parsing in compositional clustering
+- **Chemical Formula Display**: All CIF entries now show "Formula (ID)" format
+  - Example: "Y4Mo4O11 (281037)" instead of just "281037"
+  - Applied to all result fields: final_result.phases, highlighted_phases, grouped_phases
+  - Uses pymatgen Structure parsing to extract Composition.reduced_formula
+- **Ray Compatibility**: Platform-specific dependency configuration
+  - Windows: `ray>=2.10.0,<2.51.0` (tested with 2.50.1)
+  - Linux/macOS: `ray>=2.51.0`
+  - Fixes "no Windows wheels available" error for Ray 2.51.x
+- **Python Version Lock**: Restricted to 3.11-3.12
+  - Python 3.13 not compatible with Ray on Windows
+  - Updated environment setup instructions
+- **Import Path Issues**: Fixed `database_interface` module import
+  - Added fallback import mechanism in `scripts/dara_adapter.py`
+  - Works correctly in both script and package contexts
+
+### Added
+- **Comprehensive README**: Complete rewrite for v0.3 release
+  - Quick start guide with UV package manager
+  - Two web interface comparison (port 8899 vs 8898)
+  - Troubleshooting section with common issues and solutions
+  - Database rebuild instructions
+  - Backup of previous README as `README_v0.2_backup.md`
+- **Production Validation**: Full fresh clone testing workflow
+  - Verified installation from scratch
+  - Tested all dependencies including Ray 2.50.1
+  - Validated server startup and API responses
+  - Confirmed chemical formula display in results
+
+### Changed
+- **Version Tag**: Updated from `v0.1.0` to `1.1.2hw_v0.3` for consistency
+- **Documentation Focus**: Shifted emphasis to new local web server (port 8899)
+- **Git Workflow**: Created backup before release (`dara_backup_20251113_105207`)
+
+### Technical Details
+- Fixed 5 separate bugs in `src/dara_local/server/api_router.py`
+- Total changes: 1016 insertions, 153 deletions across 4 files
+- Validated with 100% test success rate in fresh environment
+
+---
+
 ## [1.1.2+hw_v0.2] - 2025-11-10
 
 ### Fixed
