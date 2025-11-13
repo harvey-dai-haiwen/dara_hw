@@ -136,13 +136,25 @@ def prepare_phases_for_dara(
     
     paths = db.get_cif_paths(ids)
     
-    # Filter out None/empty paths and limit number
-    valid_paths = [p for p in paths if p and p != 'None']
+    # Convert to absolute paths (critical for jobflow worker processes)
+    # Worker processes may have different working directories
+    repo_root = Path(__file__).parent.parent.resolve()
+    absolute_paths = []
+    for p in paths:
+        if not p or p == 'None':
+            continue
+        path_obj = Path(p)
+        if not path_obj.is_absolute():
+            # Convert relative path to absolute using repo root
+            path_obj = repo_root / path_obj
+        if path_obj.exists():
+            absolute_paths.append(str(path_obj))
     
-    if max_phases and len(valid_paths) > max_phases:
-        valid_paths = valid_paths[:max_phases]
+    # Limit number of phases
+    if max_phases and len(absolute_paths) > max_phases:
+        absolute_paths = absolute_paths[:max_phases]
     
-    return valid_paths
+    return absolute_paths
 
 
 def get_index_stats(index_path: str | Path) -> dict:

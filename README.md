@@ -30,6 +30,35 @@
 
 - Original Dara functions fully retained, including XRD automatic search phase and refinement
 
+## 🌐 Web Portals
+
+### Original Dara Web Portal (Port 8898)
+
+- Launch the upstream FastAPI + Gatsby UI with the built-in CLI:
+
+```powershell
+uv run python -m dara.cli server --host 127.0.0.1 --port 8898
+```
+
+- Open a browser at `http://localhost:8898` to use the legacy reaction-predictor workflow.
+- Submit jobs with `POST /api/submit` (see `docs/web_server.md` for API details). Poll status via `GET /api/task/{wf_id}` or browse queued jobs at `/tasks` in the UI.
+- Optional: export `MP_API_KEY=<your-key>` before starting to enable Materials Project reaction prediction.
+
+### Dara Local Multi-Database Portal (Port 8899)
+
+- Launch the extended local copy (COD / ICSD / MP selector) with:
+
+```powershell
+uv run python launch_local_server.py
+```
+
+- The server boots on `http://localhost:8899` and automatically spawns its queue worker.
+- Submit searches with `POST /api/search` and poll results with `GET /api/task/{wf_id}`. Each request is queued, so the API returns immediately with a workflow ID.
+- Use `example_api_usage_async.py` for a ready-to-run polling client, or inspect `JOB_QUEUE_INTEGRATION.md` for the async workflow and job-queue architecture.
+- Custom CIF uploads and chemical-system filtering are supported; CIFs are cleaned up automatically after job completion.
+
+---
+
 ## 1) Quick Start (recommended path)
 
 ---

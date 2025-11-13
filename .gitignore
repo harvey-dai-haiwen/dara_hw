@@ -40,7 +40,11 @@ icsd_cifs/
 cod_cifs/
 mp_cifs/
 mp_test_cifs/
-indexes/
+
+# Keep indexes/ directory but ignore some temp files in it
+# indexes/ - Keep this! Users need the index files
+indexes/temp/
+indexes/*.tmp
 
 # Explicitly ignore any loose CIF files anywhere
 *.cif
@@ -49,6 +53,30 @@ indexes/
 tmp_*.py
 filtered_*.json.gz
 filtered_*.parquet
+
+# Debug and test scripts (temporary, do not commit)
+check_*.py
+test_*.py
+debug_*.py
+example_api_*.py
+verify_*.py
+*.ps1
+
+# But keep useful debug notebooks
+!notebooks/debug_web_api_cifs.ipynb
+
+# Temporary documentation files
+RAY_FIX_SUMMARY.md
+DARA_LOCAL_SUMMARY.md
+DIAGNOSIS_INDEX_CORRUPTION.txt
+JOB_QUEUE_INTEGRATION.md
+VENV_REBUILD_SUCCESS.txt
+.copilot-todo
+
+# Local database and results
+worker_db/
+result_store/
+results/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

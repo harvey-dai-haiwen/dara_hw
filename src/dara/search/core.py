@@ -10,6 +10,9 @@ from typing import TYPE_CHECKING, Literal
 import ray
 
 from dara.search.tree import BaseSearchTree, SearchTree
+from dara.utils import get_logger
+
+logger = get_logger(__name__)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -85,8 +88,12 @@ def search_phases(
     if refinement_params is None:
         refinement_params = {}
 
-    if not ray.is_initialized():
-        ray.init(runtime_env={"working_dir": None})
+    # Try to initialize Ray, but don't fail if it can't (Windows compatibility)
+    try:
+        if not ray.is_initialized():
+            ray.init(runtime_env={"working_dir": None}, ignore_reinit_error=True)
+    except Exception as e:
+        logger.warning(f"Failed to initialize Ray ({e}), will use serial processing instead")
 
     phase_params = {**DEFAULT_PHASE_PARAMS, **phase_params}
     refinement_params = {**DEFAULT_REFINEMENT_PARAMS, **refinement_params}

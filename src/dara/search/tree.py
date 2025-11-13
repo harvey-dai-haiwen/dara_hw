@@ -124,18 +124,38 @@ def batch_refinement(
     phase_params: dict[str, ...] | None = None,
     refinement_params: dict[str, float] | None = None,
 ) -> list[RefinementResult]:
-    handles = [
-        remote_do_refinement_no_saving.remote(
-            pattern_path,
-            cif_paths,
-            wavelength=wavelength,
-            instrument_profile=instrument_profile,
-            phase_params=phase_params,
-            refinement_params=refinement_params,
-        )
-        for cif_paths in cif_paths
-    ]
-    return ray.get(handles)
+    # Try using Ray for parallel processing
+    try:
+        if not ray.is_initialized():
+            raise RuntimeError("Ray not initialized, falling back to serial processing")
+        
+        handles = [
+            remote_do_refinement_no_saving.remote(
+                pattern_path,
+                cif_paths,
+                wavelength=wavelength,
+                instrument_profile=instrument_profile,
+                phase_params=phase_params,
+                refinement_params=refinement_params,
+            )
+            for cif_paths in cif_paths
+        ]
+        return ray.get(handles)
+    except (ray.exceptions.RaySystemError, ray.exceptions.LocalRayletDiedError, RuntimeError) as e:
+        # Fallback to serial processing if Ray fails
+        logger.warning(f"Ray parallel processing failed ({e}), falling back to serial processing")
+        results = []
+        for cif_path_list in cif_paths:
+            result = do_refinement_no_saving(
+                pattern_path,
+                cif_path_list,
+                wavelength=wavelength,
+                instrument_profile=instrument_profile,
+                phase_params=phase_params,
+                refinement_params=refinement_params,
+            )
+            results.append(result)
+        return results
 
 
 def calculate_fom_and_strain(
