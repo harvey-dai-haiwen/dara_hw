@@ -140,6 +140,7 @@ function LocalSearch() {
       {contextHolder}
       <Container>
         <div className="nav-links">
+          <a href="/search-tutorial">📖 How to Use (Tutorial)</a>
           <a href="/task">View Task List</a>
           <a href="/">Original Submit Page</a>
         </div>
