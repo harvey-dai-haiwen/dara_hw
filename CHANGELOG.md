@@ -14,6 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Moved return statement outside for loop in `/api/task/{task_id}` endpoint
   - Added proper None handling for `final_result` and `predict_kwargs`
   - Fixed COD numeric filename parsing in compositional clustering
+- **UI Localization**: Removed all Chinese text from web interface
+  - Replaced Chinese labels with English in search page
+  - Updated index page banner to English
+  - Fixed Windows console emoji encoding issues in launch script
+- **Gatsby Build Issues**: Bypassed problematic build process
+  - Created standalone HTML pages for tutorial
+  - Direct text replacement in built files as workaround
+  - Simplified package.json scripts for Windows compatibility
 - **Chemical Formula Display**: All CIF entries now show "Formula (ID)" format
   - Example: "Y4Mo4O11 (281037)" instead of just "281037"
   - Applied to all result fields: final_result.phases, highlighted_phases, grouped_phases
@@ -30,6 +38,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Works correctly in both script and package contexts
 
 ### Added
+- **Search Tutorial Page**: Interactive guide for local database search
+  - Step-by-step workflow (username → file upload → database → elements → submit)
+  - File format documentation (xy, txt, xye, xrdml, raw)
+  - Database selection guide (MP, ICSD, COD)
+  - Element filtering explained with examples (Ge Te → finds Ge, Te, GeTe, not GeO2)
+  - Results interpretation guide (Rwp, phase identification, visualization)
+  - Accessible at `/search-tutorial` with link from search page
+- **Launch Instructions**: Comprehensive guide in `LAUNCH_INSTRUCTIONS.md`
+  - Server startup commands
+  - Feature overview
+  - UI verification steps
+  - Database path requirements
+- **Tutorial Updates**: Complete rewrite of tutorial.md
+  - Added "NEW: Local Database Search (Recommended)" section
+  - Explained required vs excluded elements behavior
+  - Documented subsystem auto-inclusion (unary/binary/ternary)
+  - Marked original interface as "Legacy"
 - **Comprehensive README**: Complete rewrite for v0.3 release
   - Quick start guide with UV package manager
   - Two web interface comparison (port 8899 vs 8898)

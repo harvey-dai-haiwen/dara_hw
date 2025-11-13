@@ -1,20 +1,20 @@
-# Dara v1.1.2hw_v0.3 — XRD Phase Analysis with Multi-Database Support# Dara v1.1.2hw_v0.3 — XRD Phase Analysis with Multi-Database Support# Dara v1.1.2hw — Streamlined XRD and Multi-Database Workflow# Dara v1.1.2hw — Streamlined XRD and Multi-Database Workflow
+# Dara v1.1.2hw_v0.3 — XRD Phase Analysis with Multi-Database Support# Dara v1.1.2hw — Streamlined XRD and Multi-Database Workflow# Dara v1.1.2hw — Streamlined XRD and Multi-Database Workflow
 
 
 
 **Version**: 1.1.2hw_v0.3  
 
-**Python**: 3.11-3.12 (Ray compatibility requirement)  
+**Python**: 3.11-3.12 (3.13 not compatible with Ray on Windows)  
 
-**Package Manager**: UV (recommended)**Version**: 1.1.2hw_v0.3  
-
-
-
-This README focuses on the new local web server interface and quick start guide. For the original Dara documentation, see legacy files in `docs/`.**Python**: 3.11-3.12 (3.13 not compatible with Ray on Windows)  
+**Package Manager**: UV (recommended)**Version**: 1.1.2+hw_v0.2  This README focuses on what’s new in 1.1.2hw and how to use Dara quickly. Advanced database rebuild (全量更新) instructions are at the end. For the legacy landing page, see `README_original.md`.
 
 
 
----**Package Manager**: UV (recommended)**Version**: 1.1.2+hw_v0.2  This README focuses on what’s new in 1.1.2hw and how to use Dara quickly. Advanced database rebuild (全量更新) instructions are at the end. For the legacy landing page, see `README_original.md`.
+This README focuses on the new local web server interface and quick start guide. For the original Dara documentation, see legacy files in `docs/`.**Python**: ≥3.10 (tested on 3.10-3.13)  
+
+
+
+---**Package Manager**: UV (recommended)---
 
 
 
@@ -22,616 +22,299 @@ This README focuses on the new local web server interface and quick start guide.
 
 
 
-### UI ImprovementsThis README focuses on the new local web server interface and quick start guide. For the original Dara documentation, see legacy files in `docs/`.**Python**: ≥3.10 (tested on 3.10-3.13)  
-
-- ✅ **Full English Localization** - All Chinese text replaced with English in web interface
-
-- ✅ **Interactive Tutorial** - Step-by-step guide at `/search-tutorial`
-
-- ✅ **Improved Search Interface** - Clear labels, helpful tooltips, and streamlined workflow
-
-- ✅ **Windows Compatibility** - Fixed console encoding and build script issues---**Package Manager**: UV (recommended)---
-
-
-
-### Critical Bug Fixes
-
-- ✅ **Web UI Loading Bug** - Task results now display correctly without infinite loading spinner
-
-- ✅ **Chemical Formula Display** - All CIF entries show "Formula (ID)" format (e.g., "Y4Mo4O11 (281037)")## ⭐ What's New in v0.3
-
-- ✅ **Ray Parallel Processing** - Platform-specific dependency for Windows (Ray 2.50.1)
-
-- ✅ **Python Version Lock** - Restricted to 3.11-3.12 for stable Ray support on Windows
-
-- ✅ **Import Path Fixes** - Resolved `database_interface` module import issues in scripts
-
 ### Critical Bug Fixes---## ⭐ What’s new
 
-### Key Features (from v0.2)
+- ✅ **Web UI Loading Bug Fixed** - Task results now display correctly without infinite loading spinner
 
-- **Unified multi-database workflow** - ICSD, COD, Materials Project in one interface- ✅ **Web UI Loading Bug Fixed** - Task results now display correctly without infinite loading spinner
+- ✅ **Chemical Formula Display** - All CIF entries show "Formula (ID)" format (e.g., "Y4Mo4O11 (281037)")
 
-- **Materials Project integration** - Experimental/theoretical classification and stability filtering
+- ✅ **Ray Parallel Processing** - Platform-specific dependency for Windows compatibility (Ray 2.50.1)
 
-- **UV-based setup** - One command to install all dependencies- ✅ **Chemical Formula Display** - All CIF entries show "Formula (ID)" format (e.g., "Y4Mo4O11 (281037)")
+- ✅ **Python Version Lock** - Restricted to 3.11-3.12 for stable Ray support on Windows## ⭐ What's New- Unified multi-database workflow (ICSD, COD, MP) with one streamlined notebook
 
-- **Chemical system filtering** - Automatically includes all subsystems (unary, binary, ternary)
+- ✅ **Import Path Fixes** - Resolved database_interface module import issues in scripts
 
-- **Original Dara functions** - XRD automatic search phase and refinement fully retained- ✅ **Ray Parallel Processing** - Platform-specific dependency for Windows compatibility (Ray 2.50.1)
-
-
-
----- ✅ **Python Version Lock** - Restricted to 3.11-3.12 for stable Ray support on Windows## ⭐ What's New- Unified multi-database workflow (ICSD, COD, MP) with one streamlined notebook
+- 🚀 **Production Ready** - Full validation with fresh clone testing- MP integration with experimental/theoretical labels and stability filtering
 
 
 
-## 🚀 Quick Start- ✅ **Import Path Fixes** - Resolved database_interface module import issues in scripts
+### Previous Features (v0.2)- **Unified multi-database workflow** (ICSD, COD, MP) with streamlined notebook- UV-based reproducible setup; helpers to build/verify indexes
 
+- **Unified multi-database workflow** - ICSD, COD, Materials Project in one interface
 
-
-### Prerequisites- 🚀 **Production Ready** - Full validation with fresh clone testing- MP integration with experimental/theoretical labels and stability filtering
-
-- **Python**: 3.11 or 3.12 (3.13 not compatible with Ray on Windows)
-
-- **UV package manager**: [Installation guide](https://docs.astral.sh/uv/getting-started/installation/)
-
-
-
-### Installation### Previous Features (v0.2)- **Unified multi-database workflow** (ICSD, COD, MP) with streamlined notebook- UV-based reproducible setup; helpers to build/verify indexes
-
-
-
-```bash- **Unified multi-database workflow** - ICSD, COD, Materials Project in one interface
-
-# Clone the repository
-
-git clone https://github.com/harvey-dai-haiwen/dara_hw.git- **Materials Project integration** - Experimental/theoretical classification and stability filtering- **Materials Project integration** with experimental/theoretical classification and stability filtering  - Original Dara functions fully retained, including XRD automatic search phase and refinement
-
-cd dara_hw
+- **Materials Project integration** - Experimental/theoretical classification and stability filtering- **Materials Project integration** with experimental/theoretical classification and stability filtering  - Original Dara functions fully retained, including XRD automatic search phase and refinement
 
 - **UV-based setup** - One command to install all dependencies
 
-# Install dependencies with UV
+- **Chemical system filtering** - Automatically includes all subsystems (unary, binary, ternary)- **UV-based reproducible environment** - one command setup with all dependencies- Rights reserved by original developers of Dara and databases
 
-uv sync- **Chemical system filtering** - Automatically includes all subsystems (unary, binary, ternary)- **UV-based reproducible environment** - one command setup with all dependencies- Rights reserved by original developers of Dara and databases
+- **Original Dara functions** - XRD automatic search phase and refinement fully retained
 
+- **Chemical system filtering** - automatically includes all subsystems (unary, binary, ternary)
 
+---
 
-# Verify installation- **Original Dara functions** - XRD automatic search phase and refinement fully retained
+- **Dependency verification** - built-in script to validate installation---
 
-uv run python verify_dependencies.py
-
-```- **Chemical system filtering** - automatically includes all subsystems (unary, binary, ternary)
-
-
-
-### Launch the Server---
-
-
-
-```bash- **Dependency verification** - built-in script to validate installation---
-
-# Start the local database search server (Port 8899)
-
-uv run python launch_local_server.py## 🌐 Two Web Interfaces
-
-```
+## 🌐 Two Web Interfaces
 
 - Original Dara functions fully retained, including XRD automatic search phase and refinement
 
-Server will start at: **http://localhost:8899**
-
 ### 1. **NEW: Dara Local Multi-Database Portal** (Port 8899) ⭐ **RECOMMENDED**
-
-### First Steps
 
 ## 🌐 Web Portals
 
-1. **Open your browser** to http://localhost:8899/search
+**Features**:
 
-2. **Click the tutorial link** "📖 How to Use (Tutorial)" for step-by-step guidance**Features**:
+- Multi-database selector (COD / ICSD / MP)### Original Dara Web Portal (Port 8898)
 
-3. **Upload an XRD pattern** (.xy, .xrdml, .raw, .txt, or .xye file)
+- Custom CIF upload support
 
-4. **Select a database** (COD, ICSD, or MP)- Multi-database selector (COD / ICSD / MP)### Original Dara Web Portal (Port 8898)
+- Chemical system filtering with automatic subsystem inclusion- Launch the upstream FastAPI + Gatsby UI with the built-in CLI:
 
-5. **Enter required elements** (e.g., `Y Mo O` or `Ge Te`)
+- Asynchronous job queue with background workers
 
-6. **Submit** and view your task in the queue at `/task`- Custom CIF upload support
+- Enhanced result display with chemical formulas```powershell
 
+uv run python -m dara.cli server --host 127.0.0.1 --port 8898
 
+**Start Server**:```
 
----- Chemical system filtering with automatic subsystem inclusion- Launch the upstream FastAPI + Gatsby UI with the built-in CLI:
+```powershell
 
+# Option 1: Direct Python- Open a browser at `http://localhost:8898` to use the legacy reaction-predictor workflow.
 
+.venv\Scripts\python.exe launch_local_server.py- Submit jobs with `POST /api/submit` (see `docs/web_server.md` for API details). Poll status via `GET /api/task/{wf_id}` or browse queued jobs at `/tasks` in the UI.
 
-## 🌐 Two Web Interfaces- Asynchronous job queue with background workers
-
-
-
-### 1. **NEW: Dara Local Multi-Database Portal** (Port 8899) ⭐ **RECOMMENDED**- Enhanced result display with chemical formulas```powershell
-
-
-
-**Features**:uv run python -m dara.cli server --host 127.0.0.1 --port 8898
-
-- Multi-database selector (COD / ICSD / MP)
-
-- Custom CIF upload support**Start Server**:```
-
-- Chemical system filtering with automatic subsystem inclusion
-
-- Asynchronous job queue with background workers```powershell
-
-- Enhanced result display with chemical formulas
-
-- Interactive tutorial at `/search-tutorial`# Option 1: Direct Python- Open a browser at `http://localhost:8898` to use the legacy reaction-predictor workflow.
-
-
-
-**Launch**:.venv\Scripts\python.exe launch_local_server.py- Submit jobs with `POST /api/submit` (see `docs/web_server.md` for API details). Poll status via `GET /api/task/{wf_id}` or browse queued jobs at `/tasks` in the UI.
-
-```bash
-
-uv run python launch_local_server.py- Optional: export `MP_API_KEY=<your-key>` before starting to enable Materials Project reaction prediction.
-
-```
+- Optional: export `MP_API_KEY=<your-key>` before starting to enable Materials Project reaction prediction.
 
 # Option 2: Using UV
 
-**Access**: http://localhost:8899
-
 uv run python launch_local_server.py### Dara Local Multi-Database Portal (Port 8899)
 
-### 2. Original Dara Web Portal (Port 8898)
-
 ```
-
-Legacy interface with original reaction predictor functionality.
 
 - Launch the extended local copy (COD / ICSD / MP selector) with:
 
-**Launch**:
+**Access**: Open browser at `http://localhost:8899`
 
-```bash**Access**: Open browser at `http://localhost:8899`
+```powershell
 
-uv run python -m dara.cli server --host 127.0.0.1 --port 8898
+**API Usage**:uv run python launch_local_server.py
 
-``````powershell
+- Submit search: `POST /api/search` (returns workflow ID immediately)```
 
+- Check status: `GET /api/task/{workflow_id}`
 
+- List all tasks: `GET /api/tasks`- The server boots on `http://localhost:8899` and automatically spawns its queue worker.
 
-**Access**: http://localhost:8898**API Usage**:uv run python launch_local_server.py
+- Submit searches with `POST /api/search` and poll results with `GET /api/task/{wf_id}`. Each request is queued, so the API returns immediately with a workflow ID.
 
+**Example**: See `example_api_usage_async.py` for ready-to-run polling client.- Use `example_api_usage_async.py` for a ready-to-run polling client, or inspect `JOB_QUEUE_INTEGRATION.md` for the async workflow and job-queue architecture.
 
+- Custom CIF uploads and chemical-system filtering are supported; CIFs are cleaned up automatically after job completion.
 
----- Submit search: `POST /api/search` (returns workflow ID immediately)```
+**Architecture**: See `JOB_QUEUE_INTEGRATION.md` for job queue design details.
 
+---
 
+### 2. Original Dara Web Portal (Port 8898)
 
-## 📖 Documentation- Check status: `GET /api/task/{workflow_id}`
+## 1) Quick Start (recommended path)
 
+**Features**:
 
+- Legacy reaction-predictor workflow---
 
-- **Tutorial**: http://localhost:8899/search-tutorial (after starting server)- List all tasks: `GET /api/tasks`- The server boots on `http://localhost:8899` and automatically spawns its queue worker.
-
-- **Launch Instructions**: See `LAUNCH_INSTRUCTIONS.md` for detailed setup
-
-- **UV Setup Guide**: See `UV_SETUP_GUIDE.md` for environment management- Submit searches with `POST /api/search` and poll results with `GET /api/task/{wf_id}`. Each request is queued, so the API returns immediately with a workflow ID.
-
-- **Changelog**: See `CHANGELOG.md` for version history
-
-- **Original Docs**: Legacy documentation in `docs/` directory**Example**: See `example_api_usage_async.py` for ready-to-run polling client.- Use `example_api_usage_async.py` for a ready-to-run polling client, or inspect `JOB_QUEUE_INTEGRATION.md` for the async workflow and job-queue architecture.
-
-
-
----- Custom CIF uploads and chemical-system filtering are supported; CIFs are cleaned up automatically after job completion.
-
-
-
-## 🗄️ Database Setup**Architecture**: See `JOB_QUEUE_INTEGRATION.md` for job queue design details.
-
-
-
-The server requires indexed databases in the following locations:---
-
-
-
-```### 2. Original Dara Web Portal (Port 8898)
-
-dara_hw/
-
-├── indexes/## 1) Quick Start (recommended path)
-
-│   ├── cod_index.parquet
-
-│   ├── icsd_index.parquet**Features**:
-
-│   └── mp_index.parquet
-
-├── cod_cifs/cif/- Legacy reaction-predictor workflow---
-
-├── icsd_cifs/cif/
-
-└── mp_cifs/{0-9,m}/- Materials Project reaction prediction (requires `MP_API_KEY`)
-
-```
+- Materials Project reaction prediction (requires `MP_API_KEY`)
 
 1. Environment setup (uv)
 
-### Quick Database Setup
-
 **Start Server**:
-
-For testing, you can use a subset of databases. See `notebooks/mp_database_tutorial.ipynb` for Materials Project setup instructions.
 
 ```powershell## 🚀 Quick Start
 
-For full database rebuild instructions, see the **Database Rebuild** section at the end of this README.
-
 uv run python -m dara.cli server --host 127.0.0.1 --port 8898
-
----
 
 ``````powershell
 
-## 🔧 Troubleshooting
 
-
-
-### Python Version Issues
 
 **Access**: Open browser at `http://localhost:8898`### 1. Install UV Package Managergit clone https://github.com/idocx/dara.git
 
-```bash
 
-# Check Python version
-
-uv run python --version
 
 **API**: See `docs/web_server.md` for API documentation.cd dara
 
-# Should output: Python 3.11.x or 3.12.x
-
-```
 
 
-
-If using Python 3.13, install Python 3.11 or 3.12 and recreate the environment.---**Windows (PowerShell)**:
+---**Windows (PowerShell)**:
 
 
 
-### Ray Import Errors
+## 🚀 Quick Start```powershelluv venv .venv --python 3.11
 
 
-
-On Windows, ensure you have Ray 2.50.1:## 🚀 Quick Start```powershelluv venv .venv --python 3.11
-
-```bash
-
-uv run python -c "import ray; print(ray.__version__)"
-
-```
 
 ### 1. Install UV Package Managerpowershell -c "irm https://astral.sh/uv/install.ps1 | iex".\.venv\Scripts\Activate.ps1
 
-If issues persist, try:
-
-```bash
-
-uv sync --reinstall-package ray
-
-```**Windows (PowerShell)**:```
 
 
+**Windows (PowerShell)**:```
 
-### UI Not Loading```powershell
+```powershell
 
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"uv pip install -e ".[docs]"
 
-
-If the web interface shows errors:powershell -c "irm https://astral.sh/uv/install.ps1 | iex"uv pip install -e ".[docs]"
-
-1. Check server logs for error messages
-
-2. Verify database index files exist```
-
-3. Clear browser cache and reload
+```
 
 **macOS/Linux**:uv pip install jupyterlab ipykernel
 
-### Import Module Errors
-
 **macOS/Linux**:
 
-If you see `ModuleNotFoundError: No module named 'dara_local'`:
+```bash```bashpython -m ipykernel install --user --name=dara-uv --display-name="Dara (uv)"
 
-```bash```bash```bashpython -m ipykernel install --user --name=dara-uv --display-name="Dara (uv)"
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Ensure you're in the project root directory
-
-cd D:\path\to\dara_hwcurl -LsSf https://astral.sh/uv/install.sh | sh
+```curl -LsSf https://astral.sh/uv/install.sh | sh```
 
 
 
-# Reinstall dependencies```curl -LsSf https://astral.sh/uv/install.sh | sh```
+### 2. Clone Repository```
 
-uv sync
+
+
+```bash2. Place existing databases and indexes (do not add to Git)
+
+git clone https://github.com/harvey-dai-haiwen/dara_hw.git
+
+cd dara### 2. Setup Environment
+
+```
 
 ```
 
+### 3. Setup Environment
 
+```bashdara/
 
----### 2. Clone Repository```
-
-
-
-## 🧪 Development
-
-
-
-### Running Tests```bash2. Place existing databases and indexes (do not add to Git)
-
-
-
-```bashgit clone https://github.com/harvey-dai-haiwen/dara_hw.git
-
-# Run all tests
-
-uv run pytest tests/cd dara### 2. Setup Environment
-
-
-
-# Run specific test file```
-
-uv run pytest tests/test_api.py
-
-``````
-
-
-
-### Dependency Verification### 3. Setup Environment
-
-
-
-```bash```bashdara/
-
-# Verify all dependencies are installed
-
-uv run python verify_dependencies.py```powershell
-
-```
+```powershell
 
 # Create virtual environment with Python 3.11# Clone repository├── cod_cifs/                  # COD CIF files (≈100 GB)
 
----
-
 uv venv .venv --python 3.11
-
-## 📋 System Requirements
 
 git clone https://github.com/harvey-dai-haiwen/dara_hw.git├── icsd_cifs/                 # ICSD CIF files (≈10 GB)
 
-- **OS**: Windows, macOS, or Linux
+# Activate environment
 
-- **Python**: 3.11 or 3.12 (3.13 not supported due to Ray compatibility)# Activate environment
-
-- **RAM**: 8GB minimum, 16GB recommended for large databases
-
-- **Disk Space**: 50GB+ for full databases (COD + ICSD + MP).\.venv\Scripts\Activate.ps1  # Windows PowerShellcd dara├── mp_cifs/                   # MP CIF files (~2 GB)
-
-- **UV**: Latest version recommended
+.\.venv\Scripts\Activate.ps1  # Windows PowerShellcd dara├── mp_cifs/                   # MP CIF files (~2 GB)
 
 # source .venv/bin/activate    # Linux/macOS
 
----
-
 └── indexes/
-
-## 🤝 Contributing
 
 # Install all dependencies (includes Ray, pymatgen, etc.)
 
-This is a hardware-lab tailored fork of the original Dara project. For contributions:
-
 uv pip install -e .# Install all dependencies (one command!)    ├── cod_index_filled.parquet
 
-1. Fork the repository
-
-2. Create a feature branch
-
-3. Make your changes
-
-4. Submit a pull request# Optional: Verify installationuv sync    ├── icsd_index_filled.parquet
 
 
+# Optional: Verify installationuv sync    ├── icsd_index_filled.parquet
 
----uv run python verify_dependencies.py
+uv run python verify_dependencies.py
+
+```    ├── mp_index.parquet
 
 
 
-## 📜 License & Credits```    ├── mp_index.parquet
+**Expected output**:# Verify installation (optional)    └── merged_index.parquet
 
-
-
-**Rights reserved by original developers of Dara and databases.**
-
-
-
-- **Dara**: Original XRD phase analysis framework**Expected output**:# Verify installation (optional)    └── merged_index.parquet
-
-- **COD**: Crystallography Open Database
-
-- **ICSD**: Inorganic Crystal Structure Database```
-
-- **MP**: Materials Project
+```
 
 ✅ All critical dependencies are available! (27/27 packages OK)uv run python verify_dependencies.py```
 
-This fork (v1.1.2hw) adds multi-database workflow improvements while preserving all original functionality.
-
 ```
 
----
-
 ```
-
-## 🔨 Database Rebuild (Advanced)
 
 ### 4. Place Database Files
 
-<details>
+Optional: link external data folders using symlinks on Windows PowerShell (Admin):
 
-<summary>Click to expand full database rebuild instructions</summary>Optional: link external data folders using symlinks on Windows PowerShell (Admin):
+Place your database CIF files and indices (not tracked by Git):
 
+**Expected output**:
 
+```
 
-### COD Database SetupPlace your database CIF files and indices (not tracked by Git):
+dara/``````powershell
 
+├── cod_cifs/                  # COD CIF files (≈100 GB)
 
-
-1. **Download COD CIF files**:**Expected output**:
-
-   ```bash
-
-   # Download from http://www.crystallography.net/cod/```
-
-   # Extract to cod_cifs/cif/
-
-   ```dara/``````powershell
-
-
-
-2. **Build COD index**:├── cod_cifs/                  # COD CIF files (≈100 GB)
-
-   ```bash
-
-   uv run python scripts/index_cod_parallel.py├── icsd_cifs/                 # ICSD CIF files (≈10 GB)✅ All critical dependencies are available! (27/27 packages OK)New-Item -ItemType SymbolicLink -Path .\cod_cifs -Target "D:\\Data\\COD\\cifs"
-
-   ```
+├── icsd_cifs/                 # ICSD CIF files (≈10 GB)✅ All critical dependencies are available! (27/27 packages OK)New-Item -ItemType SymbolicLink -Path .\cod_cifs -Target "D:\\Data\\COD\\cifs"
 
 ├── mp_cifs/                   # MP CIF files (~2 GB)
 
-3. **Verify**:
+└── indexes/```New-Item -ItemType SymbolicLink -Path .\icsd_cifs -Target "D:\\Data\\ICSD\\cifs"
 
-   ```bash└── indexes/```New-Item -ItemType SymbolicLink -Path .\icsd_cifs -Target "D:\\Data\\ICSD\\cifs"
+    ├── cod_index_filled.parquet    (~80 MB, 502K entries)
 
-   uv run python scripts/verify_indices.py
+    ├── icsd_index_filled.parquet   (~50 MB, 229K entries)New-Item -ItemType SymbolicLink -Path .\mp_cifs   -Target "D:\\Data\\MP\\cifs"
 
-   ```    ├── cod_index_filled.parquet    (~80 MB, 502K entries)
+    ├── mp_index.parquet            (~30 MB, 169K entries)
 
+    └── merged_index.parquet        (~280 MB combined)### 3. Place Database Files```
 
-
-### ICSD Database Setup    ├── icsd_index_filled.parquet   (~50 MB, 229K entries)New-Item -ItemType SymbolicLink -Path .\mp_cifs   -Target "D:\\Data\\MP\\cifs"
-
-
-
-1. **Export from ICSD**:    ├── mp_index.parquet            (~30 MB, 169K entries)
-
-   - Requires ICSD license
-
-   - Export CIF files to `icsd_cifs/cif/`    └── merged_index.parquet        (~280 MB combined)### 3. Place Database Files```
+```
 
 
-
-2. **Build ICSD index**:```
-
-   ```bash
-
-   uv run python scripts/index_icsd.py
-
-   ```
 
 **Optional**: Link external data folders using symlinks:
 
-### Materials Project Setup
-
 Place your database CIF files and indices (not tracked by Git):3. Verify data presence
-
-1. **Get API key** from https://materialsproject.org/api
 
 **Windows (PowerShell Admin)**:
 
-2. **Download structures**:
+```powershell
 
-   ```bash```powershell
+New-Item -ItemType SymbolicLink -Path .\cod_cifs -Target "D:\Data\COD\cifs"
 
-   # See notebooks/mp_database_tutorial.ipynb for detailed instructions
+New-Item -ItemType SymbolicLink -Path .\icsd_cifs -Target "D:\Data\ICSD\cifs"``````powershell
 
-   ```New-Item -ItemType SymbolicLink -Path .\cod_cifs -Target "D:\Data\COD\cifs"
-
-
-
-3. **Build MP index**:New-Item -ItemType SymbolicLink -Path .\icsd_cifs -Target "D:\Data\ICSD\cifs"``````powershell
-
-   ```bash
-
-   uv run python scripts/index_mp.pyNew-Item -ItemType SymbolicLink -Path .\mp_cifs -Target "D:\Data\MP\cifs"
-
-   ```
+New-Item -ItemType SymbolicLink -Path .\mp_cifs -Target "D:\Data\MP\cifs"
 
 ```dara/python .\scripts\check_data_status.py
 
-### Merge All Databases
 
 
+**Linux/macOS**:├── cod_cifs/                  # COD CIF files (≈100 GB)```
 
 ```bash
 
-# Merge all three databases into one unified index**Linux/macOS**:├── cod_cifs/                  # COD CIF files (≈100 GB)```
+ln -s /path/to/COD/cifs cod_cifs├── icsd_cifs/                 # ICSD CIF files (≈10 GB)
 
-uv run python scripts/merge_indices.py
+ln -s /path/to/ICSD/cifs icsd_cifs
 
-``````bash
-
-
-
-### Verificationln -s /path/to/COD/cifs cod_cifs├── icsd_cifs/                 # ICSD CIF files (≈10 GB)
-
-
-
-```bashln -s /path/to/ICSD/cifs icsd_cifs
-
-# Verify all databases are correctly indexed
-
-uv run python scripts/verify_merged.pyln -s /path/to/MP/cifs mp_cifs├── mp_cifs/                   # MP CIF files (~2 GB)4. Run the streamlined notebook
+ln -s /path/to/MP/cifs mp_cifs├── mp_cifs/                   # MP CIF files (~2 GB)4. Run the streamlined notebook
 
 ```
-
-```
-
-</details>
 
 └── indexes/
 
----
-
 ### 5. Verify Data Status
-
-## 📚 Additional Resources
 
     ├── cod_index_filled.parquet```powershell
 
-- **Original Dara Repository**: https://github.com/idocx/dara
+```powershell
 
-- **UV Documentation**: https://docs.astral.sh/uv/```powershell
+uv run python scripts/check_data_status.py    ├── icsd_index_filled.parquetjupyter lab
 
-- **Materials Project API**: https://materialsproject.org/api
+```
 
-- **COD Database**: http://www.crystallography.net/cod/uv run python scripts/check_data_status.py    ├── icsd_index_filled.parquetjupyter lab
+    ├── mp_index.parquet```
 
-
-
----```
-
-
-
-**Version**: 1.1.2hw_v0.3      ├── mp_index.parquet```
-
-**Last Updated**: November 13, 2025  
-
-**Maintainer**: Harvey Dai (harvey-dai-haiwen)### 6. Start Using Dara
-
+### 6. Start Using Dara
 
     └── merged_index.parquet
 
