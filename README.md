@@ -106,39 +106,28 @@ uv run python verify_dependencies.py
 
 
 
-### Launch the Server---
+### Launch the Dara Local v2 Web UI
 
-
-
-```bash- **Dependency verification** - built-in script to validate installation---
-
-# Start the local database search server (Port 8899)
-
-uv run python launch_local_server.py## 🌐 Two Web Interfaces
-
+```bash
+# Start the Dara Local v2 phase-search web server (Port 8899)
+uv run python launch_local_server.py
 ```
 
-- Original Dara functions fully retained, including XRD automatic search phase and refinement
+Server will start at: **http://localhost:8899**.
 
-Server will start at: **http://localhost:8899**
+- Open **`/search`** to upload an XRD pattern and configure Part 1 + Part 2 parameters.
+- Use **`/results`** to see the job queue; open **`/results/{jobId}`** for full diagnostics,
+  Plotly fits, phase tables, and ZIP report downloads.
+- The **Tutorial** link in the top navigation explains how this maps to
+  `streamlined_phase_analysis_K2SnTe5.ipynb` Part 1 & 2.
 
-### 1. **NEW: Dara Local Multi-Database Portal** (Port 8899) ⭐ **RECOMMENDED**
+> **Note (deprecation)**: the old `dara_local` v1 server and its routes (e.g. `/task`,
+> `/search-tutorial`) are deprecated and the code has been removed in this fork.
+> Use Dara Local v2 instead via `launch_local_server.py`.
 
-### First Steps
+---
 
-## 🌐 Web Portals
-
-1. **Open your browser** to http://localhost:8899/search
-
-2. **Click the tutorial link** "📖 How to Use (Tutorial)" for step-by-step guidance**Features**:
-
-3. **Upload an XRD pattern** (.xy, .xrdml, .raw, .txt, or .xye file)
-
-4. **Select a database** (COD, ICSD, or MP)- Multi-database selector (COD / ICSD / MP)### Original Dara Web Portal (Port 8898)
-
-5. **Enter required elements** (e.g., `Y Mo O` or `Ge Te`)
-
-6. **Submit** and view your task in the queue at `/task`- Custom CIF upload support
+### Original Dara Web Portal (Port 8898)
 
 
 

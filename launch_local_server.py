@@ -1,9 +1,12 @@
 """
-Launch script for the dara_local server.
+Launch script for the dara_local_v2 web server.
 
-This script starts the extended Dara server on port 8899 with support for
-local COD/ICSD/MP database selection.
+This script starts the Dara Local v2 FastAPI app on port 8899, serving the
+Vite+React frontend and the phase-search job queue API.
 """
+
+from __future__ import annotations
+
 import sys
 from pathlib import Path
 
@@ -11,20 +14,21 @@ from pathlib import Path
 src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(src_path))
 
-from dara_local.server.app import launch_app
+from dara_local_v2.server.app import launch_app
+
 
 if __name__ == "__main__":
-    print("=" * 70)
-    print("Starting Dara Local Server")
-    print("=" * 70)
+    print("=" * 72)
+    print("Starting Dara Local v2 Web Server")
+    print("=" * 72)
     print("Features:")
-    print("  - Local database support: COD, ICSD, MP")
-    print("  - Subset-based chemical system filtering")
-    print("  - Custom CIF uploads")
-    print("  - New endpoint: POST /api/search")
+    print("  - Notebook Part 1 + Part 2 as a web workflow")
+    print("  - Local ICSD/COD/MP phase-search with job queue")
+    print("  - Multi-user submission by simple user tag")
+    print("  - Plotly visualizations and downloadable reports")
     print()
-    print("🌐 Server will start on: http://localhost:8899")
-    print("=" * 70)
+    print("🌐 Open: http://localhost:8899/search")
+    print("=" * 72)
     print()
-    
+
     launch_app()
