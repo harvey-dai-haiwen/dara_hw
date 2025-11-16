@@ -176,7 +176,9 @@ export function JobDetailPage() {
             <p className="muted-text">
               {detail.job.status === 'FAILED'
                 ? 'Job failed before producing solutions.'
-                : 'Solutions will appear here after the worker completes this job.'}
+                : detail.job.status === 'COMPLETED'
+                  ? 'Job completed but no solutions were found that passed the filters. Try relaxing database filters or checking the pattern quality.'
+                  : 'Solutions will appear here after the worker completes this job.'}
             </p>
           ) : (
             <div className="solutions-grid">

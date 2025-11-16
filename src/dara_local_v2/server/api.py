@@ -13,8 +13,20 @@ from .models import JobDetail, JobInput, JobStatus
 from .queue import JobStore
 
 
-def build_api_router(store: JobStore, uploads_dir: Path) -> APIRouter:
-    """Construct API router bound to the provided JobStore."""
+def build_api_router(store: JobStore, uploads_dir: Path, base_workdir: Path) -> APIRouter:
+    """Construct API router bound to the provided JobStore.
+
+    Parameters
+    ----------
+    store:
+        JobStore instance used for persistence.
+    uploads_dir:
+        Directory where raw uploaded pattern files are stored.
+    base_workdir:
+        Base working directory used by the worker. Custom CIF uploads are
+        written into ``base_workdir / chemical_system_without_dashes /
+        "custom_cifs"`` so they are picked up by the worker.
+    """
 
     router = APIRouter()
     uploads_dir.mkdir(parents=True, exist_ok=True)
@@ -33,6 +45,7 @@ def build_api_router(store: JobStore, uploads_dir: Path) -> APIRouter:
         mp_experimental_only: bool = Form(False),
         mp_max_e_above_hull: float = Form(0.1),
         max_phases: int = Form(500),
+        custom_cifs: Optional[List[UploadFile]] = File(None),
     ) -> dict:
         try:
             required = json.loads(required_elements)
@@ -46,6 +59,20 @@ def build_api_router(store: JobStore, uploads_dir: Path) -> APIRouter:
         dest_path = uploads_dir / pattern_file.filename
         with dest_path.open("wb") as fp:
             fp.write(await pattern_file.read())
+
+        # Persist any custom CIF uploads into the same directory layout that
+        # the worker expects, so they are automatically included in phase
+        # search via Worker._collect_cifs.
+        chem_dir_name = chemical_system.replace("-", "")
+        custom_cif_dir = base_workdir / chem_dir_name / "custom_cifs"
+        custom_cif_dir.mkdir(parents=True, exist_ok=True)
+
+        for cif in custom_cifs or []:
+            if not cif.filename:
+                continue
+            cif_path = custom_cif_dir / cif.filename
+            with cif_path.open("wb") as fp:
+                fp.write(await cif.read())
 
         job_input = JobInput(
             user=user,

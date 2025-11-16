@@ -53,7 +53,7 @@ def create_app(
     job_db_path.parent.mkdir(parents=True, exist_ok=True)
 
     job_store = JobStore(db_path=str(job_db_path))
-    router = build_api_router(job_store, uploads_dir)
+    router = build_api_router(job_store, uploads_dir, base_workdir)
 
     worker_process: multiprocessing.Process | None = None
 

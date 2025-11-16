@@ -28,6 +28,8 @@ const searchSchema = z.object({
     .min(50, 'At least 50 phases')
     .max(800, 'Keep below 800 phases'),
   user: z.string().min(1, 'Please enter your name or initials'),
+  // Optional field handled in the UI; schema keeps it flexible.
+  custom_cifs: z.any().optional(),
 })
 
 type SearchFormValues = z.infer<typeof searchSchema>
@@ -77,6 +79,8 @@ export function SearchPage() {
 
   const patternFile = watch('pattern_file')
   const chosenFileName = patternFile?.item(0)?.name
+  const customCifFiles = (watch('custom_cifs') as FileList | undefined) ?? undefined
+  const customCifNames = customCifFiles ? Array.from(customCifFiles).map((file) => file.name) : []
 
   const onSubmit = async (values: SearchFormValues) => {
     setSubmitResult(null)
@@ -98,6 +102,16 @@ export function SearchPage() {
     formData.append('mp_experimental_only', String(values.mp_experimental_only))
     formData.append('mp_max_e_above_hull', String(values.mp_max_e_above_hull))
     formData.append('max_phases', String(values.max_phases))
+
+    const customCifsList = (values as SearchFormValues & { custom_cifs?: FileList }).custom_cifs
+    if (customCifsList && customCifsList.length > 0) {
+      for (let index = 0; index < customCifsList.length; index += 1) {
+        const cifFile = customCifsList.item(index)
+        if (cifFile) {
+          formData.append('custom_cifs', cifFile, cifFile.name)
+        }
+      }
+    }
 
     try {
       const response = await fetch('/api/jobs', {
@@ -137,6 +151,25 @@ export function SearchPage() {
               {chosenFileName && <p className="file-name">{chosenFileName}</p>}
             </div>
             {errors.pattern_file && <span className="helper-text">{errors.pattern_file.message}</span>}
+          </div>
+
+          <div className="form-field" style={{ gridColumn: '1 / -1' }}>
+            <label htmlFor="custom_cifs">Custom CIFs (optional)</label>
+            <div className="upload-field">
+              <input
+                id="custom_cifs"
+                type="file"
+                accept=".cif"
+                multiple
+                {...register('custom_cifs')}
+              />
+              {customCifNames.length > 0 && (
+                <p className="file-name">{customCifNames.join(', ')}</p>
+              )}
+            </div>
+            <p className="field-note">
+              Optional: upload one or more CIF files to be included as additional phases. Leave empty if not needed.
+            </p>
           </div>
 
           <div className="form-field">
