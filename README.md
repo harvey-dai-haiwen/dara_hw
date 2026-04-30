@@ -14,6 +14,20 @@ pip install dara-xrd
 
 For more details about installation, please refer to [installation guide](https://CederGroupHub.github.io/dara/install.html).
 
+## Local development
+
+This repository is maintained with `uv` for local development. The recommended workflow is:
+
+```bash
+uv python install 3.11
+uv sync --extra tests
+uv run pytest tests/test_structure_db.py tests/test_api_router.py
+```
+
+The repository only needs the `uv`-managed `.venv` for development. Extra local environments such as Conda or ad hoc virtual environments are not required.
+
+If you maintain local crystallographic mirrors for search-match workflows, see the local database recovery notes in the documentation: https://cedergrouphub.github.io/dara/local_database_recovery.html
+
 ## Web Server
 Dara ships with a browser-based web server for an out-of-box experience of Dara. To launch the webserver, run
 ```bash

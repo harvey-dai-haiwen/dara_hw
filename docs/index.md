@@ -87,6 +87,7 @@ For source code and further information, please visit [http://www.bgmn.de](http:
 :maxdepth: 2
 :hidden:
 Installation<install>
+Local Database Recovery<local_database_recovery>
 Web Server<web_server>
 Tutorials<tutorials>
 API Docs<modules>

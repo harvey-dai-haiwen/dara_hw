@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import itertools
+import re
 from abc import ABCMeta, abstractmethod
+from collections import defaultdict
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
@@ -18,12 +20,18 @@ from dara.data import COMMON_GASES
 from dara.settings import DaraSettings
 from dara.utils import copy_and_rename_files, get_logger
 
+try:
+    import pyarrow.parquet as pq
+except ImportError:  # pragma: no cover - optional fast path
+    pq = None
+
 logger = get_logger(__name__)
 
 DARA_SETTINGS = DaraSettings()
 
 PATH_TO_COD = DARA_SETTINGS.PATH_TO_COD
 PATH_TO_ICSD = DARA_SETTINGS.PATH_TO_ICSD
+PATH_TO_MP = DARA_SETTINGS.PATH_TO_MP
 
 
 class StructureDatabase(MSONable, metaclass=ABCMeta):
@@ -166,13 +174,30 @@ class StructureDatabase(MSONable, metaclass=ABCMeta):
             e_hull_value = round(1000 * e_hull) if e_hull is not None else None
 
             fp = (
-                f"{self.get_file_path(code)}"
+                self.get_file_path(code)
                 if self.local_copy_found
-                else f"{download_folder}/{code}.cif"
+                else Path(download_folder) / f"{code}.cif"
             )
-            file_map[fp] = f"{formula}_{sg}_({self.name}_{code})-{e_hull_value}.cif"
+            if self.local_copy_found and not fp.exists():
+                logger.warning("Skipping missing local CIF: %s", fp)
+                continue
+
+            file_map[str(fp)] = self._get_copy_filename(code)
 
         return file_map
+
+    def _get_copy_filename(self, code: str | int) -> str:
+        """Build a stable copied CIF name from the database identifier.
+
+        Use database IDs rather than formula/spacegroup metadata so copied artifact
+        names stay stable and portable across platforms.
+        """
+        safe_code = re.sub(r"[^A-Za-z0-9._-]", "_", str(code).strip())
+        prefix = f"{self.name}_"
+        if safe_code.lower().startswith(f"{self.name.lower()}-") or safe_code.lower().startswith(prefix.lower()):
+            return f"{safe_code}.cif"
+
+        return f"{prefix}{safe_code}.cif"
 
     @property
     def path(self) -> Path:
@@ -184,7 +209,12 @@ class StructureDatabase(MSONable, metaclass=ABCMeta):
         if p is None:
             p = self.default_folder_path
 
-        return Path(p)
+        path = Path(p)
+        nested_cif_path = path / "cif"
+        if nested_cif_path.is_dir():
+            return nested_cif_path
+
+        return path
 
     @property
     def local_copy_found(self) -> bool:
@@ -342,7 +372,16 @@ class ICSDDatabase(StructureDatabase):
 
     def get_file_path(self, cif_id: str | int):
         """Get the path to a CIF file in the ICSD database."""
-        return self.path / f"icsd_{self._clean_icsd_code(cif_id)}.cif"
+        code = self._clean_icsd_code(cif_id)
+        flat_path = self.path / f"icsd_{code}.cif"
+        if flat_path.exists():
+            return flat_path
+
+        sharded_path = self.path / self._get_sharded_file_path(code)
+        if sharded_path.exists():
+            return sharded_path
+
+        return flat_path
 
     def download_structures(
         self, ids: list[str] | None = None, save=False, default_folder=None
@@ -368,3 +407,152 @@ class ICSDDatabase(StructureDatabase):
         """Add leading zeros to the ICSD code."""
         code = str(int(icsd_code))
         return (6 - len(code)) * "0" + code
+
+    @staticmethod
+    def _get_sharded_file_path(icsd_code: str) -> Path:
+        normalized = f"{int(icsd_code):07d}"
+        return Path(normalized[0]) / normalized[1:3] / normalized[3:5] / f"{int(icsd_code)}.cif"
+
+
+class MPDatabase(StructureDatabase):
+    """Class to interact with Materials Project CIFs stored locally."""
+
+    def __init__(self, path_to_cifs: Path | str | None = None):
+        super().__init__(path_to_cifs)
+        self._formula_info = loadfn(Path(__file__).parent / "data/mp_struct_info.json.gz")
+
+    def get_file_path(self, cif_id: str | int):
+        """Get the path to a CIF file in the Materials Project database."""
+        identifier = str(cif_id).strip()
+        if not identifier:
+            raise ValueError("Invalid MP ID provided")
+
+        routing_key = identifier[3:] if identifier.startswith("mp-") else identifier
+        if len(routing_key) < 2:
+            raise ValueError(f"Invalid MP ID provided: {identifier}")
+
+        return self.path / routing_key[0].lower() / routing_key[:2].lower() / f"{identifier}.cif"
+
+    def download_structures(
+        self, ids: list[str] | None = None, save=False, default_folder=None
+    ) -> list[Cif]:
+        """Download structures from Materials Project."""
+        raise NotImplementedError(
+            "Downloading from Materials Project is not implemented here. Please use a local CIF copy."
+        )
+
+    @property
+    def name(self) -> str:
+        """Name of the database."""
+        return "mp"
+
+    @property
+    def default_folder_path(self) -> Path:
+        """Default path to the folder containing the Materials Project CIFs."""
+        return PATH_TO_MP
+
+    @property
+    def preparsed_info(self) -> dict:
+        """Build a chemsys -> [(formula, mp_id, sg, e_hull), ...] index from local MP CIFs."""
+        if not self._preparsed_info and self.local_copy_found:
+            self._preparsed_info = self._load_preparsed_index() or self._scan_local_cifs()
+
+        return self._preparsed_info
+
+    def _load_preparsed_index(self) -> dict[str, list[tuple[str, str, int | str, float | None]]] | None:
+        index_path = self._get_index_path()
+        if pq is None or not index_path.exists():
+            return None
+
+        table = pq.read_table(
+            index_path,
+            columns=["raw_db_id", "formula", "elements", "spacegroup", "energy_above_hull"],
+        )
+
+        indexed_data: dict[str, list[tuple[str, str, int | str, float | None]]] = defaultdict(list)
+        for row in table.to_pylist():
+            chemsys = "-".join(sorted({str(element) for element in row["elements"]}))
+            indexed_data[chemsys].append(
+                (
+                    row["formula"],
+                    row["raw_db_id"],
+                    row["spacegroup"],
+                    row["energy_above_hull"],
+                )
+            )
+
+        return dict(indexed_data)
+
+    def _scan_local_cifs(self) -> dict[str, list[tuple[str, str, int | str, float | None]]]:
+        indexed_data: dict[str, list[tuple[str, str, int | str, float | None]]] = defaultdict(list)
+
+        for cif_path in self.path.rglob("*.cif"):
+            try:
+                structure = Cif.from_file(cif_path).to_structure()
+                formula = structure.composition.reduced_formula
+                chemsys = structure.composition.chemical_system
+                sg = structure.get_space_group_info()[1]
+            except Exception:
+                logger.warning("Skipping unreadable MP CIF: %s", cif_path)
+                continue
+
+            indexed_data[chemsys].append(
+                (formula, cif_path.stem, sg, self._get_e_hull(formula, sg))
+            )
+
+        return dict(indexed_data)
+
+    def _get_index_path(self) -> Path:
+        repo_root = Path(__file__).resolve().parents[2]
+        index_name = "mp_index_test.parquet" if self.path.name == "mp_test_cifs" else "mp_index.parquet"
+        return repo_root / "indexes" / index_name
+
+    def _get_e_hull(self, formula: str, sg: int | str) -> float | None:
+        for e_hull, mp_sg in self._formula_info.get(formula, []):
+            if sg == mp_sg[1]:
+                return e_hull
+
+        return None
+
+
+DATABASE_REGISTRY = {
+    "COD": CODDatabase,
+    "ICSD": ICSDDatabase,
+    "MP": MPDatabase,
+}
+
+
+def get_structure_database(
+    database: str, path_to_cifs: Path | str | None = None
+) -> StructureDatabase:
+    """Instantiate a supported structure database by name."""
+    normalized = database.strip().upper()
+    try:
+        database_cls = DATABASE_REGISTRY[normalized]
+    except KeyError as exc:
+        supported = ", ".join(DATABASE_REGISTRY)
+        raise ValueError(f"Unsupported database '{database}'. Supported values: {supported}, ALL") from exc
+
+    return database_cls(path_to_cifs=path_to_cifs)
+
+
+def get_structure_databases(databases: str | list[str] | tuple[str, ...] | None) -> list[StructureDatabase]:
+    """Instantiate one or more supported structure databases."""
+    if databases is None:
+        tokens = ["COD"]
+    elif isinstance(databases, str):
+        tokens = [token.strip().upper() for token in databases.split(",") if token.strip()]
+    else:
+        tokens = [str(token).strip().upper() for token in databases if str(token).strip()]
+
+    if not tokens:
+        raise ValueError("At least one database must be provided")
+
+    resolved: list[str] = []
+    for token in tokens:
+        names = list(DATABASE_REGISTRY) if token == "ALL" else [token]
+        for name in names:
+            if name not in resolved:
+                resolved.append(name)
+
+    return [get_structure_database(name) for name in resolved]

@@ -23,6 +23,22 @@ cd dara
 pip install -e .
 ```
 
+## Local development with uv
+
+For local development and testing, this repository is maintained with `uv` and a single
+repository-local virtual environment.
+
+```bash
+git clone https://github.com/CederGroupHub/dara
+cd dara
+uv python install 3.11
+uv sync --extra tests
+uv run pytest tests/test_structure_db.py tests/test_api_router.py
+```
+
+The expected local environment is the `uv`-managed `.venv`. Additional local Conda
+environments or extra virtual environments are not required for routine development.
+
 ### Special case: installation on older cluster (e.g., Lawrencium, LBNL)
 
 BGMN (the refinement backend) is a compiled program, and it may not be directly usable

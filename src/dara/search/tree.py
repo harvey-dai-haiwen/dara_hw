@@ -1150,54 +1150,54 @@ class SearchTree(BaseSearchTree):
         # adjust the initial value of eps1 based on the weighted average of all the phases
         if not isinstance(self.refinement_params.get("eps1", 0), Number):
             weighted_eps1 = 0
-            rwp_sum = 0
+            weight_sum = 0
 
             for result in all_phases_result.values():
                 if result is not None:
+                    weight = 1 / (result.lst_data.rwp + 1e-1)
                     weighted_eps1 += (
-                        1
-                        / (result.lst_data.rwp + 1e-1)
-                        * get_number(result.lst_data.EPS1)
+                        weight * get_number(result.lst_data.EPS1)
                     )
-                    rwp_sum += result.lst_data.rwp
-            weighted_eps1 /= rwp_sum
-            _, eps1_lower, eps1_upper = parse_refinement_param(
-                self.refinement_params["eps1"]
-            )
-            self.refinement_params["eps1"] = (
-                f"{weighted_eps1:.6f}"
-                + (f"_{eps1_lower}" if eps1_lower is not None else "")
-                + (f"^{eps1_upper}" if eps1_upper is not None else "")
-            )
-            logger.info(
-                f"The initial value of eps1 is automatically set to {self.refinement_params['eps1']}."
-            )
+                    weight_sum += weight
+            if weight_sum > 0:
+                weighted_eps1 /= weight_sum
+                _, eps1_lower, eps1_upper = parse_refinement_param(
+                    self.refinement_params["eps1"]
+                )
+                self.refinement_params["eps1"] = (
+                    f"{weighted_eps1:.6f}"
+                    + (f"_{eps1_lower}" if eps1_lower is not None else "")
+                    + (f"^{eps1_upper}" if eps1_upper is not None else "")
+                )
+                logger.info(
+                    f"The initial value of eps1 is automatically set to {self.refinement_params['eps1']}."
+                )
 
         # adjust the initial value of eps2 based on the weighted average of all the phases
         if not isinstance(self.refinement_params.get("eps2", 0), Number):
             weighted_eps2 = 0
-            rwp_sum = 0
+            weight_sum = 0
 
             for result in all_phases_result.values():
                 if result is not None:
+                    weight = 1 / (result.lst_data.rwp + 1e-1)
                     weighted_eps2 += (
-                        1
-                        / (result.lst_data.rwp + 1e-1)
-                        * get_number(result.lst_data.EPS2)
+                        weight * get_number(result.lst_data.EPS2)
                     )
-                    rwp_sum += result.lst_data.rwp
-            weighted_eps2 /= rwp_sum
-            _, eps2_lower, eps2_upper = parse_refinement_param(
-                self.refinement_params["eps2"]
-            )
-            self.refinement_params["eps2"] = (
-                f"{weighted_eps2:.6f}"
-                + (f"_{eps2_lower}" if eps2_lower is not None else "")
-                + (f"^{eps2_upper}" if eps2_upper is not None else "")
-            )
-            logger.info(
-                f"The initial value of eps2 is automatically set to {self.refinement_params['eps2']}."
-            )
+                    weight_sum += weight
+            if weight_sum > 0:
+                weighted_eps2 /= weight_sum
+                _, eps2_lower, eps2_upper = parse_refinement_param(
+                    self.refinement_params["eps2"]
+                )
+                self.refinement_params["eps2"] = (
+                    f"{weighted_eps2:.6f}"
+                    + (f"_{eps2_lower}" if eps2_lower is not None else "")
+                    + (f"^{eps2_upper}" if eps2_upper is not None else "")
+                )
+                logger.info(
+                    f"The initial value of eps2 is automatically set to {self.refinement_params['eps2']}."
+                )
 
         # adjust the initial value of k1 and b1 for each phase based on the refinement result
         all_phases_result_updated = {}

@@ -11,6 +11,7 @@ import shutil
 import sys
 import warnings
 from datetime import datetime
+from functools import lru_cache
 from pathlib import Path
 from typing import TYPE_CHECKING, Union
 
@@ -235,7 +236,8 @@ def copy_and_rename_files(
     # Copy and rename each specified file
     for src_file, dest_filename in file_map.items():
         src_file = Path(src_file)
-        dest_file = Path(dest_directory / dest_filename)
+        safe_dest_filename = re.sub(r'[<>:"/\\|?*]', "_", dest_filename)
+        dest_file = Path(dest_directory / safe_dest_filename)
 
         # Check if file exists and is a file (not a directory)
         if os.path.isfile(src_file):
@@ -456,7 +458,24 @@ def get_composition_from_filename(file_name: str | Path) -> Composition:
     if isinstance(file_name, str):
         file_name = Path(file_name)
 
-    return Composition(file_name.name.split("_")[0])
+    formula = file_name.stem.split("_")[0]
+    try:
+        return Composition(formula)
+    except ValueError:
+        if file_name.suffix.lower() != ".cif" or not file_name.exists():
+            raise
+        return _get_composition_from_cif_path(file_name)
+
+
+@lru_cache(maxsize=4096)
+def _get_composition_from_cif_path(cif_path: str | Path) -> Composition:
+    cif_path = Path(cif_path)
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore")
+        structure = Structure.from_file(
+            cif_path.as_posix(), site_tolerance=1e-3, occupancy_tolerance=100
+        )
+    return structure.composition.element_composition.reduced_composition
 
 
 def get_composition_distance(

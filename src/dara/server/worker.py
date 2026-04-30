@@ -37,7 +37,7 @@ def run_job(uuid):
         job["status"] = "RUNNING"
         worker_store.update(job)
         try:
-            with TemporaryDirectory() as tmp_dir:
+            with TemporaryDirectory(ignore_cleanup_errors=True) as tmp_dir:
                 result = run_locally(
                     MontyDecoder().process_decoded(job["job"]),
                     raise_immediately=True,

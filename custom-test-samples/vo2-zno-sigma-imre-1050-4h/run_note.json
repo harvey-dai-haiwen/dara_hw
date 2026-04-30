@@ -1,0 +1,16 @@
+{
+  "sample_source": "D:/XRD_Analysis/VO2+ZnO_Sigma_IMRE_1050_4h.xy",
+  "staged_sample": "D:/Haiwen/Code_Repositories/dara/custom-test-samples/vo2-zno-sigma-imre-1050-4h/VO2+ZnO_Sigma_IMRE_1050_4h.xy",
+  "precursors": [
+    "VO2",
+    "ZnO"
+  ],
+  "wavelength": "Cu",
+  "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+  "threads": 4,
+  "databases": [
+    "COD",
+    "ICSD",
+    "COMBINED"
+  ]
+}

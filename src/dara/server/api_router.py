@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import tempfile
 from ast import literal_eval
 from pathlib import Path
@@ -18,7 +19,7 @@ from dara.server.utils import convert_to_local_tz, get_result_store, get_worker_
 from dara.server.worker import (
     add_job_to_queue,
 )
-from dara.structure_db import CODDatabase
+from dara.structure_db import get_structure_databases
 from dara.utils import (
     get_compositional_clusters,
     get_head_of_compositional_cluster,
@@ -37,19 +38,16 @@ async def submit(
     wavelength: Annotated[str, Form()] = "Cu",
     temperature: Annotated[int, Form()] = -1,
     use_rxn_predictor: Annotated[bool, Form()] = True,
+    database: Annotated[str, Form()] = "COD",
     additional_phases: Annotated[list[UploadFile], File()] = None,
 ):
     try:
         name = pattern_file.filename
-        with tempfile.NamedTemporaryFile() as temp:
-            temp.write(pattern_file.file.read())
-            temp.seek(0)
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir) / name
+            with open(temp_path, "wb") as temp_file:
+                shutil.copyfileobj(pattern_file.file, temp_file)
             try:
-                # Use the original filename's extension to detect format,
-                # since the temp file has no meaningful extension.
-                temp_path = Path(temp.name).parent / name
-                import shutil
-                shutil.copy2(temp.name, temp_path)
                 pattern = load_pattern(temp_path)
             except ValueError:
                 raise HTTPException(status_code=400, detail="Invalid file format")
@@ -83,6 +81,11 @@ async def submit(
         except ValueError:
             pass
 
+        try:
+            cif_dbs = get_structure_databases(database)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+
         if use_rxn_predictor:
             try:
                 import mp_api  # noqa: F401
@@ -106,7 +109,7 @@ async def submit(
                 pattern,
                 precursors=precursor_formulas,
                 predict_kwargs={"temp": temperature + 273},
-                cif_dbs=[CODDatabase()],
+                cif_dbs=cif_dbs,
                 additional_cifs=additional_cifs,
                 additional_cif_params={"lattice_range": 0.05},
                 search_kwargs={
@@ -125,7 +128,7 @@ async def submit(
             ).make(
                 pattern,
                 precursors=precursor_formulas,
-                cif_dbs=[CODDatabase()],
+                cif_dbs=cif_dbs,
                 additional_cifs=additional_cifs,
                 additional_cif_params={"lattice_range": 0.05},
                 search_kwargs={

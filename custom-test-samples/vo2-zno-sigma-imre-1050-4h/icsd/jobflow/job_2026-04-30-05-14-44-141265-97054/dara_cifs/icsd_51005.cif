@@ -1,0 +1,95 @@
+#(C) 2024 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.
+# Downloaded by AVV9002989 (Wei, Nong: nong0003@e.ntu.edu.sg)
+# Kedar Hippalgaonkar's Materials by Design Lab, Nanyang Technological University
+data_51005-ICSD
+_database_code_ICSD 51005
+_audit_creation_date 2001-07-16
+_chemical_name_common 'Vanadium(IV) oxide hemihydrate'
+_chemical_formula_structural 'V O2 (H2 O)0.5'
+_chemical_formula_sum 'H1 O2.5 V1'
+_exptl_crystal_density_diffrn 2.86
+_citation_title 'A new polymorph of V O2 prepared by soft chemical methods'
+loop_
+_citation_id
+_citation_journal_full
+_citation_year
+_citation_journal_volume
+_citation_page_first
+_citation_page_last
+_citation_journal_id_ASTM
+primary 'Journal of Solid State Chemistry' 1998 138 178 182 JSSCBI
+loop_
+_citation_author_citation_id
+_citation_author_name
+primary 'Hagrman, D.'
+primary 'Zubieta, J.'
+primary 'Warren, C.J.'
+primary 'Meyer, L.M.'
+primary 'Treacy, M.M.J.'
+primary 'Haushalter, R.C.'
+_cell_length_a 3.7211(6)
+_cell_length_b 3.7211(6)
+_cell_length_c 15.421(1)
+_cell_angle_alpha 90.
+_cell_angle_beta 90.
+_cell_angle_gamma 90.
+_cell_volume 213.53
+_cell_formula_units_Z 4
+_space_group_name_H-M_alt 'I 4/m m m'
+_space_group_IT_number 139
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 'y, x, -z'
+2 '-y, -x, -z'
+3 '-y, x, -z'
+4 'y, -x, -z'
+5 '-x, y, -z'
+6 'x, -y, -z'
+7 'x, y, -z'
+8 '-x, -y, -z'
+9 '-y, -x, z'
+10 'y, x, z'
+11 'y, -x, z'
+12 '-y, x, z'
+13 'x, -y, z'
+14 '-x, y, z'
+15 '-x, -y, z'
+16 'x, y, z'
+17 'y+1/2, x+1/2, -z+1/2'
+18 '-y+1/2, -x+1/2, -z+1/2'
+19 '-y+1/2, x+1/2, -z+1/2'
+20 'y+1/2, -x+1/2, -z+1/2'
+21 '-x+1/2, y+1/2, -z+1/2'
+22 'x+1/2, -y+1/2, -z+1/2'
+23 'x+1/2, y+1/2, -z+1/2'
+24 '-x+1/2, -y+1/2, -z+1/2'
+25 '-y+1/2, -x+1/2, z+1/2'
+26 'y+1/2, x+1/2, z+1/2'
+27 'y+1/2, -x+1/2, z+1/2'
+28 '-y+1/2, x+1/2, z+1/2'
+29 'x+1/2, -y+1/2, z+1/2'
+30 '-x+1/2, y+1/2, z+1/2'
+31 '-x+1/2, -y+1/2, z+1/2'
+32 'x+1/2, y+1/2, z+1/2'
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+V4+ 4
+O2- -2
+H1+ 1
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_B_iso_or_equiv
+_atom_site_occupancy
+V1 V4+ 4 e 0 0 0.20749(9) 1.15(2) 1.
+O1 O2- 4 d 0 0.5 0.25 0.80(5) 1.
+O2 O2- 4 e 0 0 0.1077(5) 2.54(9) 1.
+O3 O2- 4 c 0.5 0 0 4.1(4) 0.5
+#End of TTdata_51005-ICSD

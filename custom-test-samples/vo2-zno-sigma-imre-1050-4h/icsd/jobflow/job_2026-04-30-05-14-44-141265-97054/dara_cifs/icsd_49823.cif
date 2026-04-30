@@ -1,0 +1,82 @@
+#(C) 2024 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.
+# Downloaded by AVV9002989 (Wei, Nong: nong0003@e.ntu.edu.sg)
+# Kedar Hippalgaonkar's Materials by Design Lab, Nanyang Technological University
+data_49823-ICSD
+_database_code_ICSD 49823
+_audit_creation_date 2023-02-01
+_chemical_name_common 'Zinc vanadium oxide'
+_chemical_formula_structural '(Zn0.97 V0.03) O0.91'
+_chemical_formula_sum 'O0.91 V0.03 Zn0.97'
+_chemical_name_structure_type ZnS-[2H]
+_exptl_crystal_density_diffrn 5.57
+_citation_title
+
+;
+Structural, optical, and magnetic properties of V-doped ZnO nanoparticles and
+the onset of ferromagnetic order
+;
+loop_
+_citation_id
+_citation_journal_full
+_citation_year
+_citation_journal_volume
+_citation_page_first
+_citation_page_last
+_citation_journal_id_ASTM
+primary 'Journal of Alloys and Compounds' 2022 920 '' '' JALCEU
+loop_
+_citation_author_citation_id
+_citation_author_name
+primary 'Mrabet, S.'
+primary 'Ihzaz, N.'
+primary 'Alshammari, M.'
+primary 'Khlifi, N.'
+primary 'Ba, M.'
+primary 'Bessadok, M.N.'
+primary 'Mejri, I.H.'
+primary 'El Mir, L.'
+_cell_length_a 3.245(5)
+_cell_length_b 3.245(5)
+_cell_length_c 5.197(5)
+_cell_angle_alpha 90.
+_cell_angle_beta 90.
+_cell_angle_gamma 120.
+_cell_volume 47.39
+_cell_formula_units_Z 2
+_space_group_name_H-M_alt 'P 63 m c'
+_space_group_IT_number 186
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 '-x, -x+y, z+1/2'
+2 'x-y, -y, z+1/2'
+3 'y, x, z+1/2'
+4 'x-y, x, z+1/2'
+5 'y, -x+y, z+1/2'
+6 '-x, -y, z+1/2'
+7 'x, x-y, z'
+8 '-x+y, y, z'
+9 '-y, -x, z'
+10 '-x+y, -x, z'
+11 '-y, x-y, z'
+12 'x, y, z'
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+Zn2+ 2
+V2+ 2
+O2- -2
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_B_iso_or_equiv
+_atom_site_occupancy
+Zn1 Zn2+ 2 b 0.3333 0.6667 0.5 . 0.97
+V1 V2+ 2 b 0.3333 0.6667 0.5 . 0.03
+O1 O2- 2 b 0.3333 0.6667 0.8838(12) . 0.912(11)
+#End of TTdata_49823-ICSD

@@ -174,9 +174,6 @@ class PhaseSearchMaker(Maker):
 
         xrd_data.to_xy_file(pattern_path)
 
-        if precursors is None:
-            precursors = []
-
         if cifs is not None:
             logger.info("CIFs provided. Skipping CIF download and phase prediction.")
             for cif in cifs + (additional_cifs or []):
@@ -193,7 +190,7 @@ class PhaseSearchMaker(Maker):
 
             if self.phase_predictor is None:
                 logger.info(
-                    "Phase prediction disabled; using all ICSD phases in the chemical system."
+                    "Phase prediction disabled; using all database phases in the chemical system."
                 )
                 elems = {
                     str(elem) for p in precursors for elem in Composition(p).elements

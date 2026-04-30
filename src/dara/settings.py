@@ -22,6 +22,7 @@ class DaraSettings(BaseSettings):
 
     PATH_TO_ICSD: Path = Field(Path("~/ICSD_2024/ICSD_2024_experimental_inorganic/experimental_inorganic").expanduser())
     PATH_TO_COD: Path = Field(Path("~/COD_2024").expanduser())
+    PATH_TO_MP: Path = Field(Path("~/mp_cifs").expanduser())
 
     model_config = SettingsConfigDict(env_prefix="dara_")  # prepend dara_ to env vars
 

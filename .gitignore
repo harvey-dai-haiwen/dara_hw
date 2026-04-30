@@ -140,3 +140,45 @@ BGMNwin/
 
 notebooks/cifs/
 notebooks/cifs_cleaned/
+
+# Local publication prep
+.conda311/
+.venv313/
+.copilot-todo
+build.log
+worker_db/
+
+# Local database mirrors and generated indexes
+cod_cifs/
+icsd_cifs/
+mp_cifs/
+mp_test_cifs/
+indexes/
+filtered_index_*.json.gz
+
+# Local diagnostics and scratch files
+DARA_LOCAL_SUMMARY.md
+DIAGNOSIS_INDEX_CORRUPTION.txt
+JOB_QUEUE_INTEGRATION.md
+RAY_FIX_SUMMARY.md
+VENV_REBUILD_SUCCESS.txt
+check_grouped_phases.py
+check_result_structure.py
+check_task9.py
+debug_endpoint.py
+example_api_usage.py
+example_api_usage_async.py
+test_api.ps1
+test_api_requests.py
+test_cif_structure.py
+test_direct_call.py
+test_endpoint_full.py
+test_index_simple.py
+test_local_server.py
+test_path_fix.py
+test_ray_fix.py
+test_task9_api.py
+test_web_vs_notebook_cifs.py
+test_workflow.py
+tmp_inspect_mp.py
+tmp_read_icsd_head.py
