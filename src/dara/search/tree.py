@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import warnings
 from itertools import zip_longest
 from numbers import Number
@@ -40,8 +41,7 @@ if TYPE_CHECKING:
 logger = get_logger(__name__, level="INFO")
 
 
-@ray.remote(num_cpus=1)
-def remote_do_refinement_no_saving(
+def _do_refinement_no_saving_safe(
     pattern_path: Path,
     cif_paths: list[Path],
     wavelength: Literal["Cu", "Co", "Cr", "Fe", "Mo"] | float,
@@ -72,6 +72,25 @@ def remote_do_refinement_no_saving(
         logger.debug(f"Refinement failed for {cif_paths}, the reason is RPB = 100.")
         return None
     return result
+
+
+@ray.remote(num_cpus=1)
+def remote_do_refinement_no_saving(
+    pattern_path: Path,
+    cif_paths: list[Path],
+    wavelength: Literal["Cu", "Co", "Cr", "Fe", "Mo"] | float,
+    instrument_profile: str | Path,
+    phase_params: dict[str, ...] | None,
+    refinement_params: dict[str, float] | None,
+) -> RefinementResult | None:
+    return _do_refinement_no_saving_safe(
+        pattern_path,
+        cif_paths,
+        wavelength,
+        instrument_profile,
+        phase_params,
+        refinement_params,
+    )
 
 
 @ray.remote(num_cpus=1)
@@ -129,18 +148,67 @@ def batch_refinement(
     phase_params: dict[str, ...] | None = None,
     refinement_params: dict[str, float] | None = None,
 ) -> list[RefinementResult]:
-    handles = [
-        remote_do_refinement_no_saving.remote(
-            pattern_path,
-            cif_paths,
-            wavelength=wavelength,
-            instrument_profile=instrument_profile,
-            phase_params=phase_params,
-            refinement_params=refinement_params,
-        )
-        for cif_paths in cif_paths
-    ]
-    return ray.get(handles)
+    if not cif_paths:
+        return []
+
+    max_parallel_refinements = get_max_parallel_refinements(refinement_params)
+    if max_parallel_refinements == 1:
+        return [
+            _do_refinement_no_saving_safe(
+                pattern_path,
+                phase_paths,
+                wavelength=wavelength,
+                instrument_profile=instrument_profile,
+                phase_params=phase_params,
+                refinement_params=refinement_params,
+            )
+            for phase_paths in cif_paths
+        ]
+
+    results: list[RefinementResult] = []
+    for start in range(0, len(cif_paths), max_parallel_refinements):
+        batch = cif_paths[start : start + max_parallel_refinements]
+        handles = [
+            remote_do_refinement_no_saving.remote(
+                pattern_path,
+                phase_paths,
+                wavelength=wavelength,
+                instrument_profile=instrument_profile,
+                phase_params=phase_params,
+                refinement_params=refinement_params,
+            )
+            for phase_paths in batch
+        ]
+        results.extend(ray.get(handles))
+    return results
+
+
+def get_max_parallel_refinements(refinement_params: dict[str, float] | None) -> int:
+    configured_value = os.environ.get("DARA_MAX_PARALLEL_REFINEMENTS") or os.environ.get(
+        "DARA_MAX_PARALLEL_JOBS"
+    )
+    if configured_value is not None:
+        try:
+            return max(1, int(configured_value))
+        except ValueError:
+            logger.warning(
+                "Ignoring invalid refinement parallelism setting %r; falling back to thread-based limit.",
+                configured_value,
+            )
+
+    n_threads = 1
+    if refinement_params is not None and refinement_params.get("n_threads") is not None:
+        try:
+            n_threads = max(1, int(refinement_params["n_threads"]))
+        except (TypeError, ValueError):
+            logger.warning(
+                "Ignoring invalid n_threads=%r when deriving refinement parallelism.",
+                refinement_params.get("n_threads"),
+            )
+
+    # Keep the default total thread budget conservative on Windows to avoid
+    # launching too many BGMN subprocesses at once during search-tree expansion.
+    return max(1, 8 // n_threads)
 
 
 def calculate_fom_and_strain(

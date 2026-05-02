@@ -1,0 +1,96 @@
+#(C) 2024 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.
+# Downloaded by AVV9002989 (Wei, Nong: nong0003@e.ntu.edu.sg)
+# Kedar Hippalgaonkar's Materials by Design Lab, Nanyang Technological University
+data_123022-ICSD
+_database_code_ICSD 123022
+_audit_creation_date 2022-08-01
+_chemical_name_common 'Lithium molybdenum oxide (0.9/6/17)'
+_chemical_formula_structural 'Li0.9 Mo6 O17'
+_chemical_formula_sum 'Li0.9 Mo6 O17'
+_chemical_name_structure_type Li1-xMo6O17
+_exptl_crystal_density_diffrn 4.38
+_citation_title
+
+;
+Pressure-induced structural transitions triggering dimensional crossover in
+the lithium purple bronze Li$_{0.9}$Mo$_6$O$_{17}$
+;
+loop_
+_citation_id
+_citation_journal_full
+_citation_year
+_citation_journal_volume
+_citation_page_first
+_citation_page_last
+_citation_journal_id_ASTM
+primary 'Physical Review B' 2021 103 '' '' PRBHB7
+loop_
+_citation_author_citation_id
+_citation_author_name
+primary 'Tran, M.K.'
+primary 'Akrap, A.'
+primary 'Levallois, J.'
+primary 'Teyssier, J.'
+primary 'Schouwink, P.'
+primary 'Besnard, C.'
+primary 'Lerch, P.'
+primary 'Allen, J.W.'
+primary 'Greenblatt, M.'
+primary 'van der Marel, D.'
+_cell_length_a 12.539(5)
+_cell_length_b 5.4911(5)
+_cell_length_c 9.3954(4)
+_cell_angle_alpha 90.
+_cell_angle_beta 89.372(7)
+_cell_angle_gamma 90.
+_cell_volume 646.86
+_cell_formula_units_Z 2
+_space_group_name_H-M_alt 'P 1 21/m 1'
+_space_group_IT_number 11
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 'x, -y+1/2, z'
+2 '-x, -y, -z'
+3 '-x, y+1/2, -z'
+4 'x, y, z'
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+O2- -2
+Mo6+ 5.5167
+O2- -2
+Mo6+ 5.5167
+O2- -2
+Mo6+ 5.5167
+O2- -2
+Li1+ 1
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_U_iso_or_equiv
+_atom_site_occupancy
+O1 O2- 4 f 0.2319 0.0129 0.9726 0.00941 1.
+O2 O2- 4 f 0.4274 0.0031 0.8447 0.00941 1.
+O3 O2- 4 f 0.0859 0.0142 0.7229 0.00941 1.
+O4 O2- 4 f 0.2304 0.0019 0.4962 0.00941 1.
+O5 O2- 4 f 0.5861 0.5 0.6532 0.00941 1.
+O6 O2- 2 e 0.0536 0.75 0.0627 0.00941 1.
+Mo1 Mo6+ 2 e 0.189 0.75 0.0676 0.01543 1.
+Mo2 Mo6+ 2 e 0.3556 0.25 0.9184 0.00837 1.
+O7 O2- 2 e 0.2394 0.75 0.2407 0.00941 1.
+O8 O2- 2 e 0.2686 0.25 0.7352 0.00941 1.
+Mo3 Mo6+ 2 e 0.1802 0.25 0.594 0.01009 1.
+Mo4 Mo6+ 2 e 0.3336 0.75 0.4206 0.00728 1.
+O9 O2- 2 e 0.0429 0.25 0.4787 0.00941 1.
+O10 O2- 2 e 0.4086 0.75 0.5877 0.00941 1.
+Mo5 Mo6+ 2 e 0.007 0.75 0.696 0.01723 1.
+Mo6 Mo6+ 2 e 0.5061 0.75 0.7336 0.01384 1.
+O11 O2- 2 e 0.9062 0.75 0.8173 0.00941 1.
+O12 O2- 2 e 0.6009 0.75 0.9048 0.00941 1.
+#End of TTdata_123022-ICSD

@@ -1,0 +1,111 @@
+{
+  "database": "ICSD",
+  "elapsed_seconds": 192.53350579999824,
+  "best_rwp": 6.1,
+  "num_results": 2,
+  "top_candidate_groups": [
+    {
+      "rank": 1,
+      "phase_buckets": [
+        {
+          "phase_bucket": 1,
+          "clusters": [
+            {
+              "head_formula": "Y5 Mo2 O12",
+              "cif_stems": [
+                "icsd_254378",
+                "icsd_254377"
+              ]
+            }
+          ]
+        },
+        {
+          "phase_bucket": 2,
+          "clusters": [
+            {
+              "head_formula": "Y4 Mo4 O11",
+              "cif_stems": [
+                "icsd_281037"
+              ]
+            }
+          ]
+        },
+        {
+          "phase_bucket": 3,
+          "clusters": [
+            {
+              "head_formula": "Mo1",
+              "cif_stems": [
+                "icsd_643959"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "phase_buckets": [
+        {
+          "phase_bucket": 1,
+          "clusters": [
+            {
+              "head_formula": "Y5 Mo2 O12",
+              "cif_stems": [
+                "icsd_60957",
+                "icsd_254379"
+              ]
+            }
+          ]
+        },
+        {
+          "phase_bucket": 2,
+          "clusters": [
+            {
+              "head_formula": "Y4 Mo4 O11",
+              "cif_stems": [
+                "icsd_281037"
+              ]
+            }
+          ]
+        },
+        {
+          "phase_bucket": 3,
+          "clusters": [
+            {
+              "head_formula": "Mo1",
+              "cif_stems": [
+                "icsd_643959"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "best_refinement": [
+    {
+      "phase": "icsd_254377",
+      "weight_fraction": 0.5762269775364633,
+      "rphase": 5.42,
+      "spacegroup_no": 71,
+      "hermann_mauguin": "I2/m2/m2/m"
+    },
+    {
+      "phase": "icsd_281037",
+      "weight_fraction": 0.3358884275524327,
+      "rphase": 10.62,
+      "spacegroup_no": 55,
+      "hermann_mauguin": "P2_1/b2_1/a2/m"
+    },
+    {
+      "phase": "icsd_643959",
+      "weight_fraction": 0.08788459491110402,
+      "rphase": 3.43,
+      "spacegroup_no": 229,
+      "hermann_mauguin": "I4/m-32/m"
+    }
+  ],
+  "artifact_root": "D:/Haiwen/Code_Repositories/dara/custom-test-samples/20231212-ycl3onepot-1200/icsd",
+  "jobflow_root": "D:/Haiwen/Code_Repositories/dara/custom-test-samples/20231212-ycl3onepot-1200/icsd/jobflow"
+}

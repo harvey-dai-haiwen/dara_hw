@@ -90,6 +90,8 @@ def test_get_structure_database_rejects_unknown_name():
 
 
 def test_mp_database_file_path_matches_repo_layout(mp_db):
+    assert mp_db.get_file_path("mp-9").as_posix().endswith("0/00/mp-9.cif")
+    assert mp_db.get_file_path("mp-90").as_posix().endswith("0/00/mp-90.cif")
     assert mp_db.get_file_path("mp-1026684").as_posix().endswith("1/10/mp-1026684.cif")
     assert mp_db.get_file_path("mvc-11882").as_posix().endswith("m/mv/mvc-11882.cif")
 

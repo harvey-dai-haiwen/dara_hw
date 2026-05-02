@@ -428,8 +428,11 @@ class MPDatabase(StructureDatabase):
             raise ValueError("Invalid MP ID provided")
 
         routing_key = identifier[3:] if identifier.startswith("mp-") else identifier
-        if len(routing_key) < 2:
+        if len(routing_key) < 1:
             raise ValueError(f"Invalid MP ID provided: {identifier}")
+
+        if identifier.startswith("mp-") and routing_key.isdigit() and len(routing_key) < 3:
+            return self.path / "0" / "00" / f"{identifier}.cif"
 
         return self.path / routing_key[0].lower() / routing_key[:2].lower() / f"{identifier}.cif"
 

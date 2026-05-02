@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import os
 from collections import deque
 from traceback import print_exc
 from typing import TYPE_CHECKING, Literal
@@ -28,6 +29,17 @@ DEFAULT_PHASE_PARAMS = {
 }
 DEFAULT_REFINEMENT_PARAMS = {"n_threads": 8, "eps1": 0, "eps2": "0_-0.05^0.05"}
 DEFAULT_PEAK_MATCHING_STRATEGY = PeakMatchingStrategy.default()
+
+
+def _get_max_parallel_jobs() -> int | None:
+    raw_value = os.getenv("DARA_MAX_PARALLEL_JOBS")
+    if not raw_value:
+        return None
+
+    try:
+        return max(1, int(raw_value))
+    except ValueError as exc:
+        raise ValueError("DARA_MAX_PARALLEL_JOBS must be an integer.") from exc
 
 
 @ray.remote
@@ -100,7 +112,11 @@ def search_phases(
         refinement_params = {}
 
     if not ray.is_initialized():
-        ray.init(runtime_env={"working_dir": None})
+        ray_init_kwargs = {"runtime_env": {"working_dir": None}}
+        max_parallel_jobs = _get_max_parallel_jobs()
+        if max_parallel_jobs is not None:
+            ray_init_kwargs["num_cpus"] = max_parallel_jobs
+        ray.init(**ray_init_kwargs)
 
     phase_params = {**DEFAULT_PHASE_PARAMS, **phase_params}
     refinement_params = {**DEFAULT_REFINEMENT_PARAMS, **refinement_params}
@@ -122,7 +138,7 @@ def search_phases(
         peak_matching_strategy=peak_matching_strategy,
     )
 
-    max_worker = ray.cluster_resources()["CPU"]
+    max_worker = int(ray.cluster_resources().get("CPU", 1))
     pending = [remote_expand_node(search_tree, search_tree.root)]
     to_be_submitted = deque()
 

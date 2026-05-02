@@ -1,0 +1,71 @@
+{
+  "database": "COD",
+  "elapsed_seconds": 125.55120119999992,
+  "best_rwp": 8.03,
+  "num_results": 1,
+  "top_candidate_groups": [
+    {
+      "rank": 1,
+      "phase_buckets": [
+        {
+          "phase_bucket": 1,
+          "clusters": [
+            {
+              "head_formula": "Y5 Mo2 O12",
+              "cif_stems": [
+                "cod_1005000"
+              ]
+            }
+          ]
+        },
+        {
+          "phase_bucket": 2,
+          "clusters": [
+            {
+              "head_formula": "Y4 Mo4 O11",
+              "cif_stems": [
+                "cod_4318008"
+              ]
+            }
+          ]
+        },
+        {
+          "phase_bucket": 3,
+          "clusters": [
+            {
+              "head_formula": "Mo1",
+              "cif_stems": [
+                "cod_9012432"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "best_refinement": [
+    {
+      "phase": "cod_1005000",
+      "weight_fraction": 0.5228650137741047,
+      "rphase": 12.76,
+      "spacegroup_no": 12,
+      "hermann_mauguin": "C12/m1"
+    },
+    {
+      "phase": "cod_4318008",
+      "weight_fraction": 0.38060606060606056,
+      "rphase": 10.26,
+      "spacegroup_no": 55,
+      "hermann_mauguin": "P2_1/b2_1/a2/m"
+    },
+    {
+      "phase": "cod_9012432",
+      "weight_fraction": 0.0965289256198347,
+      "rphase": 3.78,
+      "spacegroup_no": 229,
+      "hermann_mauguin": "I4/m-32/m"
+    }
+  ],
+  "artifact_root": "D:/Haiwen/Code_Repositories/dara/custom-test-samples/20231212-ycl3onepot-1200/cod",
+  "jobflow_root": "D:/Haiwen/Code_Repositories/dara/custom-test-samples/20231212-ycl3onepot-1200/cod/jobflow"
+}
