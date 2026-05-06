@@ -266,7 +266,11 @@ class PhaseSearchMaker(Maker):
                 phases=best_phases,
                 phase_params=final_refinement_params,
                 show_progress=True,
-                **search_kwargs,
+                **{
+                    key: value
+                    for key, value in search_kwargs.items()
+                    if key in {"wavelength", "instrument_profile", "refinement_params"}
+                },
             )
             new_best_dir_path = (
                 str(best_dir_path) + f"_rwp_{round(best_result.lst_data.rwp, 2)}"

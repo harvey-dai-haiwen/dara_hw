@@ -19,6 +19,7 @@ from dara import do_refinement_no_saving
 from dara.cif2str import CIF2StrError
 from dara.peak_detection import detect_peaks
 from dara.refine import RefinementPhase
+from dara.resources import DaraResourceBudget
 from dara.search.data_model import PeakMatchingStrategy, SearchNodeData, SearchResult
 from dara.search.peak_matcher import PeakMatcher
 from dara.utils import (
@@ -65,7 +66,7 @@ def _do_refinement_no_saving_safe(
             phase_params=phase_params,
             refinement_params=refinement_params,
         )
-    except (RuntimeError, TimeoutExpired, CIF2StrError, ValueError) as e:
+    except (RuntimeError, TimeoutExpired, CIF2StrError, ValueError, OSError) as e:
         logger.debug(f"Refinement failed for {cif_paths}, the reason is {e}")
         return None
     if result.lst_data.rpb == 100:
@@ -122,6 +123,8 @@ def batch_peak_matching(
     return_type: Literal["PeakMatcher", "score", "jaccard"] = "PeakMatcher",
     batch_size: int = 100,
     score_kwargs: dict[str, float] | None = None,
+    max_pending_batches: int | None = None,
+    resource_budget: DaraResourceBudget | dict | None = None,
 ) -> list[PeakMatcher | float]:
     if isinstance(peak_obs, np.ndarray):
         peak_obs = [peak_obs] * len(peak_calcs)
@@ -129,15 +132,28 @@ def batch_peak_matching(
     if len(peak_calcs) != len(peak_obs):
         raise ValueError("Length of peak_calcs and peak_obs must be the same.")
 
+    if not ray.is_initialized():
+        from dara.resources import init_ray_for_dara
+
+        init_ray_for_dara(resource_budget)
+
     all_data = list(zip_longest(peak_calcs, peak_obs, fillvalue=None))
     batches = [
         all_data[i : i + batch_size] for i in range(0, len(all_data), batch_size)
     ]
-    handles = [
-        remote_peak_matching.remote(batch, return_type=return_type, score_kwargs=score_kwargs)
-        for batch in batches
-    ]
-    return sum(ray.get(handles), [])
+    if max_pending_batches is None:
+        max_pending_batches = len(batches)
+
+    results: list[PeakMatcher | float] = []
+    pending: list[ray.ObjectRef] = []
+    for batch in batches:
+        pending.append(remote_peak_matching.remote(batch, return_type=return_type, score_kwargs=score_kwargs))
+        if len(pending) >= max_pending_batches:
+            results.extend(sum(ray.get(pending), []))
+            pending = []
+    if pending:
+        results.extend(sum(ray.get(pending), []))
+    return results
 
 
 def batch_refinement(
@@ -147,11 +163,13 @@ def batch_refinement(
     instrument_profile: str | Path = "Aeris-fds-Pixcel1d-Medipix3",
     phase_params: dict[str, ...] | None = None,
     refinement_params: dict[str, float] | None = None,
+    resource_budget: DaraResourceBudget | dict | None = None,
 ) -> list[RefinementResult]:
     if not cif_paths:
         return []
 
-    max_parallel_refinements = get_max_parallel_refinements(refinement_params)
+    budget = DaraResourceBudget.make(resource_budget)
+    max_parallel_refinements = get_max_parallel_refinements(refinement_params, budget)
     if max_parallel_refinements == 1:
         return [
             _do_refinement_no_saving_safe(
@@ -166,10 +184,15 @@ def batch_refinement(
         ]
 
     results: list[RefinementResult] = []
+    if not ray.is_initialized():
+        from dara.resources import init_ray_for_dara
+
+        init_ray_for_dara(budget)
+
     for start in range(0, len(cif_paths), max_parallel_refinements):
         batch = cif_paths[start : start + max_parallel_refinements]
         handles = [
-            remote_do_refinement_no_saving.remote(
+            remote_do_refinement_no_saving.options(num_cpus=budget.bgmn_threads).remote(
                 pattern_path,
                 phase_paths,
                 wavelength=wavelength,
@@ -183,7 +206,13 @@ def batch_refinement(
     return results
 
 
-def get_max_parallel_refinements(refinement_params: dict[str, float] | None) -> int:
+def get_max_parallel_refinements(
+    refinement_params: dict[str, float] | None,
+    resource_budget: DaraResourceBudget | dict | None = None,
+) -> int:
+    if resource_budget is not None:
+        return DaraResourceBudget.make(resource_budget).max_bgmn_tasks
+
     configured_value = os.environ.get("DARA_MAX_PARALLEL_REFINEMENTS") or os.environ.get(
         "DARA_MAX_PARALLEL_JOBS"
     )
@@ -209,6 +238,64 @@ def get_max_parallel_refinements(refinement_params: dict[str, float] | None) -> 
     # Keep the default total thread budget conservative on Windows to avoid
     # launching too many BGMN subprocesses at once during search-tree expansion.
     return max(1, 8 // n_threads)
+
+
+def _iter_upper_triangle_pairs(size: int, include_diagonal: bool = False):
+    """Yield phase-pair indices without materializing the full pair list."""
+    for i in range(size):
+        start = i if include_diagonal else i + 1
+        for j in range(start, size):
+            yield i, j
+
+
+def _chunked(iterable, chunk_size: int):
+    """Yield fixed-size chunks from an iterator."""
+    chunk = []
+    for item in iterable:
+        chunk.append(item)
+        if len(chunk) >= chunk_size:
+            yield chunk
+            chunk = []
+    if chunk:
+        yield chunk
+
+
+def pairwise_jaccard_distance_matrix(
+    peaks: list[np.ndarray],
+    resource_budget: DaraResourceBudget | dict | None = None,
+) -> np.ndarray:
+    """Compute the exact global phase-phase peak distance matrix in chunks."""
+    budget = DaraResourceBudget.make(resource_budget)
+    size = len(peaks)
+    distance_matrix = np.zeros((size, size), dtype=np.float32)
+    if size <= 1:
+        return distance_matrix
+
+    pair_iter = _iter_upper_triangle_pairs(size, include_diagonal=False)
+    for pair_chunk in _chunked(pair_iter, budget.peak_match_chunk_size):
+        ordered_pairs = []
+        for i, j in pair_chunk:
+            ordered_pairs.append((i, j))
+            ordered_pairs.append((j, i))
+
+        peak_calcs = [peaks[i] for i, _j in ordered_pairs]
+        peak_obs = [peaks[j] for _i, j in ordered_pairs]
+        similarities = batch_peak_matching(
+            peak_calcs,
+            peak_obs,
+            return_type="jaccard",
+            batch_size=budget.peak_match_batch_size,
+            max_pending_batches=budget.peak_match_max_pending_batches,
+            resource_budget=budget,
+        )
+        for index, (i, j) in enumerate(pair_chunk):
+            similarity_forward = float(similarities[2 * index])
+            similarity_reverse = float(similarities[2 * index + 1])
+            distance = 1 - ((similarity_forward + similarity_reverse) / 2)
+            distance_matrix[i, j] = distance
+            distance_matrix[j, i] = distance
+
+    return distance_matrix
 
 
 def calculate_fom_and_strain(
@@ -284,6 +371,7 @@ def calculate_fom_and_strain(
 def group_phases(
     all_phases_result: dict[RefinementPhase, RefinementResult | None],
     distance_threshold: float = 0.1,
+    resource_budget: DaraResourceBudget | dict | None = None,
 ) -> dict[RefinementPhase, dict[str, float | int]]:
     """
     Group the phases based on their similarity.
@@ -329,15 +417,7 @@ def group_phases(
             ].values
         )
 
-    pairwise_similarity = batch_peak_matching(
-        [p for p in peaks for _ in peaks],
-        [p for _ in peaks for p in peaks],
-        return_type="jaccard",
-    )
-    distance_matrix = 1 - np.array(pairwise_similarity).reshape(len(peaks), len(peaks))
-
-    # current peak matching algorithm is not a symmetric metric.
-    distance_matrix = (distance_matrix + distance_matrix.T) / 2
+    distance_matrix = pairwise_jaccard_distance_matrix(peaks, resource_budget=resource_budget)
 
     # clustering
     clusterer = AgglomerativeClustering(
@@ -456,6 +536,7 @@ class BaseSearchTree(Tree):
         pinned_phases: list[RefinementPhase] | None = None,
         record_peak_matcher_scores: bool = False,
         peak_matching_strategy: PeakMatchingStrategy | None = None,
+        resource_budget: DaraResourceBudget | dict | None = None,
         *args,
         **kwargs,
     ):
@@ -477,6 +558,7 @@ class BaseSearchTree(Tree):
         self.pinned_phases = pinned_phases
         self.record_peak_matcher_scores = record_peak_matcher_scores
         self.peak_matching_strategy = peak_matching_strategy
+        self.resource_budget = DaraResourceBudget.make(resource_budget)
 
         self.all_phases_result = all_phases_result
         self.peak_obs = peak_obs
@@ -526,6 +608,7 @@ class BaseSearchTree(Tree):
             grouped_results = group_phases(
                 new_results,
                 distance_threshold=self.maximum_grouping_distance,
+                resource_budget=self.resource_budget,
             )
 
             # if express mode is on, we will put all the phases in its own group
@@ -798,7 +881,12 @@ class BaseSearchTree(Tree):
                 zip_longest(
                     all_phases_result.keys(),
                     batch_peak_matching(
-                        peak_calcs, missing_peaks, return_type="PeakMatcher"
+                        peak_calcs,
+                        missing_peaks,
+                        return_type="PeakMatcher",
+                        batch_size=self.resource_budget.peak_match_batch_size,
+                        max_pending_batches=self.resource_budget.peak_match_max_pending_batches,
+                        resource_budget=self.resource_budget,
                     ),
                     fillvalue=None,
                 )
@@ -844,8 +932,13 @@ class BaseSearchTree(Tree):
                 zip_longest(
                     all_phases_result.keys(),
                     batch_peak_matching(
-                        peak_calcs, missing_peaks, return_type="score",
+                        peak_calcs,
+                        missing_peaks,
+                        return_type="score",
                         score_kwargs=self.peak_matching_strategy.as_kwargs(),
+                        batch_size=self.resource_budget.peak_match_batch_size,
+                        max_pending_batches=self.resource_budget.peak_match_max_pending_batches,
+                        resource_budget=self.resource_budget,
                     ),
                     fillvalue=0,
                 )
@@ -909,6 +1002,7 @@ class BaseSearchTree(Tree):
             instrument_profile=self.instrument_profile,
             phase_params=self.phase_params,
             refinement_params=self.refinement_params,
+            resource_budget=self.resource_budget,
         )
 
     def _clone(self, identifier=None, with_tree=False, deep=False):
@@ -929,6 +1023,7 @@ class BaseSearchTree(Tree):
             maximum_grouping_distance=self.maximum_grouping_distance,
             pinned_phases=self.pinned_phases,
             express_mode=self.express_mode,
+            resource_budget=self.resource_budget,
         )
 
     @classmethod
@@ -966,6 +1061,7 @@ class BaseSearchTree(Tree):
             pinned_phases=search_tree.pinned_phases,
             record_peak_matcher_scores=search_tree.record_peak_matcher_scores,
             peak_matching_strategy=search_tree.peak_matching_strategy,
+            resource_budget=search_tree.resource_budget,
         )
         new_search_tree.add_node(root_node)
 
@@ -1028,6 +1124,7 @@ class SearchTree(BaseSearchTree):
         rpb_threshold: float | None = None,
         record_peak_matcher_scores: bool = False,
         peak_matching_strategy: PeakMatchingStrategy | None = None,
+        resource_budget: DaraResourceBudget | dict | None = None,
         *args,
         **kwargs,
     ):
@@ -1077,6 +1174,7 @@ class SearchTree(BaseSearchTree):
             self.pinned_phases,
             record_peak_matcher_scores,
             peak_matching_strategy,
+            resource_budget,
             *args,
             **kwargs,
         )
@@ -1106,6 +1204,7 @@ class SearchTree(BaseSearchTree):
             phases_grouped = group_phases(
                 all_phases_result,
                 distance_threshold=self.maximum_grouping_distance,
+                resource_budget=self.resource_budget,
             )
             phase_group_mapping = {}
 

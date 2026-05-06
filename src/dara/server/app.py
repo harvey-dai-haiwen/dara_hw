@@ -21,7 +21,12 @@ _worker_process = None
 async def launch_worker_process(app: FastAPI):
     """Context manager to launch the worker process."""
     global _worker_process  # noqa: PLW0603
-    _worker_process = multiprocessing.Process(target=worker_process, daemon=True)
+    setting = get_dara_server_settings()
+    _worker_process = multiprocessing.Process(
+        target=worker_process,
+        args=(setting.resource_budget(),),
+        daemon=True,
+    )
     _worker_process.start()
     try:
         yield

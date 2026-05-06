@@ -7,14 +7,13 @@ import shutil
 import sys
 import time
 from collections import defaultdict
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from tempfile import mkdtemp
 from typing import Any
 
 import ray
 from pymatgen.core import Composition
-
 
 THREAD_ENV_VARS = (
     "OMP_NUM_THREADS",
@@ -103,8 +102,19 @@ def build_parser() -> argparse.ArgumentParser:
         "--max-parallel-jobs",
         type=int,
         default=1,
-        help="Maximum concurrent Ray search jobs. Keep bgmn-threads * max-parallel-jobs <= 8.",
+        help="Maximum concurrent Ray search jobs.",
     )
+    parser.add_argument(
+        "--resource-profile",
+        choices=["auto", "small", "medium", "large"],
+        default="auto",
+        help="Resource profile used by Dara search, Ray, and peak matching.",
+    )
+    parser.add_argument("--memory-gb", type=float, default=None)
+    parser.add_argument("--peak-match-chunk-size", type=int, default=None)
+    parser.add_argument("--peak-match-batch-size", type=int, default=None)
+    parser.add_argument("--peak-match-max-pending-batches", type=int, default=None)
+    parser.add_argument("--ray-object-store-memory-gb", type=float, default=None)
     parser.add_argument(
         "--ray-mode",
         choices=["local", "cluster"],
@@ -210,7 +220,7 @@ def patch_search_steps(recorder: StepRecorder):
             else "tree_branch_refinement"
         )
         start = time.perf_counter()
-        results = original_refine_phases(self, phases, pinned_phases=pinned_phases, *args, **kwargs)
+        results = original_refine_phases(self, phases, pinned_phases, *args, **kwargs)
         recorder.add(
             step_name,
             time.perf_counter() - start,
@@ -250,8 +260,8 @@ def patch_search_steps(recorder: StepRecorder):
         best_phases, raw_scores, threshold = original_score_phases(
             self,
             all_phases_result,
-            current_result=current_result,
             *args,
+            current_result=current_result,
             **kwargs,
         )
         recorder.add(
@@ -304,19 +314,16 @@ def patch_search_steps(recorder: StepRecorder):
         for (owner, attr), original in reversed(list(originals.items())):
             setattr(owner, attr, original)
 
-    original_batch_peak_matching = tree_module.batch_peak_matching
-
     def serial_batch_peak_matching(
         peak_calcs,
         peak_obs,
         return_type="PeakMatcher",
         batch_size=100,
         score_kwargs=None,
+        max_pending_batches=None,
+        resource_budget=None,
     ):
-        if hasattr(peak_obs, "shape"):
-            peak_obs_values = [peak_obs] * len(peak_calcs)
-        else:
-            peak_obs_values = peak_obs
+        peak_obs_values = [peak_obs] * len(peak_calcs) if hasattr(peak_obs, "shape") else peak_obs
 
         results = []
         for peak_calc, peak_obs_item in zip(peak_calcs, peak_obs_values, strict=False):
@@ -333,8 +340,6 @@ def patch_search_steps(recorder: StepRecorder):
 
     store(tree_module, "batch_peak_matching", serial_batch_peak_matching)
 
-    original_batch_refinement = tree_module.batch_refinement
-
     def serial_batch_refinement(
         pattern_path,
         cif_paths,
@@ -342,6 +347,7 @@ def patch_search_steps(recorder: StepRecorder):
         instrument_profile="Aeris-fds-Pixcel1d-Medipix3",
         phase_params=None,
         refinement_params=None,
+        resource_budget=None,
     ):
         results = []
         for references in cif_paths:
@@ -433,14 +439,23 @@ def run_profile(args: argparse.Namespace) -> dict[str, Any]:
         if not all_cifs:
             raise ValueError(f"No CIFs copied for chemical system {sorted(chemsys)}")
 
+        from dara.resources import DaraResourceBudget, init_ray_for_dara
+
         ray.shutdown()
-        ray.init(
-            num_cpus=max(1, args.max_parallel_jobs),
-            local_mode=args.ray_mode == "local",
-            log_to_driver=True,
-            runtime_env={"working_dir": None},
-            ignore_reinit_error=True,
-        )
+        resource_budget = DaraResourceBudget(
+            profile=args.resource_profile,
+            total_cpus=args.max_parallel_jobs * args.bgmn_threads,
+            memory_gb=args.memory_gb,
+            bgmn_threads=args.bgmn_threads,
+            max_bgmn_tasks=args.max_parallel_jobs,
+            native_threads=args.threads,
+            peak_match_chunk_size=args.peak_match_chunk_size,
+            peak_match_batch_size=args.peak_match_batch_size,
+            peak_match_max_pending_batches=args.peak_match_max_pending_batches,
+            ray_object_store_memory_gb=args.ray_object_store_memory_gb,
+            ray_local_mode=args.ray_mode == "local",
+        ).resolve()
+        init_ray_for_dara(resource_budget)
 
         overall_start = time.perf_counter()
         results = search_phases(
@@ -452,6 +467,7 @@ def run_profile(args: argparse.Namespace) -> dict[str, Any]:
             express_mode=True,
             enable_angular_cut=True,
             refinement_params={"n_threads": args.bgmn_threads},
+            resource_budget=resource_budget,
         )
         total_elapsed = time.perf_counter() - overall_start
     finally:
@@ -473,6 +489,7 @@ def run_profile(args: argparse.Namespace) -> dict[str, Any]:
         "bgmn_threads": args.bgmn_threads,
         "max_parallel_jobs": args.max_parallel_jobs,
         "ray_mode": args.ray_mode,
+        "resource_budget": asdict(resource_budget),
         "candidate_cifs": len(all_cifs),
         "copied_cifs": copied_cifs,
         "database_copy_breakdown": db_summaries,
@@ -490,10 +507,6 @@ def main() -> int:
     args.dara_root = args.dara_root.resolve()
     if args.threads < 1 or args.bgmn_threads < 1 or args.max_parallel_jobs < 1:
         raise ValueError("threads, bgmn-threads, and max-parallel-jobs must all be >= 1")
-    if args.bgmn_threads * args.max_parallel_jobs > 8:
-        raise ValueError(
-            "The requested parallelism exceeds the hard limit: bgmn-threads * max-parallel-jobs must be <= 8"
-        )
     configure_threads(args.threads)
     summary = run_profile(args)
     if args.output_path is not None:

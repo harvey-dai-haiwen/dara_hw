@@ -6,6 +6,8 @@ from typing import Literal
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from dara.resources import DaraResourceBudget
+
 
 class DaraServerSettings(BaseSettings):
     """
@@ -84,6 +86,47 @@ class DaraServerSettings(BaseSettings):
         description='Path for MontyDB database. Used only if database_backend is "monty".'
     )
 
+    resource_profile: Literal["auto", "small", "medium", "large"] = Field(
+        default="auto",
+        description="Resource profile for Dara search jobs.",
+    )
+    total_cpus: int | None = Field(
+        default=None,
+        description="Total CPU budget exposed to Ray for Dara jobs.",
+    )
+    memory_gb: float | None = Field(
+        default=None,
+        description="Approximate memory budget in GB.",
+    )
+    bgmn_threads: int | None = Field(
+        default=None,
+        description="Threads used inside each BGMN process.",
+    )
+    max_bgmn_tasks: int | None = Field(
+        default=None,
+        description="Maximum concurrent BGMN refinement processes.",
+    )
+    native_threads: int | None = Field(
+        default=None,
+        description="Thread cap for native numerical libraries.",
+    )
+    peak_match_chunk_size: int | None = Field(
+        default=None,
+        description="Maximum upper-triangle phase pairs materialized per peak-matching chunk.",
+    )
+    peak_match_batch_size: int | None = Field(
+        default=None,
+        description="Number of peak comparisons per Ray peak-matching task.",
+    )
+    peak_match_max_pending_batches: int | None = Field(
+        default=None,
+        description="Maximum pending peak-matching Ray tasks kept in memory.",
+    )
+    ray_object_store_memory_gb: float | None = Field(
+        default=None,
+        description="Optional Ray object store memory cap in GB.",
+    )
+
     def __init__(self, **values):
         super().__init__(**values)
         # Ensure montydb_path directory exists if using monty backend
@@ -91,6 +134,21 @@ class DaraServerSettings(BaseSettings):
             dir_path = os.path.dirname(self.montydb_path)
             if dir_path and not os.path.exists(dir_path):
                 os.makedirs(dir_path, exist_ok=True)
+
+    def resource_budget(self) -> DaraResourceBudget:
+        """Build the resource budget used by the server worker."""
+        return DaraResourceBudget(
+            profile=self.resource_profile,
+            total_cpus=self.total_cpus,
+            memory_gb=self.memory_gb,
+            bgmn_threads=self.bgmn_threads,
+            max_bgmn_tasks=self.max_bgmn_tasks,
+            native_threads=self.native_threads,
+            peak_match_chunk_size=self.peak_match_chunk_size,
+            peak_match_batch_size=self.peak_match_batch_size,
+            peak_match_max_pending_batches=self.peak_match_max_pending_batches,
+            ray_object_store_memory_gb=self.ray_object_store_memory_gb,
+        ).resolve()
 
 
 def get_dara_server_settings() -> DaraServerSettings:

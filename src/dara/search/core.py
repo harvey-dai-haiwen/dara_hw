@@ -2,16 +2,12 @@
 
 from __future__ import annotations
 
-import copy
-import os
 from collections import deque
-from traceback import print_exc
 from typing import TYPE_CHECKING, Literal
 
-import ray
-
+from dara.resources import DaraResourceBudget, init_ray_for_dara
 from dara.search.data_model import PeakMatchingStrategy
-from dara.search.tree import BaseSearchTree, SearchTree
+from dara.search.tree import SearchTree
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -27,36 +23,8 @@ DEFAULT_PHASE_PARAMS = {
     "b1": "0_0^0.005",
     "rp": 4,
 }
-DEFAULT_REFINEMENT_PARAMS = {"n_threads": 8, "eps1": 0, "eps2": "0_-0.05^0.05"}
+DEFAULT_REFINEMENT_PARAMS = {"eps1": 0, "eps2": "0_-0.05^0.05"}
 DEFAULT_PEAK_MATCHING_STRATEGY = PeakMatchingStrategy.default()
-
-
-def _get_max_parallel_jobs() -> int | None:
-    raw_value = os.getenv("DARA_MAX_PARALLEL_JOBS")
-    if not raw_value:
-        return None
-
-    try:
-        return max(1, int(raw_value))
-    except ValueError as exc:
-        raise ValueError("DARA_MAX_PARALLEL_JOBS must be an integer.") from exc
-
-
-@ray.remote
-def _remote_expand_node(search_tree: BaseSearchTree) -> BaseSearchTree:
-    """Expand a node in the search tree."""
-    try:
-        search_tree.expand_root()
-        return search_tree
-    except Exception as e:
-        print_exc()
-        raise e
-
-
-def remote_expand_node(search_tree: SearchTree, nid: str) -> ray.ObjectRef:
-    """Expand a node in the search tree."""
-    subtree = BaseSearchTree.from_search_tree(root_nid=nid, search_tree=search_tree)
-    return _remote_expand_node.remote(subtree)
 
 
 def search_phases(
@@ -75,6 +43,7 @@ def search_phases(
     rpb_threshold: float | None = None,
     peak_matching_strategy: PeakMatchingStrategy
     | tuple[float, float, float, float] = DEFAULT_PEAK_MATCHING_STRATEGY,
+    resource_budget: DaraResourceBudget | dict | None = None,
 ) -> list[SearchResult] | SearchTree:
     """
     Search for the best phases to use for refinement.
@@ -101,6 +70,7 @@ def search_phases(
             PeakMatchingStrategy model or a tuple of four floats
             (matched_coeff, wrong_intensity_coeff, missing_coeff, extra_coeff).
             If None, the default coefficients will be used.
+        resource_budget: CPU and memory settings for Ray, BGMN, and peak matching.
     """
     if not isinstance(peak_matching_strategy, PeakMatchingStrategy):
         peak_matching_strategy = PeakMatchingStrategy.from_tuple(peak_matching_strategy)
@@ -111,15 +81,11 @@ def search_phases(
     if refinement_params is None:
         refinement_params = {}
 
-    if not ray.is_initialized():
-        ray_init_kwargs = {"runtime_env": {"working_dir": None}}
-        max_parallel_jobs = _get_max_parallel_jobs()
-        if max_parallel_jobs is not None:
-            ray_init_kwargs["num_cpus"] = max_parallel_jobs
-        ray.init(**ray_init_kwargs)
+    resolved_budget = init_ray_for_dara(resource_budget)
 
     phase_params = {**DEFAULT_PHASE_PARAMS, **phase_params}
     refinement_params = {**DEFAULT_REFINEMENT_PARAMS, **refinement_params}
+    refinement_params.setdefault("n_threads", resolved_budget.bgmn_threads)
 
     # build the search tree
     search_tree = SearchTree(
@@ -136,27 +102,14 @@ def search_phases(
         rpb_threshold=rpb_threshold,
         record_peak_matcher_scores=record_peak_matcher_scores,
         peak_matching_strategy=peak_matching_strategy,
+        resource_budget=resolved_budget,
     )
 
-    max_worker = int(ray.cluster_resources().get("CPU", 1))
-    pending = [remote_expand_node(search_tree, search_tree.root)]
-    to_be_submitted = deque()
-
-    while pending:
-        done, pending = ray.wait(pending, timeout=0.5)
-
-        for task in done:
-            remote_search_tree = ray.get(task)
-            remote_search_tree = copy.deepcopy(remote_search_tree)
-            search_tree.add_subtree(
-                anchor_nid=remote_search_tree.root, search_tree=remote_search_tree
-            )
-            for nid in search_tree.get_expandable_children(remote_search_tree.root):
-                to_be_submitted.append(nid)
-
-        while len(pending) < max_worker and to_be_submitted:
-            nid = to_be_submitted.popleft()
-            pending.append(remote_expand_node(search_tree, nid))
+    to_be_expanded = deque([search_tree.root])
+    while to_be_expanded:
+        nid = to_be_expanded.popleft()
+        search_tree.expand_node(nid)
+        to_be_expanded.extend(search_tree.get_expandable_children(nid))
 
     if not return_search_tree:
         return search_tree.get_search_results()

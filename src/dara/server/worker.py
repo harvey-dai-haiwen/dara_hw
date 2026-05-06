@@ -1,36 +1,38 @@
+from __future__ import annotations
+
 import logging
 import time
 from datetime import datetime, timezone
 from tempfile import TemporaryDirectory
 from traceback import format_exc
 
-import ray
 from jobflow.managers.local import run_locally
 from monty.serialization import MontyDecoder
 
+from dara.resources import DaraResourceBudget, init_ray_for_dara
 from dara.server.utils import get_job_store, get_result_store, get_worker_store
 
 logger = logging.getLogger("dara.server.worker")
 
 
-def worker_process():
+def worker_process(resource_budget: DaraResourceBudget | dict | None = None):
     """Start the Ray worker process."""
+    resolved_budget = init_ray_for_dara(resource_budget)
     logger.info("Starting worker process for job execution...")
     mark_running_jobs_as_fizzled()
 
     while True:
         for job_uuid in get_all_pending_jobs():
             logger.debug(f"Job {job_uuid} has started...")
-            run_job(job_uuid)
+            run_job(job_uuid, resource_budget=resolved_budget)
         time.sleep(3)
 
 
-def run_job(uuid):
+def run_job(uuid, resource_budget: DaraResourceBudget | dict | None = None):
     """Run a job remotely by its UUID."""
     with get_worker_store() as worker_store:
         # launch ray earlier. To make sure it is run in a "pernament" folder that will not be deleted.
-        if not ray.is_initialized():
-            ray.init(runtime_env={"working_dir": None})
+        init_ray_for_dara(resource_budget)
 
         job = worker_store.query_one(criteria={"uuid": uuid})
         job["start_time"] = datetime.now(tz=timezone.utc)

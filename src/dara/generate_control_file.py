@@ -15,7 +15,7 @@ from dara.utils import read_phase_name_from_str
 
 def copy_instrument_files(instrument_profile: str | Path, working_dir: Path) -> str:
     """
-    Copy the instrument file (.geq) to the working directory.
+    Copy the instrument profile files to the working directory.
 
     Args:
         working_dir: the working directory
@@ -38,7 +38,9 @@ def copy_instrument_files(instrument_profile: str | Path, working_dir: Path) -> 
             f"the provided path and the default path ({default_instrument_path})."
         )
 
-    shutil.copy(instrument_path, working_dir)
+    for sidecar_path in instrument_path.parent.glob(f"{instrument_path.stem}.*"):
+        if sidecar_path.is_file():
+            shutil.copy(sidecar_path, working_dir)
     return instrument_path.stem
 
 

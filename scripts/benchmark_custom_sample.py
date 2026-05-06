@@ -7,11 +7,11 @@ import re
 import shutil
 import sys
 import time
+from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
 
 import numpy as np
-
 
 THREAD_ENV_VARS = (
     "OMP_NUM_THREADS",
@@ -22,7 +22,6 @@ THREAD_ENV_VARS = (
     "BLIS_NUM_THREADS",
     "TBB_NUM_THREADS",
 )
-MAX_TOTAL_THREADS = 12
 
 DEFAULT_DATABASES = ("COD", "ICSD", "COMBINED")
 DEFAULT_PRECURSORS = ("VO2", "ZnO")
@@ -106,11 +105,11 @@ def build_default_output_root(sample_path: Path, run_timestamp: str, engine_name
 
 def find_or_create_batch(metadata_root: Path, batch_id: str | None = None) -> tuple[str, Path]:
     """Find or create a batch directory.
-    
+
     Args:
         metadata_root: metadata/dara root directory
         batch_id: explicit batch ID (e.g., "batch_001"). If None, auto-detect or create new.
-        
+
     Returns:
         tuple of (batch_id, batch_path)
     """
@@ -124,7 +123,7 @@ def find_or_create_batch(metadata_root: Path, batch_id: str | None = None) -> tu
         else:
             batch_id = "batch_001"
             batch_dir = metadata_root / batch_id
-    
+
     batch_dir.mkdir(parents=True, exist_ok=True)
     return batch_id, batch_dir
 
@@ -202,6 +201,17 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--bgmn-threads", type=int, default=4)
     parser.add_argument("--max-parallel-jobs", type=int, default=2)
     parser.add_argument(
+        "--resource-profile",
+        choices=["auto", "small", "medium", "large"],
+        default="auto",
+        help="Resource profile used by Dara search, Ray, and peak matching.",
+    )
+    parser.add_argument("--memory-gb", type=float, default=None)
+    parser.add_argument("--peak-match-chunk-size", type=int, default=None)
+    parser.add_argument("--peak-match-batch-size", type=int, default=None)
+    parser.add_argument("--peak-match-max-pending-batches", type=int, default=None)
+    parser.add_argument("--ray-object-store-memory-gb", type=float, default=None)
+    parser.add_argument(
         "--output-root",
         type=Path,
         help="Override artifact root. Default: <sample-dir>/metadata/dara/batch_*/samples/<sample-slug>",
@@ -209,7 +219,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--batch-id",
         default=None,
-        help="Batch ID for grouping samples (e.g., 'batch_001'). If not provided, uses the latest batch or creates batch_001.",
+        help=(
+            "Batch ID for grouping samples (e.g., 'batch_001'). If not provided, "
+            "uses the latest batch or creates batch_001."
+        ),
     )
     return parser
 
@@ -308,7 +321,11 @@ def extract_candidate_refinements(document, jobflow_root: Path) -> list[dict[str
             {
                 "rank": result_index,
                 "rwp": candidate_rwps.get(result_index),
-                "phase_buckets": candidate_groups[result_index - 1]["phase_buckets"] if result_index <= len(candidate_groups) else [],
+                "phase_buckets": (
+                    candidate_groups[result_index - 1]["phase_buckets"]
+                    if result_index <= len(candidate_groups)
+                    else []
+                ),
                 "refinement": extract_refinement_summary(refinement_result),
             }
         )
@@ -328,6 +345,7 @@ def run_database(args: argparse.Namespace, pattern_path: Path, output_root: Path
 
     from dara.cif import Cif
     from dara.jobs import PhaseSearchMaker
+    from dara.resources import DaraResourceBudget
     from dara.xrd import load_pattern
 
     database_name = args.database_name
@@ -339,6 +357,18 @@ def run_database(args: argparse.Namespace, pattern_path: Path, output_root: Path
 
     additional_cifs = [Cif.from_file(path) for path in args.additional_cif_paths]
     pattern = load_pattern(pattern_path)
+    resource_budget = DaraResourceBudget(
+        profile=args.resource_profile,
+        total_cpus=args.max_parallel_jobs * args.bgmn_threads,
+        memory_gb=args.memory_gb,
+        bgmn_threads=args.bgmn_threads,
+        max_bgmn_tasks=args.max_parallel_jobs,
+        native_threads=args.threads,
+        peak_match_chunk_size=args.peak_match_chunk_size,
+        peak_match_batch_size=args.peak_match_batch_size,
+        peak_match_max_pending_batches=args.peak_match_max_pending_batches,
+        ray_object_store_memory_gb=args.ray_object_store_memory_gb,
+    ).resolve()
 
     start_time = time.perf_counter()
     job = PhaseSearchMaker(
@@ -358,6 +388,7 @@ def run_database(args: argparse.Namespace, pattern_path: Path, output_root: Path
             "instrument_profile": args.instrument_profile,
             "max_phases": args.max_phases,
             "refinement_params": {"n_threads": args.bgmn_threads},
+            "resource_budget": asdict(resource_budget),
         },
     )
     response = run_locally(
@@ -386,6 +417,7 @@ def run_database(args: argparse.Namespace, pattern_path: Path, output_root: Path
         "artifact_root": run_dir.as_posix(),
         "jobflow_root": jobflow_root.as_posix(),
         "additional_cif_paths": [path.as_posix() for path in args.additional_cif_paths],
+        "resource_budget": asdict(resource_budget),
     }
     write_json(run_dir / "summary.json", summary)
     return summary
@@ -396,8 +428,6 @@ def main() -> int:
     args = parser.parse_args()
     if args.threads < 1 or args.bgmn_threads < 1 or args.max_parallel_jobs < 1:
         parser.error("threads, bgmn-threads, and max-parallel-jobs must all be >= 1")
-    if args.bgmn_threads * args.max_parallel_jobs > MAX_TOTAL_THREADS:
-        parser.error(f"bgmn-threads * max-parallel-jobs must not exceed {MAX_TOTAL_THREADS}")
 
     args.dara_root = args.dara_root.resolve()
     args.precursor = args.precursor or list(DEFAULT_PRECURSORS)
@@ -427,6 +457,12 @@ def main() -> int:
         "threads": args.threads,
         "bgmn_threads": args.bgmn_threads,
         "max_parallel_jobs": args.max_parallel_jobs,
+        "resource_profile": args.resource_profile,
+        "memory_gb": args.memory_gb,
+        "peak_match_chunk_size": args.peak_match_chunk_size,
+        "peak_match_batch_size": args.peak_match_batch_size,
+        "peak_match_max_pending_batches": args.peak_match_max_pending_batches,
+        "ray_object_store_memory_gb": args.ray_object_store_memory_gb,
         "databases": args.database,
         "additional_cif_paths": [path.as_posix() for path in args.additional_cif_paths],
         "additional_cif_dirs": [str(path) for path in args.additional_cif_dir],
