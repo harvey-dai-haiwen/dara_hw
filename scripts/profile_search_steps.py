@@ -149,7 +149,7 @@ def compute_chemsys(precursors: list[str]) -> set[str]:
     return elements
 
 
-def patch_search_steps(recorder: StepRecorder):
+def patch_search_steps(recorder: StepRecorder, serial_overrides: bool):
     import dara.search.tree as tree_module
     from dara import do_refinement_no_saving
     from dara.cif2str import CIF2StrError
@@ -314,6 +314,36 @@ def patch_search_steps(recorder: StepRecorder):
         for (owner, attr), original in reversed(list(originals.items())):
             setattr(owner, attr, original)
 
+    original_batch_peak_matching = tree_module.batch_peak_matching
+
+    def wrapped_batch_peak_matching(
+        peak_calcs,
+        peak_obs,
+        return_type="PeakMatcher",
+        batch_size=100,
+        score_kwargs=None,
+        max_pending_batches=None,
+        resource_budget=None,
+    ):
+        start = time.perf_counter()
+        results = original_batch_peak_matching(
+            peak_calcs,
+            peak_obs,
+            return_type=return_type,
+            batch_size=batch_size,
+            score_kwargs=score_kwargs,
+            max_pending_batches=max_pending_batches,
+            resource_budget=resource_budget,
+        )
+        recorder.add(
+            "batch_peak_matching",
+            time.perf_counter() - start,
+            peak_pairs=len(peak_calcs),
+            batch_size=batch_size,
+            max_pending_batches=max_pending_batches or 0,
+        )
+        return results
+
     def serial_batch_peak_matching(
         peak_calcs,
         peak_obs,
@@ -325,6 +355,7 @@ def patch_search_steps(recorder: StepRecorder):
     ):
         peak_obs_values = [peak_obs] * len(peak_calcs) if hasattr(peak_obs, "shape") else peak_obs
 
+        start = time.perf_counter()
         results = []
         for peak_calc, peak_obs_item in zip(peak_calcs, peak_obs_values, strict=False):
             peak_matcher = tree_module.PeakMatcher(peak_calc, peak_obs_item)
@@ -336,9 +367,49 @@ def patch_search_steps(recorder: StepRecorder):
                 results.append(peak_matcher.jaccard_index())
             else:
                 raise ValueError(f"Unknown return type {return_type}")
+        recorder.add(
+            "batch_peak_matching",
+            time.perf_counter() - start,
+            peak_pairs=len(peak_calcs),
+            batch_size=batch_size,
+            max_pending_batches=max_pending_batches or 0,
+        )
         return results
 
-    store(tree_module, "batch_peak_matching", serial_batch_peak_matching)
+    store(
+        tree_module,
+        "batch_peak_matching",
+        serial_batch_peak_matching if serial_overrides else wrapped_batch_peak_matching,
+    )
+
+    original_batch_refinement = tree_module.batch_refinement
+
+    def wrapped_batch_refinement(
+        pattern_path,
+        cif_paths,
+        wavelength="Cu",
+        instrument_profile="Aeris-fds-Pixcel1d-Medipix3",
+        phase_params=None,
+        refinement_params=None,
+        resource_budget=None,
+    ):
+        start = time.perf_counter()
+        results = original_batch_refinement(
+            pattern_path,
+            cif_paths,
+            wavelength=wavelength,
+            instrument_profile=instrument_profile,
+            phase_params=phase_params,
+            refinement_params=refinement_params,
+            resource_budget=resource_budget,
+        )
+        recorder.add(
+            "batch_refinement",
+            time.perf_counter() - start,
+            candidate_branches=len(cif_paths),
+            successful_refinements=sum(1 for result in results if result is not None),
+        )
+        return results
 
     def serial_batch_refinement(
         pattern_path,
@@ -349,6 +420,7 @@ def patch_search_steps(recorder: StepRecorder):
         refinement_params=None,
         resource_budget=None,
     ):
+        start = time.perf_counter()
         results = []
         for references in cif_paths:
             if len(references) == 0:
@@ -368,9 +440,19 @@ def patch_search_steps(recorder: StepRecorder):
             if result is not None and result.lst_data.rpb == 100:
                 result = None
             results.append(result)
+        recorder.add(
+            "batch_refinement",
+            time.perf_counter() - start,
+            candidate_branches=len(cif_paths),
+            successful_refinements=sum(1 for result in results if result is not None),
+        )
         return results
 
-    store(tree_module, "batch_refinement", serial_batch_refinement)
+    store(
+        tree_module,
+        "batch_refinement",
+        serial_batch_refinement if serial_overrides else wrapped_batch_refinement,
+    )
 
     return restore
 
@@ -395,7 +477,7 @@ def run_profile(args: argparse.Namespace) -> dict[str, Any]:
     from dara.xrd import load_pattern
 
     recorder = StepRecorder()
-    restore = patch_search_steps(recorder)
+    restore = patch_search_steps(recorder, serial_overrides=args.ray_mode == "local")
 
     sample_path = args.sample_path.resolve()
     label = args.label or sample_path.stem

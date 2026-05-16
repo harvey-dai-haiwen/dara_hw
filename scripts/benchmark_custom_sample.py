@@ -201,6 +201,25 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--bgmn-threads", type=int, default=4)
     parser.add_argument("--max-parallel-jobs", type=int, default=2)
     parser.add_argument(
+        "--refinement-backend",
+        choices=["bgmn", "gsas", "fullprof"],
+        default="bgmn",
+        help="Refinement backend for Dara search confirmation. Default: bgmn.",
+    )
+    parser.add_argument(
+        "--compare-refinement-backends",
+        default="",
+        help="Comma-separated backends to run into separate folders, e.g. bgmn,gsas,fullprof.",
+    )
+    parser.add_argument("--gsas-instprm", type=Path, default=None)
+    parser.add_argument(
+        "--gsas-conda-env",
+        default="GSASII_fix",
+        help="Conda env used for GSAS-II external worker. Use an empty string to run GSAS-II in the current env.",
+    )
+    parser.add_argument("--fullprof-root", type=Path, default=None)
+    parser.add_argument("--backend-timeout", type=int, default=120)
+    parser.add_argument(
         "--resource-profile",
         choices=["auto", "small", "medium", "large"],
         default="auto",
@@ -225,6 +244,29 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     return parser
+
+
+def parse_backend_list(args: argparse.Namespace) -> list[str]:
+    if not args.compare_refinement_backends:
+        return [args.refinement_backend]
+    backends = [item.strip().lower() for item in args.compare_refinement_backends.split(",") if item.strip()]
+    invalid = [item for item in backends if item not in {"bgmn", "gsas", "fullprof"}]
+    if invalid:
+        raise ValueError(f"Invalid refinement backend(s): {', '.join(invalid)}")
+    return list(dict.fromkeys(backends))
+
+
+def build_backend_options(args: argparse.Namespace) -> dict[str, object]:
+    options: dict[str, object] = {"backend_timeout": args.backend_timeout, "timeout": args.backend_timeout}
+    if args.gsas_instprm is not None:
+        options["gsas_instprm"] = args.gsas_instprm.resolve().as_posix()
+    if args.gsas_conda_env:
+        options["gsas_conda_env"] = args.gsas_conda_env
+    else:
+        options["gsas_conda_env"] = None
+    if args.fullprof_root is not None:
+        options["fullprof_root"] = args.fullprof_root.resolve().as_posix()
+    return options
 
 
 def build_databases(database_name: str, dara_root: Path):
@@ -349,7 +391,12 @@ def run_database(args: argparse.Namespace, pattern_path: Path, output_root: Path
     from dara.xrd import load_pattern
 
     database_name = args.database_name
-    run_dir = output_root / database_name.lower()
+    backend_name = getattr(args, "current_refinement_backend", args.refinement_backend)
+    run_dir = (
+        output_root / backend_name / database_name.lower()
+        if args.compare_refinement_backends
+        else output_root / database_name.lower()
+    )
     jobflow_root = run_dir / "jobflow"
     if jobflow_root.exists():
         remove_tree_with_retries(jobflow_root)
@@ -389,6 +436,8 @@ def run_database(args: argparse.Namespace, pattern_path: Path, output_root: Path
             "max_phases": args.max_phases,
             "refinement_params": {"n_threads": args.bgmn_threads},
             "resource_budget": asdict(resource_budget),
+            "refinement_backend": backend_name,
+            "backend_options": build_backend_options(args),
         },
     )
     response = run_locally(
@@ -408,6 +457,8 @@ def run_database(args: argparse.Namespace, pattern_path: Path, output_root: Path
 
     summary = {
         "database": database_name,
+        "refinement_backend": backend_name,
+        "backend_options": build_backend_options(args),
         "elapsed_seconds": elapsed_seconds,
         "best_rwp": document.best_rwp,
         "num_results": len(document.results or []),
@@ -457,6 +508,12 @@ def main() -> int:
         "threads": args.threads,
         "bgmn_threads": args.bgmn_threads,
         "max_parallel_jobs": args.max_parallel_jobs,
+        "refinement_backend": args.refinement_backend,
+        "compare_refinement_backends": args.compare_refinement_backends,
+        "gsas_instprm": args.gsas_instprm.as_posix() if args.gsas_instprm else None,
+        "gsas_conda_env": args.gsas_conda_env,
+        "fullprof_root": args.fullprof_root.as_posix() if args.fullprof_root else None,
+        "backend_timeout": args.backend_timeout,
         "resource_profile": args.resource_profile,
         "memory_gb": args.memory_gb,
         "peak_match_chunk_size": args.peak_match_chunk_size,
@@ -471,9 +528,11 @@ def main() -> int:
     write_json(output_root / "run_note.json", run_note)
 
     summaries = []
-    for database_name in args.database:
-        args.database_name = database_name
-        summaries.append(run_database(args, staged_sample, output_root))
+    for backend_name in parse_backend_list(args):
+        args.current_refinement_backend = backend_name
+        for database_name in args.database:
+            args.database_name = database_name
+            summaries.append(run_database(args, staged_sample, output_root))
 
     write_json(
         output_root / "benchmark_summary.json",
@@ -485,6 +544,7 @@ def main() -> int:
             "precursors": args.precursor,
             "wavelength": args.wavelength,
             "threads": args.threads,
+            "refinement_backends": parse_backend_list(args),
             "results": summaries,
         },
     )

@@ -1,19 +1,14 @@
-"""Perform refinements with BGMN."""
+"""Perform refinements with Dara refinement backends."""
 
 from __future__ import annotations
 
-import shutil
 import tempfile
 from pathlib import Path
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from dara.bgmn_worker import BGMNWorker
-from dara.cif2str import cif2str
-from dara.generate_control_file import generate_control_file
-from dara.result import RefinementResult, get_result
-from dara.xrd import convert_pattern_to_xy
+from dara.result import RefinementResult
 
 
 class RefinementPhase(BaseModel, frozen=True):
@@ -73,55 +68,29 @@ def do_refinement(
     working_dir: Path | str | None = None,
     phase_params: dict | None = None,
     refinement_params: dict | None = None,
+    backend: Literal["bgmn", "gsas", "fullprof"] | str = "bgmn",
+    backend_options: dict[str, Any] | None = None,
     show_progress: bool = False,
 ) -> RefinementResult:
-    """Refine the structure using BGMN."""
-    pattern_path = Path(pattern_path)
-    working_dir = (
-        Path(working_dir)
-        if working_dir is not None
-        else pattern_path.parent / f"refinement_{pattern_path.stem}"
-    )
+    """Refine structures with the selected backend.
 
-    if not working_dir.exists():
-        working_dir.mkdir(exist_ok=True, parents=True)
+    The default backend is BGMN and preserves the historical Dara behavior.
+    GSAS-II and FullProf are opt-in confirmation backends.
+    """
+    from dara.refinement_backends import run_refinement_backend
 
-    if phase_params is None:
-        phase_params = {}
-
-    if refinement_params is None:
-        refinement_params = {}
-
-    if pattern_path.suffix.lower() not in (".xy",):
-        pattern_path = convert_pattern_to_xy(pattern_path, working_dir)
-
-    str_paths = []
-    for phase_path in phases:
-        phase = RefinementPhase.make(phase_path)
-        phase_path_ = phase.path
-        phase_params_ = phase_params.copy()
-        # Update the default phase parameters with the specific parameters for the phase
-        phase_params_.update(phase.params)
-        if phase_path_.suffix == ".cif":
-            str_path = cif2str(phase_path_, "", working_dir, **phase_params_)
-        else:
-            if phase_path_.parent != working_dir:
-                shutil.copy(phase_path_, working_dir)
-            str_path = working_dir / phase_path_.name
-        str_paths.append(str_path)
-
-    control_file_path = generate_control_file(
+    return run_refinement_backend(
         pattern_path=pattern_path,
-        str_paths=str_paths,
+        phases=phases,
+        wavelength=wavelength,
         instrument_profile=instrument_profile,
         working_dir=working_dir,
-        wavelength=wavelength,
-        **refinement_params,
+        phase_params=phase_params,
+        refinement_params=refinement_params,
+        backend=backend,
+        backend_options=backend_options,
+        show_progress=show_progress,
     )
-
-    bgmn_worker = BGMNWorker()
-    bgmn_worker.run_refinement_cmd(control_file_path, show_progress=show_progress)
-    return get_result(control_file_path)
 
 
 def do_refinement_no_saving(
@@ -131,9 +100,11 @@ def do_refinement_no_saving(
     instrument_profile: str | Path = "Aeris-fds-Pixcel1d-Medipix3",
     phase_params: dict | None = None,
     refinement_params: dict | None = None,
+    backend: Literal["bgmn", "gsas", "fullprof"] | str = "bgmn",
+    backend_options: dict[str, Any] | None = None,
     show_progress: bool = False,
 ) -> RefinementResult:
-    """Refine the structure using BGMN in a temporary directory without saving."""
+    """Refine the structure in a temporary directory without saving."""
     with tempfile.TemporaryDirectory() as tmpdir:
         working_dir = Path(tmpdir)
 
@@ -145,5 +116,7 @@ def do_refinement_no_saving(
             working_dir=working_dir,
             phase_params=phase_params,
             refinement_params=refinement_params,
+            backend=backend,
+            backend_options=backend_options,
             show_progress=show_progress,
         )

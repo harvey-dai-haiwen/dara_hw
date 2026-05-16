@@ -103,6 +103,7 @@ documentation = "https://CederGroupHub.github.io/dara/"
 
 [project.scripts]
 dara = "dara.cli:main"
+dara-search-match = "dara.search_match_cli:main"
 
 
 [tool.coverage.run]

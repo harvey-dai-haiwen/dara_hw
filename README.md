@@ -70,6 +70,90 @@ Operational notes:
 - on Windows, do not overlap reruns that target the same sample and database output directory
 - this path expects local crystallographic mirrors to be available in the checkout
 
+## Programmatic Search-Match Workflow
+
+The accelerate branch exposes one resource-aware workflow for scripts, CLIs, and agent skills:
+
+- Python API: `dara.run_search_match(config)`
+- CLI: `dara-search-match`
+- Outputs: `<output-root>/summary.json` plus per-rank files under `<output-root>/searchmatch/rank_###/`
+
+The workflow accepts one XRD pattern, local database selection (`ICSD`, `COD`, `MP`), the built-in three-group element filter, optional user CIF files/directories, optional external CSVs containing CIF text, and refinement/backend resource settings. It then runs Dara search-match and exports ranked refinement plots and phase fractions.
+
+Element filtering is intentionally strict:
+
+- `must`: every selected CIF must contain all elements in this group.
+- `any`: selected CIF must contain at least one listed element.
+- `any-expression`: boolean expression such as `Na|(Cl&Mo)`.
+- `possible`: allowed but not required elements.
+- No other elements are allowed, and one element may appear in only one group.
+
+CLI example using only local folder CIFs:
+
+```bash
+dara-search-match --xrd D:\sample\pattern.xy ^
+  --no-database ^
+  --additional-cif-dir D:\sample\cifs ^
+  --any-element Ni --any-element Sn --any-element Se ^
+  --possible-element C --possible-element O ^
+  --physical-cores 16 --logical-threads 32 --memory-gb 128 ^
+  --cpu-target-fraction 0.40 --bgmn-threads 4 --max-parallel-jobs 3 ^
+  --instrument-profile monochromated_xrd ^
+  --output-root D:\sample\metadata\dara\local-cif-search
+```
+
+CLI example using ICSD plus an external CSV with CIF text:
+
+```bash
+dara-search-match --xrd D:\sample\pattern.xy ^
+  --database ICSD ^
+  --any-element Ni --any-element Sn --any-element Se ^
+  --possible-element C --possible-element O ^
+  --external-csv D:\sample\wf_tnmtps_am20_kgb2.2_Ni-Se-Sn.csv ^
+  --physical-cores 16 --logical-threads 32 --memory-gb 128 ^
+  --cpu-target-fraction 0.40
+```
+
+Python example:
+
+```python
+from pathlib import Path
+
+from dara import (
+    DaraSearchMatchConfig,
+    ElementFilterConfig,
+    MachineConfig,
+    run_search_match,
+)
+
+summary = run_search_match(
+    DaraSearchMatchConfig(
+        sample_path=Path(r"D:\sample\pattern.xy"),
+        output_root=Path(r"D:\sample\metadata\dara\run001"),
+        databases=("ICSD",),
+        element_filter=ElementFilterConfig(any=("Ni", "Sn", "Se"), possible=("C", "O")),
+        additional_cif_dirs=(Path(r"D:\sample\extra_cifs"),),
+        instrument_profile="monochromated_xrd",
+        machine=MachineConfig(
+            physical_cores=16,
+            logical_threads=32,
+            memory_gb=128,
+            cpu_target_fraction=0.40,
+            bgmn_threads=4,
+            max_parallel_jobs=3,
+        ),
+    )
+)
+print(summary["best_rwp"], summary["output_root"])
+```
+
+Expected output files:
+
+- `summary.json`: full machine settings, candidate counts, filter decisions, result ranks, and warnings.
+- `searchmatch/rank_###/refinement_plot.html`: interactive observed/calculated/residual refinement plot.
+- `searchmatch/rank_###/phase_fractions.csv` and `.json`: refined phase fractions.
+- `searchmatch/rank_###/refinement_summary.json`: R factors and phase metadata for that rank.
+
 ## Release smoke checklist
 
 For a handoff-ready local checkout, validate these in order:

@@ -6,7 +6,7 @@ from itertools import zip_longest
 from numbers import Number
 from pathlib import Path
 from subprocess import TimeoutExpired
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 import jenkspy
 import numpy as np
@@ -49,6 +49,8 @@ def _do_refinement_no_saving_safe(
     instrument_profile: str | Path,
     phase_params: dict[str, ...] | None,
     refinement_params: dict[str, float] | None,
+    backend: Literal["bgmn", "gsas", "fullprof"] | str = "bgmn",
+    backend_options: dict[str, Any] | None = None,
 ) -> RefinementResult | None:
     """
     Perform the actual refinement in the remote process.
@@ -65,6 +67,8 @@ def _do_refinement_no_saving_safe(
             instrument_profile=instrument_profile,
             phase_params=phase_params,
             refinement_params=refinement_params,
+            backend=backend,
+            backend_options=backend_options,
         )
     except (RuntimeError, TimeoutExpired, CIF2StrError, ValueError, OSError) as e:
         logger.debug(f"Refinement failed for {cif_paths}, the reason is {e}")
@@ -83,6 +87,8 @@ def remote_do_refinement_no_saving(
     instrument_profile: str | Path,
     phase_params: dict[str, ...] | None,
     refinement_params: dict[str, float] | None,
+    backend: Literal["bgmn", "gsas", "fullprof"] | str = "bgmn",
+    backend_options: dict[str, Any] | None = None,
 ) -> RefinementResult | None:
     return _do_refinement_no_saving_safe(
         pattern_path,
@@ -91,6 +97,8 @@ def remote_do_refinement_no_saving(
         instrument_profile,
         phase_params,
         refinement_params,
+        backend,
+        backend_options,
     )
 
 
@@ -164,6 +172,8 @@ def batch_refinement(
     phase_params: dict[str, ...] | None = None,
     refinement_params: dict[str, float] | None = None,
     resource_budget: DaraResourceBudget | dict | None = None,
+    backend: Literal["bgmn", "gsas", "fullprof"] | str = "bgmn",
+    backend_options: dict[str, Any] | None = None,
 ) -> list[RefinementResult]:
     if not cif_paths:
         return []
@@ -179,6 +189,8 @@ def batch_refinement(
                 instrument_profile=instrument_profile,
                 phase_params=phase_params,
                 refinement_params=refinement_params,
+                backend=backend,
+                backend_options=backend_options,
             )
             for phase_paths in cif_paths
         ]
@@ -199,6 +211,8 @@ def batch_refinement(
                 instrument_profile=instrument_profile,
                 phase_params=phase_params,
                 refinement_params=refinement_params,
+                backend=backend,
+                backend_options=backend_options,
             )
             for phase_paths in batch
         ]
@@ -537,6 +551,8 @@ class BaseSearchTree(Tree):
         record_peak_matcher_scores: bool = False,
         peak_matching_strategy: PeakMatchingStrategy | None = None,
         resource_budget: DaraResourceBudget | dict | None = None,
+        refinement_backend: Literal["bgmn", "gsas", "fullprof"] | str = "bgmn",
+        backend_options: dict[str, Any] | None = None,
         *args,
         **kwargs,
     ):
@@ -559,6 +575,8 @@ class BaseSearchTree(Tree):
         self.record_peak_matcher_scores = record_peak_matcher_scores
         self.peak_matching_strategy = peak_matching_strategy
         self.resource_budget = DaraResourceBudget.make(resource_budget)
+        self.refinement_backend = refinement_backend
+        self.backend_options = backend_options or {}
 
         self.all_phases_result = all_phases_result
         self.peak_obs = peak_obs
@@ -1003,6 +1021,8 @@ class BaseSearchTree(Tree):
             phase_params=self.phase_params,
             refinement_params=self.refinement_params,
             resource_budget=self.resource_budget,
+            backend=self.refinement_backend,
+            backend_options=self.backend_options,
         )
 
     def _clone(self, identifier=None, with_tree=False, deep=False):
@@ -1024,6 +1044,8 @@ class BaseSearchTree(Tree):
             pinned_phases=self.pinned_phases,
             express_mode=self.express_mode,
             resource_budget=self.resource_budget,
+            refinement_backend=self.refinement_backend,
+            backend_options=self.backend_options,
         )
 
     @classmethod
@@ -1062,6 +1084,8 @@ class BaseSearchTree(Tree):
             record_peak_matcher_scores=search_tree.record_peak_matcher_scores,
             peak_matching_strategy=search_tree.peak_matching_strategy,
             resource_budget=search_tree.resource_budget,
+            refinement_backend=search_tree.refinement_backend,
+            backend_options=search_tree.backend_options,
         )
         new_search_tree.add_node(root_node)
 
@@ -1125,6 +1149,8 @@ class SearchTree(BaseSearchTree):
         record_peak_matcher_scores: bool = False,
         peak_matching_strategy: PeakMatchingStrategy | None = None,
         resource_budget: DaraResourceBudget | dict | None = None,
+        refinement_backend: Literal["bgmn", "gsas", "fullprof"] | str = "bgmn",
+        backend_options: dict[str, Any] | None = None,
         *args,
         **kwargs,
     ):
@@ -1175,6 +1201,8 @@ class SearchTree(BaseSearchTree):
             record_peak_matcher_scores,
             peak_matching_strategy,
             resource_budget,
+            refinement_backend=refinement_backend,
+            backend_options=backend_options,
             *args,
             **kwargs,
         )
@@ -1314,6 +1342,20 @@ class SearchTree(BaseSearchTree):
             pinned_phases=self.pinned_phases,
         )
 
+        # BGMN exposes EPS1/EPS2 in its parsed .lst; optional backends use their
+        # native zero-shift controls and should not feed these BGMN-specific guesses.
+        if self.refinement_backend != "bgmn":
+            cleaned_results = {
+                phase: result
+                for phase, result in all_phases_result.items()
+                if result is not None
+            }
+            logger.info(
+                f"Finished refining {len(cif_paths)} phases with {self.refinement_backend}, "
+                f"with {len(cif_paths) - len(cleaned_results)} phases removed."
+            )
+            return cleaned_results
+
         # adjust the initial value of eps1 based on the weighted average of all the phases
         if not isinstance(self.refinement_params.get("eps1", 0), Number):
             weighted_eps1 = 0
@@ -1322,9 +1364,7 @@ class SearchTree(BaseSearchTree):
             for result in all_phases_result.values():
                 if result is not None:
                     weight = 1 / (result.lst_data.rwp + 1e-1)
-                    weighted_eps1 += (
-                        weight * get_number(result.lst_data.EPS1)
-                    )
+                    weighted_eps1 += weight * get_number(result.lst_data.EPS1)
                     weight_sum += weight
             if weight_sum > 0:
                 weighted_eps1 /= weight_sum
@@ -1348,9 +1388,7 @@ class SearchTree(BaseSearchTree):
             for result in all_phases_result.values():
                 if result is not None:
                     weight = 1 / (result.lst_data.rwp + 1e-1)
-                    weighted_eps2 += (
-                        weight * get_number(result.lst_data.EPS2)
-                    )
+                    weighted_eps2 += weight * get_number(result.lst_data.EPS2)
                     weight_sum += weight
             if weight_sum > 0:
                 weighted_eps2 /= weight_sum

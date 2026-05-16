@@ -45,6 +45,8 @@ class RefinementMaker(Maker):
     name: str = "refine"
     save: bool = True
     refinement_params: dict | None = None
+    backend: str = "bgmn"
+    backend_options: dict | None = None
     show_progress: bool = True
 
     @job(output_schema=RefinementDocument)
@@ -78,10 +80,12 @@ class RefinementMaker(Maker):
 
         args = {
             "pattern_path": pattern_path,
-            "phase_paths": phase_paths,
-            "instrument_name": instrument_name,
+            "phases": phase_paths,
+            "instrument_profile": instrument_name,
             "phase_params": phase_params,
             "refinement_params": self.refinement_params,
+            "backend": self.backend,
+            "backend_options": self.backend_options,
             "show_progress": self.show_progress,
         }
 
@@ -267,9 +271,16 @@ class PhaseSearchMaker(Maker):
                 phase_params=final_refinement_params,
                 show_progress=True,
                 **{
-                    key: value
+                    ("backend" if key == "refinement_backend" else key): value
                     for key, value in search_kwargs.items()
-                    if key in {"wavelength", "instrument_profile", "refinement_params"}
+                    if key
+                    in {
+                        "wavelength",
+                        "instrument_profile",
+                        "refinement_params",
+                        "refinement_backend",
+                        "backend_options",
+                    }
                 },
             )
             new_best_dir_path = (

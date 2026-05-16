@@ -11,6 +11,7 @@ __MACOSX/
 # C extensions
 *.so
 benchmarks/
+tools/
 # Distribution / packaging
 .Python
 build/
@@ -52,6 +53,7 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
+.tmp/
 nosetests.xml
 coverage.xml
 *.cover
@@ -157,6 +159,9 @@ indexes/
 filtered_index_*.json.gz
 
 # Local diagnostics and scratch files
+src/dara/data/BGMN-Templates/Devices/*_makegeq.log
+src/dara/data/BGMN-Templates/Devices/*_geomet.log
+src/dara/data/BGMN-Templates/Devices/*.get
 DARA_LOCAL_SUMMARY.md
 DIAGNOSIS_INDEX_CORRUPTION.txt
 JOB_QUEUE_INTEGRATION.md

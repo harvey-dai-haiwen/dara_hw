@@ -129,7 +129,7 @@ class DaraResourceBudget:
             default_batch_size = 1_000
             default_pending = max(2, min(8, default_max_bgmn_tasks * 2))
 
-        bgmn_threads = max(1, int(self.bgmn_threads or default_bgmn_threads))
+        bgmn_threads = min(total_cpus, max(1, int(self.bgmn_threads or default_bgmn_threads)))
         max_bgmn_tasks = max(1, int(self.max_bgmn_tasks or default_max_bgmn_tasks))
         native_threads = max(1, int(self.native_threads or 1))
 

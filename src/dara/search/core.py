@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections import deque
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from dara.resources import DaraResourceBudget, init_ray_for_dara
 from dara.search.data_model import PeakMatchingStrategy
@@ -44,6 +44,8 @@ def search_phases(
     peak_matching_strategy: PeakMatchingStrategy
     | tuple[float, float, float, float] = DEFAULT_PEAK_MATCHING_STRATEGY,
     resource_budget: DaraResourceBudget | dict | None = None,
+    refinement_backend: Literal["bgmn", "gsas", "fullprof"] | str = "bgmn",
+    backend_options: dict[str, Any] | None = None,
 ) -> list[SearchResult] | SearchTree:
     """
     Search for the best phases to use for refinement.
@@ -71,6 +73,8 @@ def search_phases(
             (matched_coeff, wrong_intensity_coeff, missing_coeff, extra_coeff).
             If None, the default coefficients will be used.
         resource_budget: CPU and memory settings for Ray, BGMN, and peak matching.
+        refinement_backend: refinement backend used for search-tree confirmation.
+        backend_options: backend-specific options such as GSAS-II instprm or FullProf root.
     """
     if not isinstance(peak_matching_strategy, PeakMatchingStrategy):
         peak_matching_strategy = PeakMatchingStrategy.from_tuple(peak_matching_strategy)
@@ -103,6 +107,8 @@ def search_phases(
         record_peak_matcher_scores=record_peak_matcher_scores,
         peak_matching_strategy=peak_matching_strategy,
         resource_budget=resolved_budget,
+        refinement_backend=refinement_backend,
+        backend_options=backend_options,
     )
 
     to_be_expanded = deque([search_tree.root])

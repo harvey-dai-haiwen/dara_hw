@@ -163,7 +163,9 @@ class DiaResult(BaseModel):
 class RefinementResult(BaseModel):
     """The result from the refinement, which is parsed from the .lst and .dia files."""
 
-    model_config = ConfigDict(arbitrary_types_allowed=True, populate_by_name=True)
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True, populate_by_name=True, extra="allow"
+    )
 
     lst_data: LstResult
     plot_data: DiaResult = Field(repr=False)

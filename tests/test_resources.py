@@ -23,6 +23,13 @@ def test_explicit_bgmn_budget_controls_refinement_parallelism():
     assert get_max_parallel_refinements({"n_threads": 4}, budget) == 12
 
 
+def test_bgmn_threads_do_not_exceed_total_cpu_budget():
+    budget = DaraResourceBudget(total_cpus=2, bgmn_threads=4, max_bgmn_tasks=1).resolve()
+
+    assert budget.bgmn_threads == 2
+    assert budget.ray_num_cpus == 2
+
+
 def test_legacy_parallel_env_maps_to_max_bgmn_tasks(monkeypatch):
     monkeypatch.setenv("DARA_MAX_PARALLEL_REFINEMENTS", "3")
     monkeypatch.setenv("DARA_BGMN_THREADS", "2")
