@@ -42,7 +42,9 @@ The release surfaces are:
 - `requirements.txt` for base runtime installs
 - `requirements-tests.txt` for local validation installs
 
-If you maintain local crystallographic mirrors for search-match workflows, see the local database recovery notes in the documentation: https://cedergrouphub.github.io/dara/local_database_recovery.html
+If you maintain local crystallographic mirrors for search-match workflows, see
+the repo guide at `docs/local_database_setup.md` and the recovery notes in the
+documentation: https://cedergrouphub.github.io/dara/local_database_recovery.html
 
 ## Local custom-sample benchmarking
 
