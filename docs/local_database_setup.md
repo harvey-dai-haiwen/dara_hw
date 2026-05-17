@@ -1,44 +1,55 @@
 # Local Database Setup
 
 This guide describes how to prepare local crystallographic mirrors for Dara
-search-match runs on the accelerate branch. The mirrors themselves are private
-data and must not be committed.
+search-match runs on the accelerate branch. The preferred handoff model is a
+separate database-entry repository called `CIF_index`, checked out locally as
+`D:\Haiwen\Databases\Structure_index` on this workstation. The mirrors
+themselves are private data and must not be committed.
 
 ## Runtime Contract
 
 Dara's database layer expects local CIF mirrors plus small metadata indexes:
 
 ```text
-dara/
+Structure_index/
   cod_cifs/        # optional local COD mirror
   icsd_cifs/       # optional local ICSD mirror, license required
   mp_cifs/         # optional local Materials Project CIF mirror
   indexes/         # optional fast parquet indexes, mainly used by MP
 ```
 
-The default paths are defined in `src/dara/settings.py`:
-
-```text
-PATH_TO_COD  = ~/COD_2024
-PATH_TO_ICSD = ~/ICSD_2024/ICSD_2024_experimental_inorganic/experimental_inorganic
-PATH_TO_MP   = ~/mp_cifs
-```
-
-For a repo-local checkout, either pass database objects with explicit paths from
-Python, or create `~/.dara.yaml`:
+The default package paths are defined in `src/dara/settings.py`, but team
+machines should prefer a `~/.dara.yaml` pointing to the standalone
+`Structure_index` checkout:
 
 ```yaml
-PATH_TO_COD: D:/Haiwen/Code_Repositories/dara/cod_cifs
-PATH_TO_ICSD: D:/Haiwen/Code_Repositories/dara/icsd_cifs
-PATH_TO_MP: D:/Haiwen/Code_Repositories/dara/mp_cifs
+PATH_TO_STRUCTURE_INDEX: D:/Haiwen/Databases/Structure_index
+```
+
+When `PATH_TO_STRUCTURE_INDEX` is set, Dara derives these local mirrors unless
+you explicitly override them:
+
+```text
+PATH_TO_COD  = <PATH_TO_STRUCTURE_INDEX>/cod_cifs
+PATH_TO_ICSD = <PATH_TO_STRUCTURE_INDEX>/icsd_cifs
+PATH_TO_MP   = <PATH_TO_STRUCTURE_INDEX>/mp_cifs
+```
+
+You can also keep the explicit paths in `~/.dara.yaml` for older Dara checkouts:
+
+```yaml
+PATH_TO_COD: D:/Haiwen/Databases/Structure_index/cod_cifs
+PATH_TO_ICSD: D:/Haiwen/Databases/Structure_index/icsd_cifs
+PATH_TO_MP: D:/Haiwen/Databases/Structure_index/mp_cifs
 ```
 
 Environment variables also work because settings use the `dara_` prefix:
 
 ```powershell
-$env:dara_PATH_TO_COD = "D:\Haiwen\Code_Repositories\dara\cod_cifs"
-$env:dara_PATH_TO_ICSD = "D:\Haiwen\Code_Repositories\dara\icsd_cifs"
-$env:dara_PATH_TO_MP = "D:\Haiwen\Code_Repositories\dara\mp_cifs"
+$env:dara_PATH_TO_STRUCTURE_INDEX = "D:\Haiwen\Databases\Structure_index"
+$env:dara_PATH_TO_COD = "D:\Haiwen\Databases\Structure_index\cod_cifs"
+$env:dara_PATH_TO_ICSD = "D:\Haiwen\Databases\Structure_index\icsd_cifs"
+$env:dara_PATH_TO_MP = "D:\Haiwen\Databases\Structure_index\mp_cifs"
 ```
 
 ## COD
@@ -138,11 +149,13 @@ MP uses:
 
 ```text
 src/dara/data/mp_struct_info.json.gz
-indexes/mp_index.parquet
+<PATH_TO_STRUCTURE_INDEX>/indexes/mp_index.parquet
 ```
 
-At runtime, Dara first tries `indexes/mp_index.parquet` if `pyarrow` is
-installed. The parquet schema must contain:
+At runtime, Dara first tries
+`<PATH_TO_STRUCTURE_INDEX>/indexes/mp_index.parquet` if `pyarrow` is installed,
+then falls back to the legacy repo-local `indexes/mp_index.parquet`. The parquet
+schema must contain:
 
 ```text
 raw_db_id
@@ -156,12 +169,12 @@ If `indexes/mp_index.parquet` is missing, Dara scans `mp_cifs/**/*.cif` and
 builds the chemical-system index in memory. That fallback is convenient but can
 be slow on a full MP mirror.
 
-There is no formal MP index-builder CLI in the repo yet. If you need a durable
-parquet index, generate it from your local CIF export with those five columns
-and write it to:
+There is no formal MP index-builder CLI in the Dara repo yet. If you need a
+durable parquet index, update it in the `CIF_index` repository from your local
+CIF export with those five columns and write it to:
 
 ```text
-indexes/mp_index.parquet
+D:/Haiwen/Databases/Structure_index/indexes/mp_index.parquet
 ```
 
 ## Validation
@@ -208,4 +221,5 @@ The dry-run should write:
 
 Do not commit local mirrors, rebuilt private metadata, scratch outputs, or
 machine-specific indexes unless the team explicitly agrees that the file is
-public and reproducible. ICSD CIFs must never be published from this repository.
+public and reproducible. ICSD CIFs must never be published from Dara or from
+`CIF_index`.

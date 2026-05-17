@@ -508,6 +508,10 @@ class MPDatabase(StructureDatabase):
     def _get_index_path(self) -> Path:
         repo_root = Path(__file__).resolve().parents[2]
         index_name = "mp_index_test.parquet" if self.path.name == "mp_test_cifs" else "mp_index.parquet"
+        structure_index_path = DARA_SETTINGS.PATH_TO_STRUCTURE_INDEX / "indexes" / index_name
+        if structure_index_path.exists():
+            return structure_index_path
+
         return repo_root / "indexes" / index_name
 
     def _get_e_hull(self, formula: str, sg: int | str) -> float | None:

@@ -20,6 +20,10 @@ class DaraSettings(BaseSettings):
 
     CONFIG_FILE: str = Field(_DEFAULT_CONFIG_FILE_PATH, description="File to load alternative defaults from.")
 
+    PATH_TO_STRUCTURE_INDEX: Path = Field(
+        Path("~/Structure_index").expanduser(),
+        description="Root folder for the optional standalone CIF_index database repository.",
+    )
     PATH_TO_ICSD: Path = Field(Path("~/ICSD_2024/ICSD_2024_experimental_inorganic/experimental_inorganic").expanduser())
     PATH_TO_COD: Path = Field(Path("~/COD_2024").expanduser())
     PATH_TO_MP: Path = Field(Path("~/mp_cifs").expanduser())
@@ -55,4 +59,11 @@ class DaraSettings(BaseSettings):
                 except ValueError:
                     raise SyntaxError(f"DARA config file is unparsable:{config_file_path} ") from None
 
-        return {**new_values, **values}
+        merged_values = {**new_values, **values}
+        if "PATH_TO_STRUCTURE_INDEX" in merged_values:
+            structure_index_root = Path(merged_values["PATH_TO_STRUCTURE_INDEX"]).expanduser()
+            merged_values.setdefault("PATH_TO_COD", structure_index_root / "cod_cifs")
+            merged_values.setdefault("PATH_TO_ICSD", structure_index_root / "icsd_cifs")
+            merged_values.setdefault("PATH_TO_MP", structure_index_root / "mp_cifs")
+
+        return merged_values

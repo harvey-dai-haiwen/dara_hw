@@ -111,16 +111,18 @@ class DaraSearchMatchConfig:
 
 def build_database_objects(names: Iterable[str], dara_root: Path):
     """Instantiate local Dara database mirrors."""
+    from dara.settings import DaraSettings
     from dara.structure_db import CODDatabase, ICSDDatabase, MPDatabase
 
     normalized = [name.upper() for name in names]
     unknown = sorted(set(normalized) - set(DATABASE_NAMES))
     if unknown:
         raise ValueError(f"Unknown database name(s): {', '.join(unknown)}")
+    settings = DaraSettings()
     db_map = {
-        "ICSD": ICSDDatabase(dara_root / "icsd_cifs"),
-        "COD": CODDatabase(dara_root / "cod_cifs"),
-        "MP": MPDatabase(dara_root / "mp_cifs"),
+        "ICSD": ICSDDatabase(settings.PATH_TO_ICSD),
+        "COD": CODDatabase(settings.PATH_TO_COD),
+        "MP": MPDatabase(settings.PATH_TO_MP),
     }
     return [db_map[name] for name in normalized]
 

@@ -1,5 +1,6 @@
 """Tests for structure_db.py."""
 
+import os
 from pathlib import Path
 
 import pytest
@@ -17,6 +18,12 @@ from dara.utils import get_composition_from_filename
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+STRUCTURE_INDEX_ROOT = Path(
+    os.environ.get(
+        "DARA_STRUCTURE_INDEX_ROOT",
+        r"D:\Haiwen\Databases\Structure_index",
+    )
+)
 
 
 class DummyStructureDatabase(StructureDatabase):
@@ -41,17 +48,26 @@ class DummyStructureDatabase(StructureDatabase):
 
 @pytest.fixture(scope="module")
 def icsd_db():
-    return ICSDDatabase(REPO_ROOT / "icsd_cifs")
+    path = STRUCTURE_INDEX_ROOT / "icsd_cifs"
+    if not path.exists():
+        path = REPO_ROOT / "icsd_cifs"
+    return ICSDDatabase(path)
 
 
 @pytest.fixture(scope="module")
 def cod_db():
-    return CODDatabase(REPO_ROOT / "cod_cifs")
+    path = STRUCTURE_INDEX_ROOT / "cod_cifs"
+    if not path.exists():
+        path = REPO_ROOT / "cod_cifs"
+    return CODDatabase(path)
 
 
 @pytest.fixture(scope="module")
 def mp_db():
-    return MPDatabase(REPO_ROOT / "mp_test_cifs")
+    path = REPO_ROOT / "mp_test_cifs"
+    if not path.exists():
+        path = STRUCTURE_INDEX_ROOT / "mp_cifs"
+    return MPDatabase(path)
 
 
 def test_icsd_database(icsd_db):
