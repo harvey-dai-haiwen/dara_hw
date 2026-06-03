@@ -228,6 +228,7 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">Local Deployment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="local_database_recovery.html">Local Database Recovery</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Web Server</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -276,9 +277,12 @@
 <li class="toctree-l3"><a class="reference internal" href="dara.peak_detection.html">dara.peak_detection module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.plot.html">dara.plot module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.refine.html">dara.refine module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.refinement_backends.html">dara.refinement_backends module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.resources.html">dara.resources module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.result.html">dara.result module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.schema.html">dara.schema module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match.html">dara.search_match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match_cli.html">dara.search_match_cli module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.settings.html">dara.settings module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.structure_db.html">dara.structure_db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.utils.html">dara.utils module</a></li>
@@ -571,7 +575,7 @@
 <section id="basic-server-startup">
 <h3>2. Basic Server Startup<a class="headerlink" href="#basic-server-startup" title="Link to this heading">#</a></h3>
 <p><strong>Command Line Interface:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dara<span class="w"> </span>server
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>dara<span class="w"> </span>server
 </pre></div>
 </div>
 <p>This starts the server with default settings:</p>
@@ -587,10 +591,10 @@ Open your browser and navigate to: <code class="docutils literal notranslate"><s
 <h3>3. Custom Configuration<a class="headerlink" href="#custom-configuration" title="Link to this heading">#</a></h3>
 <p><strong>With Command Line Arguments:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start on different host/port</span>
-dara<span class="w"> </span>server<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">9000</span>
+uv<span class="w"> </span>run<span class="w"> </span>dara<span class="w"> </span>server<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">9000</span>
 
 <span class="c1"># Use MongoDB backend</span>
-dara<span class="w"> </span>server<span class="w"> </span>--database-backend<span class="w"> </span>mongodb<span class="w"> </span>--mongodb-host<span class="w"> </span>localhost<span class="w"> </span>--mongodb-port<span class="w"> </span><span class="m">27017</span>
+uv<span class="w"> </span>run<span class="w"> </span>dara<span class="w"> </span>server<span class="w"> </span>--database-backend<span class="w"> </span>mongodb<span class="w"> </span>--mongodb-host<span class="w"> </span>localhost<span class="w"> </span>--mongodb-port<span class="w"> </span><span class="m">27017</span>
 </pre></div>
 </div>
 <p><strong>With Environment Variables:</strong></p>
@@ -605,7 +609,7 @@ dara<span class="w"> </span>server<span class="w"> </span>--database-backend<spa
 <span class="nb">export</span><span class="w"> </span><span class="nv">DARA_SERVER_MONGODB_PASSWORD</span><span class="o">=</span>your_password
 
 <span class="c1"># Start server</span>
-dara<span class="w"> </span>server
+uv<span class="w"> </span>run<span class="w"> </span>dara<span class="w"> </span>server
 </pre></div>
 </div>
 </section>
@@ -639,7 +643,7 @@ dara<span class="w"> </span>server
 </div>
 <p><strong>Example:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Allow external connections</span>
-dara<span class="w"> </span>server<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8080</span>
+uv<span class="w"> </span>run<span class="w"> </span>dara<span class="w"> </span>server<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8080</span>
 </pre></div>
 </div>
 </section>
@@ -672,7 +676,7 @@ dara<span class="w"> </span>server<span class="w"> </span>--host<span class="w">
 </div>
 <p><strong>Example:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Custom MontyDB location</span>
-dara<span class="w"> </span>server<span class="w"> </span>--montydb-path<span class="w"> </span>/data/dara/montydb
+uv<span class="w"> </span>run<span class="w"> </span>dara<span class="w"> </span>server<span class="w"> </span>--montydb-path<span class="w"> </span>/data/dara/montydb
 </pre></div>
 </div>
 </section>
@@ -722,7 +726,7 @@ dara<span class="w"> </span>server<span class="w"> </span>--montydb-path<span cl
 </div>
 <p><strong>Example:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># MongoDB with authentication</span>
-dara<span class="w"> </span>server<span class="w"> </span><span class="se">\</span>
+uv<span class="w"> </span>run<span class="w"> </span>dara<span class="w"> </span>server<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--database-backend<span class="w"> </span>mongodb<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--mongodb-host<span class="w"> </span>db.example.com<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--mongodb-port<span class="w"> </span><span class="m">27017</span><span class="w"> </span><span class="se">\</span>

@@ -31,9 +31,12 @@ Submodules
    dara.peak_detection
    dara.plot
    dara.refine
+   dara.refinement_backends
    dara.resources
    dara.result
    dara.schema
+   dara.search_match
+   dara.search_match_cli
    dara.settings
    dara.structure_db
    dara.utils

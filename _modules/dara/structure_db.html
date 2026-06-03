@@ -223,6 +223,7 @@
         </ul>
         <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deployment.html">Local Deployment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../local_database_recovery.html">Local Database Recovery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../web_server.html">Web Server</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -271,9 +272,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../dara.peak_detection.html">dara.peak_detection module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.plot.html">dara.plot module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.refine.html">dara.refine module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dara.refinement_backends.html">dara.refinement_backends module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.resources.html">dara.resources module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.result.html">dara.result module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.schema.html">dara.schema module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dara.search_match.html">dara.search_match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dara.search_match_cli.html">dara.search_match_cli module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.settings.html">dara.settings module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.structure_db.html">dara.structure_db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.utils.html">dara.utils module</a></li>
@@ -401,7 +405,9 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">gzip</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
@@ -906,6 +912,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preparsed_info</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_load_preparsed_index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">json_index_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_json_index_path</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">json_index_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_json_index</span><span class="p">(</span><span class="n">json_index_path</span><span class="p">)</span>
+
         <span class="n">index_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_index_path</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">pq</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">index_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -927,6 +937,25 @@
                 <span class="p">)</span>
             <span class="p">)</span>
 
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">indexed_data</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_json_index</span><span class="p">(</span><span class="n">index_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]]:</span>
+        <span class="n">indexed_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">index_path</span><span class="p">,</span> <span class="s2">&quot;rt&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">handle</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                    <span class="k">continue</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="n">chemsys</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">({</span><span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]}))</span>
+                <span class="n">indexed_data</span><span class="p">[</span><span class="n">chemsys</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;formula&quot;</span><span class="p">],</span>
+                        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;raw_db_id&quot;</span><span class="p">],</span>
+                        <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;spacegroup&quot;</span><span class="p">),</span>
+                        <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;energy_above_hull&quot;</span><span class="p">),</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">indexed_data</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_scan_local_cifs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]]:</span>
@@ -951,6 +980,19 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_index_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="n">repo_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">index_name</span> <span class="o">=</span> <span class="s2">&quot;mp_index_test.parquet&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;mp_test_cifs&quot;</span> <span class="k">else</span> <span class="s2">&quot;mp_index.parquet&quot;</span>
+        <span class="n">structure_index_path</span> <span class="o">=</span> <span class="n">DARA_SETTINGS</span><span class="o">.</span><span class="n">PATH_TO_STRUCTURE_INDEX</span> <span class="o">/</span> <span class="s2">&quot;indexes&quot;</span> <span class="o">/</span> <span class="n">index_name</span>
+        <span class="k">if</span> <span class="n">structure_index_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">structure_index_path</span>
+
+        <span class="k">return</span> <span class="n">repo_root</span> <span class="o">/</span> <span class="s2">&quot;indexes&quot;</span> <span class="o">/</span> <span class="n">index_name</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_json_index_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+        <span class="n">repo_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">index_name</span> <span class="o">=</span> <span class="s2">&quot;mp_index_test.jsonl.gz&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;mp_test_cifs&quot;</span> <span class="k">else</span> <span class="s2">&quot;mp_index.jsonl.gz&quot;</span>
+        <span class="n">structure_index_path</span> <span class="o">=</span> <span class="n">DARA_SETTINGS</span><span class="o">.</span><span class="n">PATH_TO_STRUCTURE_INDEX</span> <span class="o">/</span> <span class="s2">&quot;indexes&quot;</span> <span class="o">/</span> <span class="n">index_name</span>
+        <span class="k">if</span> <span class="n">structure_index_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">structure_index_path</span>
+
         <span class="k">return</span> <span class="n">repo_root</span> <span class="o">/</span> <span class="s2">&quot;indexes&quot;</span> <span class="o">/</span> <span class="n">index_name</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_e_hull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formula</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sg</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>

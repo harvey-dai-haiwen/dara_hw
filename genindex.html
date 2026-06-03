@@ -223,6 +223,7 @@
         </ul>
         <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">Local Deployment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="local_database_recovery.html">Local Database Recovery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="web_server.html">Web Server</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -271,9 +272,12 @@
 <li class="toctree-l3"><a class="reference internal" href="dara.peak_detection.html">dara.peak_detection module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.plot.html">dara.plot module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.refine.html">dara.refine module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.refinement_backends.html">dara.refinement_backends module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.resources.html">dara.resources module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.result.html">dara.result module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.schema.html">dara.schema module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match.html">dara.search_match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match_cli.html">dara.search_match_cli module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.settings.html">dara.settings module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.structure_db.html">dara.structure_db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.utils.html">dara.utils module</a></li>
@@ -414,6 +418,7 @@
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#Q"><strong>Q</strong></a>
  | <a href="#R"><strong>R</strong></a>
@@ -437,18 +442,30 @@
 </li>
       <li><a href="dara.search.tree.html#dara.search.tree.BaseSearchTree.add_subtree">add_subtree() (BaseSearchTree method)</a>
 </li>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.additional_cif_dirs">additional_cif_dirs (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.additional_cif_dirs">[1]</a>
+</li>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.additional_cifs">additional_cifs (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.additional_cifs">[1]</a>
+</li>
       <li><a href="dara.result.html#dara.result.PhaseResult.alpha">alpha (PhaseResult attribute)</a>
+</li>
+      <li><a href="dara.html#dara.ExternalCsvConfig.angle_tolerance">angle_tolerance (ExternalCsvConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.ExternalCsvConfig.angle_tolerance">[1]</a>
 </li>
       <li><a href="dara.xrd.html#dara.xrd.XRDData.angles">angles (XRDData property)</a>
 </li>
       <li><a href="dara.utils.html#dara.utils.angular_correction">angular_correction() (in module dara.utils)</a>
 </li>
-      <li><a href="dara.candidate_filter.html#dara.candidate_filter.CandidateElementFilter.any_elements">any_elements (CandidateElementFilter attribute)</a>
+      <li><a href="dara.html#dara.ElementFilterConfig.any">any (ElementFilterConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.ElementFilterConfig.any">[1]</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dara.candidate_filter.html#dara.candidate_filter.CandidateElementFilter.any_expression">any_expression (CandidateElementFilter attribute)</a>
+      <li><a href="dara.candidate_filter.html#dara.candidate_filter.CandidateElementFilter.any_elements">any_elements (CandidateElementFilter attribute)</a>
 </li>
+      <li><a href="dara.candidate_filter.html#dara.candidate_filter.CandidateElementFilter.any_expression">any_expression (CandidateElementFilter attribute)</a>
+
+      <ul>
+        <li><a href="dara.html#dara.ElementFilterConfig.any_expression">(ElementFilterConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.ElementFilterConfig.any_expression">[1]</a>
+</li>
+      </ul></li>
       <li><a href="dara.candidate_filter.html#dara.candidate_filter.CandidateElementFilter.any_expression_model">any_expression_model (CandidateElementFilter property)</a>
 </li>
       <li><a href="dara.candidate_filter.html#dara.candidate_filter.CandidateElementFilter.any_group_elements">any_group_elements (CandidateElementFilter property)</a>
@@ -461,6 +478,8 @@
 </li>
       <li><a href="dara.search.data_model.html#dara.search.data_model.PeakMatchingStrategy.as_kwargs">as_kwargs() (PeakMatchingStrategy method)</a>
 </li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.FullProfPcrGenerator.assign_code">assign_code() (FullProfPcrGenerator method)</a>
+</li>
       <li><a href="dara.result.html#dara.result.PhaseResult.atom_positions_string">atom_positions_string (PhaseResult attribute)</a>
 </li>
   </ul></td>
@@ -471,22 +490,38 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dara.result.html#dara.result.PhaseResult.b">b (PhaseResult attribute)</a>
 </li>
+      <li><a href="dara.jobs.html#dara.jobs.RefinementMaker.backend">backend (RefinementMaker attribute)</a>
+</li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.BackendRunContext.backend_options">backend_options (BackendRunContext attribute)</a>
+
+      <ul>
+        <li><a href="dara.html#dara.DaraSearchMatchConfig.backend_options">(DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.backend_options">[1]</a>
+</li>
+        <li><a href="dara.jobs.html#dara.jobs.RefinementMaker.backend_options">(RefinementMaker attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.BackendRefinementError">BackendRefinementError</a>
+</li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.BackendRunContext">BackendRunContext (class in dara.refinement_backends)</a>
+</li>
       <li><a href="dara.search.tree.html#dara.search.tree.BaseSearchTree">BaseSearchTree (class in dara.search.tree)</a>
 </li>
       <li><a href="dara.search.tree.html#dara.search.tree.batch_peak_matching">batch_peak_matching() (in module dara.search.tree)</a>
 </li>
       <li><a href="dara.search.tree.html#dara.search.tree.batch_refinement">batch_refinement() (in module dara.search.tree)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dara.schema.html#dara.schema.PhaseSearchDocument.best_rwp">best_rwp (PhaseSearchDocument attribute)</a>
 </li>
       <li><a href="dara.result.html#dara.result.PhaseResult.beta">beta (PhaseResult attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dara.resources.html#dara.resources.DaraResourceBudget.bgmn_threads">bgmn_threads (DaraResourceBudget attribute)</a>
 
       <ul>
         <li><a href="dara.server.setting.html#dara.server.setting.DaraServerSettings.bgmn_threads">(DaraServerSettings attribute)</a>
+</li>
+        <li><a href="dara.html#dara.MachineConfig.bgmn_threads">(MachineConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.bgmn_threads">[1]</a>
 </li>
       </ul></li>
       <li><a href="dara.bgmn_worker.html#dara.bgmn_worker.BGMNWorker">BGMNWorker (class in dara.bgmn_worker)</a>
@@ -498,6 +533,10 @@
 </li>
       </ul></li>
       <li><a href="dara.utils.html#dara.utils.bool2yn">bool2yn() (in module dara.utils)</a>
+</li>
+      <li><a href="dara.search_match.html#dara.search_match.build_database_objects">build_database_objects() (in module dara.search_match)</a>
+</li>
+      <li><a href="dara.search_match_cli.html#dara.search_match_cli.build_parser">build_parser() (in module dara.search_match_cli)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -523,6 +562,8 @@
 </li>
       <li><a href="dara.cif2str.html#dara.cif2str.CIF2StrError">CIF2StrError</a>
 </li>
+      <li><a href="dara.html#dara.ExternalCsvConfig.cif_column">cif_column (ExternalCsvConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.ExternalCsvConfig.cif_column">[1]</a>
+</li>
       <li><a href="dara.candidate_filter.html#dara.candidate_filter.cif_elements">cif_elements() (in module dara.candidate_filter)</a>
 </li>
       <li><a href="dara.external_candidates.html#dara.external_candidates.ExternalCifPreparationResult.cif_paths">cif_paths (ExternalCifPreparationResult attribute)</a>
@@ -535,21 +576,25 @@
         <li><a href="dara.jobs.html#dara.jobs.PhaseSearchMaker.cifs_folder_name">(PhaseSearchMaker attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dara.cli.html#dara.cli.DaraCli.cli_cmd">cli_cmd() (DaraCli method)</a>
 
       <ul>
         <li><a href="dara.cli.html#dara.cli.Server.cli_cmd">(Server method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dara.structure_db.html#dara.structure_db.CODDatabase">CODDatabase (class in dara.structure_db)</a>
+</li>
+      <li><a href="dara.search_match.html#dara.search_match.collect_additional_cifs">collect_additional_cifs() (in module dara.search_match)</a>
 </li>
       <li><a href="dara.candidate_filter.html#dara.candidate_filter.collect_database_cifs">collect_database_cifs() (in module dara.candidate_filter)</a>
 </li>
       <li><a href="dara.utils.html#dara.utils.compositions_to_array">compositions_to_array() (in module dara.utils)</a>
 </li>
-      <li><a href="dara.settings.html#dara.settings.DaraSettings.CONFIG_FILE">CONFIG_FILE (DaraSettings attribute)</a>
+      <li><a href="dara.html#dara.DaraSettings.CONFIG_FILE">CONFIG_FILE (DaraSettings attribute)</a>, <a href="dara.settings.html#dara.settings.DaraSettings.CONFIG_FILE">[1]</a>
+</li>
+      <li><a href="dara.search_match_cli.html#dara.search_match_cli.config_from_args">config_from_args() (in module dara.search_match_cli)</a>
 </li>
       <li><a href="dara.external_candidates.html#dara.external_candidates.configure_csv_field_size_limit">configure_csv_field_size_limit() (in module dara.external_candidates)</a>
 </li>
@@ -564,6 +609,8 @@
       <li><a href="dara.candidate_filter.html#dara.candidate_filter.copy_selected_cifs">copy_selected_cifs() (in module dara.candidate_filter)</a>
 </li>
       <li><a href="dara.generate_control_file.html#dara.generate_control_file.copy_xy_pattern">copy_xy_pattern() (in module dara.generate_control_file)</a>
+</li>
+      <li><a href="dara.html#dara.MachineConfig.cpu_target_fraction">cpu_target_fraction (MachineConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.cpu_target_fraction">[1]</a>
 </li>
       <li><a href="dara.search.data_model.html#dara.search.data_model.SearchNodeData.current_phases">current_phases (SearchNodeData attribute)</a>
 </li>
@@ -725,6 +772,13 @@
 </li>
       </ul></li>
       <li>
+    dara.refinement_backends
+
+      <ul>
+        <li><a href="dara.refinement_backends.html#module-dara.refinement_backends">module</a>
+</li>
+      </ul></li>
+      <li>
     dara.resources
 
       <ul>
@@ -752,8 +806,6 @@
         <li><a href="dara.search.html#module-dara.search">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     dara.search.core
 
@@ -768,6 +820,8 @@
         <li><a href="dara.search.data_model.html#module-dara.search.data_model">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     dara.search.peak_matcher
 
@@ -780,6 +834,20 @@
 
       <ul>
         <li><a href="dara.search.tree.html#module-dara.search.tree">module</a>
+</li>
+      </ul></li>
+      <li>
+    dara.search_match
+
+      <ul>
+        <li><a href="dara.search_match.html#module-dara.search_match">module</a>
+</li>
+      </ul></li>
+      <li>
+    dara.search_match_cli
+
+      <ul>
+        <li><a href="dara.search_match_cli.html#module-dara.search_match_cli">module</a>
 </li>
       </ul></li>
       <li>
@@ -852,9 +920,19 @@
         <li><a href="dara.xrd.html#module-dara.xrd">module</a>
 </li>
       </ul></li>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.dara_root">dara_root (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.dara_root">[1]</a>
+</li>
       <li><a href="dara.resources.html#dara.resources.DaraResourceBudget">DaraResourceBudget (class in dara.resources)</a>
 </li>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig">DaraSearchMatchConfig (class in dara)</a>
+
+      <ul>
+        <li><a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig">(class in dara.search_match)</a>
+</li>
+      </ul></li>
       <li><a href="dara.server.setting.html#dara.server.setting.DaraServerSettings.database_backend">database_backend (DaraServerSettings attribute)</a>, <a href="dara.server.setting.html#id0">[1]</a>
+</li>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.databases">databases (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.databases">[1]</a>
 </li>
       <li><a href="dara.utils.html#dara.utils.datetime_str">datetime_str() (in module dara.utils)</a>
 </li>
@@ -878,12 +956,22 @@
 </li>
       <li><a href="dara.peak_detection.html#dara.peak_detection.detect_peaks">detect_peaks() (in module dara.peak_detection)</a>
 </li>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.disable_structure_dedupe">disable_structure_dedupe (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.disable_structure_dedupe">[1]</a>
+</li>
       <li><a href="dara.search.peak_matcher.html#dara.search.peak_matcher.distance_matrix">distance_matrix() (in module dara.search.peak_matcher)</a>
 </li>
-      <li><a href="dara.refine.html#dara.refine.do_refinement">do_refinement() (in module dara.refine)</a>
+      <li><a href="dara.html#dara.do_refinement">do_refinement() (in module dara)</a>
+
+      <ul>
+        <li><a href="dara.refine.html#dara.refine.do_refinement">(in module dara.refine)</a>
 </li>
-      <li><a href="dara.refine.html#dara.refine.do_refinement_no_saving">do_refinement_no_saving() (in module dara.refine)</a>
+      </ul></li>
+      <li><a href="dara.html#dara.do_refinement_no_saving">do_refinement_no_saving() (in module dara)</a>
+
+      <ul>
+        <li><a href="dara.refine.html#dara.refine.do_refinement_no_saving">(in module dara.refine)</a>
 </li>
+      </ul></li>
       <li><a href="dara.bgmn.download_bgmn.html#dara.bgmn.download_bgmn.download_bgmn">download_bgmn() (in module dara.bgmn.download_bgmn)</a>
 </li>
       <li><a href="dara.structure_db.html#dara.structure_db.CODDatabase.download_structures">download_structures() (CODDatabase method)</a>
@@ -896,6 +984,8 @@
         <li><a href="dara.structure_db.html#dara.structure_db.StructureDatabase.download_structures">(StructureDatabase method)</a>
 </li>
       </ul></li>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.dry_run">dry_run (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.dry_run">[1]</a>
+</li>
       <li><a href="dara.external_candidates.html#dara.external_candidates.StructureDeduplicationResult.duplicates">duplicates (StructureDeduplicationResult attribute)</a>
 </li>
   </ul></td>
@@ -906,8 +996,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dara.eflech_worker.html#dara.eflech_worker.EflechWorker">EflechWorker (class in dara.eflech_worker)</a>
 </li>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.element_filter">element_filter (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.element_filter">[1]</a>
+</li>
       <li><a href="dara.candidate_filter.html#dara.candidate_filter.ElementExpression">ElementExpression (class in dara.candidate_filter)</a>
 </li>
+      <li><a href="dara.html#dara.ElementFilterConfig">ElementFilterConfig (class in dara)</a>
+
+      <ul>
+        <li><a href="dara.search_match.html#dara.search_match.ElementFilterConfig">(class in dara.search_match)</a>
+</li>
+      </ul></li>
       <li><a href="dara.candidate_filter.html#dara.candidate_filter.ElementExpression.elements">elements (ElementExpression attribute)</a>
 </li>
       <li><a href="dara.xrd.html#dara.xrd.XRDData.errors">errors (XRDData property)</a>
@@ -920,16 +1018,26 @@
 </li>
       <li><a href="dara.search.tree.html#dara.search.tree.BaseSearchTree.expand_node">expand_node() (BaseSearchTree method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dara.search.tree.html#dara.search.tree.BaseSearchTree.expand_root">expand_root() (BaseSearchTree method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dara.search_match.html#dara.search_match.export_refinement_artifacts">export_refinement_artifacts() (in module dara.search_match)</a>
+</li>
       <li><a href="dara.result.html#dara.result.RefinementResult.export_structure">export_structure() (RefinementResult method)</a>
+</li>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.external_csvs">external_csvs (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.external_csvs">[1]</a>
 </li>
       <li><a href="dara.external_candidates.html#dara.external_candidates.StructureDuplicate.external_path">external_path (StructureDuplicate attribute)</a>
 </li>
       <li><a href="dara.external_candidates.html#dara.external_candidates.ExternalCifPreparationResult">ExternalCifPreparationResult (class in dara.external_candidates)</a>
 </li>
+      <li><a href="dara.html#dara.ExternalCsvConfig">ExternalCsvConfig (class in dara)</a>
+
+      <ul>
+        <li><a href="dara.search_match.html#dara.search_match.ExternalCsvConfig">(class in dara.search_match)</a>
+</li>
+      </ul></li>
       <li><a href="dara.search.peak_matcher.html#dara.search.peak_matcher.PeakMatcher.extra">extra (PeakMatcher property)</a>
 </li>
       <li><a href="dara.search.data_model.html#dara.search.data_model.PeakMatchingStrategy.extra_coeff">extra_coeff (PeakMatchingStrategy attribute)</a>
@@ -940,6 +1048,8 @@
         <li><a href="dara.search.data_model.html#dara.search.data_model.SearchResult.extra_peaks">(SearchResult attribute)</a>
 </li>
       </ul></li>
+      <li><a href="dara.search_match.html#dara.search_match.extract_refinement_phases">extract_refinement_phases() (in module dara.search_match)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -994,6 +1104,8 @@
 </li>
       <li><a href="dara.search.data_model.html#dara.search.data_model.PeakMatchingStrategy.from_tuple">from_tuple() (PeakMatchingStrategy class method)</a>
 </li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.FullProfPcrGenerator">FullProfPcrGenerator (class in dara.refinement_backends)</a>
+</li>
       <li><a href="dara.utils.html#dara.utils.fuzzy_compare">fuzzy_compare() (in module dara.utils)</a>
 </li>
   </ul></td>
@@ -1003,6 +1115,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dara.result.html#dara.result.PhaseResult.gamma">gamma (PhaseResult attribute)</a>
+</li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.FullProfPcrGenerator.generate">generate() (FullProfPcrGenerator method)</a>
 </li>
       <li><a href="dara.eflech_worker.html#dara.eflech_worker.EflechWorker.generate_control_file">generate_control_file() (EflechWorker static method)</a>
 
@@ -1156,6 +1270,12 @@
 </li>
       <li><a href="dara.schema.html#dara.schema.RefinementDocument.instrument_name">instrument_name (RefinementDocument attribute)</a>
 </li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.BackendRunContext.instrument_profile">instrument_profile (BackendRunContext attribute)</a>
+
+      <ul>
+        <li><a href="dara.html#dara.DaraSearchMatchConfig.instrument_profile">(DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.instrument_profile">[1]</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dara.xrd.html#dara.xrd.XRDData.intensities">intensities (XRDData property)</a>
@@ -1179,6 +1299,10 @@
 
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.keep_work">keep_work (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.keep_work">[1]</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dara.external_candidates.html#dara.external_candidates.StructureDeduplicationResult.kept_external_paths">kept_external_paths (StructureDeduplicationResult attribute)</a>
 </li>
@@ -1206,9 +1330,11 @@
 </li>
       <li><a href="dara.server.app.html#dara.server.app.launch_worker_process">launch_worker_process() (in module dara.server.app)</a>
 </li>
+      <li><a href="dara.html#dara.ExternalCsvConfig.limit">limit (ExternalCsvConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.ExternalCsvConfig.limit">[1]</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dara.settings.html#dara.settings.DaraSettings.load_default_settings">load_default_settings() (DaraSettings class method)</a>
+      <li><a href="dara.html#dara.DaraSettings.load_default_settings">load_default_settings() (DaraSettings class method)</a>, <a href="dara.settings.html#dara.settings.DaraSettings.load_default_settings">[1]</a>
 </li>
       <li><a href="dara.xrd.html#dara.xrd.load_pattern">load_pattern() (in module dara.xrd)</a>
 </li>
@@ -1222,6 +1348,8 @@
 </li>
       <li><a href="dara.structure_db.html#dara.structure_db.StructureDatabase.local_copy_found">local_copy_found (StructureDatabase property)</a>
 </li>
+      <li><a href="dara.html#dara.MachineConfig.logical_threads">logical_threads (MachineConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.logical_threads">[1]</a>
+</li>
       <li><a href="dara.result.html#dara.result.RefinementResult.lst_data">lst_data (RefinementResult attribute)</a>
 </li>
   </ul></td>
@@ -1230,8 +1358,20 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dara.cli.html#dara.cli.main">main() (in module dara.cli)</a>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.machine">machine (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.machine">[1]</a>
 </li>
+      <li><a href="dara.html#dara.MachineConfig">MachineConfig (class in dara)</a>
+
+      <ul>
+        <li><a href="dara.search_match.html#dara.search_match.MachineConfig">(class in dara.search_match)</a>
+</li>
+      </ul></li>
+      <li><a href="dara.cli.html#dara.cli.main">main() (in module dara.cli)</a>
+
+      <ul>
+        <li><a href="dara.search_match_cli.html#dara.search_match_cli.main">(in module dara.search_match_cli)</a>
+</li>
+      </ul></li>
       <li><a href="dara.resources.html#dara.resources.DaraResourceBudget.make">make() (DaraResourceBudget class method)</a>
 
       <ul>
@@ -1239,7 +1379,7 @@
 </li>
         <li><a href="dara.jobs.html#dara.jobs.RefinementMaker.make">(RefinementMaker method)</a>
 </li>
-        <li><a href="dara.refine.html#dara.refine.RefinementPhase.make">(RefinementPhase class method)</a>
+        <li><a href="dara.html#dara.RefinementPhase.make">(RefinementPhase class method)</a>, <a href="dara.refine.html#dara.refine.RefinementPhase.make">[1]</a>
 </li>
       </ul></li>
       <li><a href="dara.cif2str.html#dara.cif2str.make_lattice_parameters_str">make_lattice_parameters_str() (in module dara.cif2str)</a>
@@ -1270,13 +1410,23 @@
       </ul></li>
       <li><a href="dara.jobs.html#dara.jobs.PhaseSearchMaker.max_num_results">max_num_results (PhaseSearchMaker attribute)</a>
 </li>
+      <li><a href="dara.html#dara.MachineConfig.max_parallel_jobs">max_parallel_jobs (MachineConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.max_parallel_jobs">[1]</a>
+</li>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.max_phases">max_phases (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.max_phases">[1]</a>
+</li>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.max_results">max_results (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.max_results">[1]</a>
+</li>
       <li><a href="dara.resources.html#dara.resources.DaraResourceBudget.memory_gb">memory_gb (DaraResourceBudget attribute)</a>
 
       <ul>
         <li><a href="dara.server.setting.html#dara.server.setting.DaraServerSettings.memory_gb">(DaraServerSettings attribute)</a>
 </li>
+        <li><a href="dara.html#dara.MachineConfig.memory_gb">(MachineConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.memory_gb">[1]</a>
+</li>
       </ul></li>
       <li><a href="dara.search.peak_matcher.html#dara.search.peak_matcher.merge_peaks">merge_peaks() (in module dara.search.peak_matcher)</a>
+</li>
+      <li><a href="dara.search_match.html#dara.search_match.merge_rejected_counts">merge_rejected_counts() (in module dara.search_match)</a>
 </li>
       <li><a href="dara.search.peak_matcher.html#dara.search.peak_matcher.PeakMatcher.missing">missing (PeakMatcher property)</a>
 </li>
@@ -1334,6 +1484,8 @@
 </li>
         <li><a href="dara.refine.html#module-dara.refine">dara.refine</a>
 </li>
+        <li><a href="dara.refinement_backends.html#module-dara.refinement_backends">dara.refinement_backends</a>
+</li>
         <li><a href="dara.resources.html#module-dara.resources">dara.resources</a>
 </li>
         <li><a href="dara.result.html#module-dara.result">dara.result</a>
@@ -1349,6 +1501,10 @@
         <li><a href="dara.search.peak_matcher.html#module-dara.search.peak_matcher">dara.search.peak_matcher</a>
 </li>
         <li><a href="dara.search.tree.html#module-dara.search.tree">dara.search.tree</a>
+</li>
+        <li><a href="dara.search_match.html#module-dara.search_match">dara.search_match</a>
+</li>
+        <li><a href="dara.search_match_cli.html#module-dara.search_match_cli">dara.search_match_cli</a>
 </li>
         <li><a href="dara.server.html#module-dara.server">dara.server</a>
 </li>
@@ -1387,6 +1543,8 @@
 </li>
       <li><a href="dara.structure_db.html#dara.structure_db.MPDatabase">MPDatabase (class in dara.structure_db)</a>
 </li>
+      <li><a href="dara.html#dara.ElementFilterConfig.must">must (ElementFilterConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.ElementFilterConfig.must">[1]</a>
+</li>
       <li><a href="dara.candidate_filter.html#dara.candidate_filter.CandidateElementFilter.must_elements">must_elements (CandidateElementFilter attribute)</a>
 </li>
       <li><a href="dara.candidate_filter.html#dara.candidate_filter.CandidateElementFilter.must_set">must_set (CandidateElementFilter property)</a>
@@ -1420,10 +1578,22 @@
       <ul>
         <li><a href="dara.server.setting.html#dara.server.setting.DaraServerSettings.native_threads">(DaraServerSettings attribute)</a>
 </li>
+        <li><a href="dara.html#dara.MachineConfig.native_threads">(MachineConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.native_threads">[1]</a>
+</li>
       </ul></li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.normalize_backend">normalize_backend() (in module dara.refinement_backends)</a>
+</li>
       <li><a href="dara.candidate_filter.html#dara.candidate_filter.normalize_elements">normalize_elements() (in module dara.candidate_filter)</a>
 </li>
       <li><a href="dara.result.html#dara.result.LstResult.num_steps">num_steps (LstResult attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.output_root">output_root (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.output_root">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1433,11 +1603,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dara.search.tree.html#dara.search.tree.pairwise_jaccard_distance_matrix">pairwise_jaccard_distance_matrix() (in module dara.search.tree)</a>
 </li>
-      <li><a href="dara.refine.html#dara.refine.RefinementPhase.params">params (RefinementPhase attribute)</a>
+      <li><a href="dara.html#dara.RefinementPhase.params">params (RefinementPhase attribute)</a>, <a href="dara.refine.html#dara.refine.RefinementPhase.params">[1]</a>
 </li>
       <li><a href="dara.result.html#dara.result.parse_dia">parse_dia() (in module dara.result)</a>
 </li>
       <li><a href="dara.external_candidates.html#dara.external_candidates.StructureDeduplicationResult.parse_failures">parse_failures (StructureDeduplicationResult attribute)</a>
+</li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.parse_fullprof_prf">parse_fullprof_prf() (in module dara.refinement_backends)</a>
+</li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.parse_fullprof_sum">parse_fullprof_sum() (in module dara.refinement_backends)</a>
 </li>
       <li><a href="dara.result.html#dara.result.parse_lst">parse_lst() (in module dara.result)</a>
 </li>
@@ -1453,19 +1627,25 @@
 </li>
       <li><a href="dara.eflech_worker.html#dara.eflech_worker.EflechWorker.patch_control_file_after_teil">patch_control_file_after_teil() (EflechWorker method)</a>
 </li>
-      <li><a href="dara.refine.html#dara.refine.RefinementPhase.path">path (RefinementPhase attribute)</a>
+      <li><a href="dara.html#dara.ExternalCsvConfig.path">path (ExternalCsvConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.ExternalCsvConfig.path">[1]</a>
 
       <ul>
+        <li><a href="dara.html#dara.RefinementPhase.path">(RefinementPhase attribute)</a>, <a href="dara.refine.html#dara.refine.RefinementPhase.path">[1]</a>
+</li>
         <li><a href="dara.structure_db.html#dara.structure_db.StructureDatabase.path">(StructureDatabase property)</a>
 </li>
       </ul></li>
-      <li><a href="dara.settings.html#dara.settings.DaraSettings.PATH_TO_COD">PATH_TO_COD (DaraSettings attribute)</a>
+      <li><a href="dara.html#dara.DaraSettings.PATH_TO_COD">PATH_TO_COD (DaraSettings attribute)</a>, <a href="dara.settings.html#dara.settings.DaraSettings.PATH_TO_COD">[1]</a>
 </li>
-      <li><a href="dara.settings.html#dara.settings.DaraSettings.PATH_TO_ICSD">PATH_TO_ICSD (DaraSettings attribute)</a>
+      <li><a href="dara.html#dara.DaraSettings.PATH_TO_ICSD">PATH_TO_ICSD (DaraSettings attribute)</a>, <a href="dara.settings.html#dara.settings.DaraSettings.PATH_TO_ICSD">[1]</a>
 </li>
-      <li><a href="dara.settings.html#dara.settings.DaraSettings.PATH_TO_MP">PATH_TO_MP (DaraSettings attribute)</a>
+      <li><a href="dara.html#dara.DaraSettings.PATH_TO_MP">PATH_TO_MP (DaraSettings attribute)</a>, <a href="dara.settings.html#dara.settings.DaraSettings.PATH_TO_MP">[1]</a>
+</li>
+      <li><a href="dara.html#dara.DaraSettings.PATH_TO_STRUCTURE_INDEX">PATH_TO_STRUCTURE_INDEX (DaraSettings attribute)</a>, <a href="dara.settings.html#dara.settings.DaraSettings.PATH_TO_STRUCTURE_INDEX">[1]</a>
 </li>
       <li><a href="dara.result.html#dara.result.LstResult.pattern_name">pattern_name (LstResult attribute)</a>
+</li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.BackendRunContext.pattern_path">pattern_path (BackendRunContext attribute)</a>
 </li>
       <li><a href="dara.result.html#dara.result.RefinementResult.peak_data">peak_data (RefinementResult attribute)</a>
 </li>
@@ -1474,11 +1654,15 @@
       <ul>
         <li><a href="dara.server.setting.html#dara.server.setting.DaraServerSettings.peak_match_batch_size">(DaraServerSettings attribute)</a>
 </li>
+        <li><a href="dara.html#dara.MachineConfig.peak_match_batch_size">(MachineConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.peak_match_batch_size">[1]</a>
+</li>
       </ul></li>
       <li><a href="dara.resources.html#dara.resources.DaraResourceBudget.peak_match_chunk_size">peak_match_chunk_size (DaraResourceBudget attribute)</a>
 
       <ul>
         <li><a href="dara.server.setting.html#dara.server.setting.DaraServerSettings.peak_match_chunk_size">(DaraServerSettings attribute)</a>
+</li>
+        <li><a href="dara.html#dara.MachineConfig.peak_match_chunk_size">(MachineConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.peak_match_chunk_size">[1]</a>
 </li>
       </ul></li>
       <li><a href="dara.resources.html#dara.resources.DaraResourceBudget.peak_match_max_pending_batches">peak_match_max_pending_batches (DaraResourceBudget attribute)</a>
@@ -1486,17 +1670,23 @@
       <ul>
         <li><a href="dara.server.setting.html#dara.server.setting.DaraServerSettings.peak_match_max_pending_batches">(DaraServerSettings attribute)</a>
 </li>
+        <li><a href="dara.html#dara.MachineConfig.peak_match_max_pending_batches">(MachineConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.peak_match_max_pending_batches">[1]</a>
+</li>
       </ul></li>
       <li><a href="dara.search.data_model.html#dara.search.data_model.SearchNodeData.peak_matcher_scores">peak_matcher_scores (SearchNodeData attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dara.search.data_model.html#dara.search.data_model.SearchNodeData.peak_matcher_threshold">peak_matcher_threshold (SearchNodeData attribute)</a>
 </li>
       <li><a href="dara.search.peak_matcher.html#dara.search.peak_matcher.PeakMatcher">PeakMatcher (class in dara.search.peak_matcher)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dara.schema.html#dara.schema.RefinementDocument.phase_params">phase_params (RefinementDocument attribute)</a>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.BackendRunContext.phase_params">phase_params (BackendRunContext attribute)</a>
+
+      <ul>
+        <li><a href="dara.schema.html#dara.schema.RefinementDocument.phase_params">(RefinementDocument attribute)</a>
 </li>
+      </ul></li>
       <li><a href="dara.schema.html#dara.schema.PhaseSearchDocument.phase_predictor">phase_predictor (PhaseSearchDocument attribute)</a>
 
       <ul>
@@ -1505,11 +1695,17 @@
       </ul></li>
       <li><a href="dara.prediction.core.html#dara.prediction.core.PhasePredictor">PhasePredictor (class in dara.prediction.core)</a>
 </li>
-      <li><a href="dara.search.data_model.html#dara.search.data_model.SearchResult.phases">phases (SearchResult attribute)</a>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.BackendRunContext.phases">phases (BackendRunContext attribute)</a>
+
+      <ul>
+        <li><a href="dara.search.data_model.html#dara.search.data_model.SearchResult.phases">(SearchResult attribute)</a>
 </li>
+      </ul></li>
       <li><a href="dara.result.html#dara.result.LstResult.phases_results">phases_results (LstResult attribute)</a>
 </li>
       <li><a href="dara.jobs.html#dara.jobs.PhaseSearchMaker">PhaseSearchMaker (class in dara.jobs)</a>
+</li>
+      <li><a href="dara.html#dara.MachineConfig.physical_cores">physical_cores (MachineConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.physical_cores">[1]</a>
 </li>
       <li><a href="dara.server.api_router.html#dara.server.api_router.plot">plot() (in module dara.server.api_router)</a>
 
@@ -1521,12 +1717,18 @@
 </li>
       <li><a href="dara.server.setting.html#dara.server.setting.DaraServerSettings.port">port (DaraServerSettings attribute)</a>, <a href="dara.server.setting.html#id8">[1]</a>
 </li>
+      <li><a href="dara.html#dara.ElementFilterConfig.possible">possible (ElementFilterConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.ElementFilterConfig.possible">[1]</a>
+</li>
       <li><a href="dara.candidate_filter.html#dara.candidate_filter.CandidateElementFilter.possible_elements">possible_elements (CandidateElementFilter attribute)</a>
 </li>
       <li><a href="dara.candidate_filter.html#dara.candidate_filter.CandidateElementFilter.possible_set">possible_set (CandidateElementFilter property)</a>
 </li>
-      <li><a href="dara.schema.html#dara.schema.PhaseSearchDocument.precursors">precursors (PhaseSearchDocument attribute)</a>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.precursors">precursors (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.precursors">[1]</a>
+
+      <ul>
+        <li><a href="dara.schema.html#dara.schema.PhaseSearchDocument.precursors">(PhaseSearchDocument attribute)</a>
 </li>
+      </ul></li>
       <li><a href="dara.prediction.rxn_ca.html#dara.prediction.rxn_ca.CellularAutomatonEngine.predict">predict() (CellularAutomatonEngine method)</a>
 
       <ul>
@@ -1584,13 +1786,19 @@
       <li><a href="dara.xrd.html#dara.xrd.RawFile">RawFile (class in dara.xrd)</a>
 </li>
       <li><a href="dara.resources.html#dara.resources.DaraResourceBudget.ray_local_mode">ray_local_mode (DaraResourceBudget attribute)</a>
+
+      <ul>
+        <li><a href="dara.html#dara.MachineConfig.ray_local_mode">(MachineConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.ray_local_mode">[1]</a>
 </li>
+      </ul></li>
       <li><a href="dara.resources.html#dara.resources.DaraResourceBudget.ray_num_cpus">ray_num_cpus (DaraResourceBudget property)</a>
 </li>
       <li><a href="dara.resources.html#dara.resources.DaraResourceBudget.ray_object_store_memory_gb">ray_object_store_memory_gb (DaraResourceBudget attribute)</a>
 
       <ul>
         <li><a href="dara.server.setting.html#dara.server.setting.DaraServerSettings.ray_object_store_memory_gb">(DaraServerSettings attribute)</a>
+</li>
+        <li><a href="dara.html#dara.MachineConfig.ray_object_store_memory_gb">(MachineConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.ray_object_store_memory_gb">[1]</a>
 </li>
       </ul></li>
       <li><a href="dara.prediction.rn.html#dara.prediction.rn.ReactionNetworkEngine">ReactionNetworkEngine (class in dara.prediction.rn)</a>
@@ -1599,9 +1807,13 @@
 </li>
       <li><a href="dara.search.tree.html#dara.search.tree.BaseSearchTree.refine_phases">refine_phases() (BaseSearchTree method)</a>
 </li>
-      <li><a href="dara.schema.html#dara.schema.RefinementDocument.refinement_params">refinement_params (RefinementDocument attribute)</a>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.refinement_backend">refinement_backend (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.refinement_backend">[1]</a>
+</li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.BackendRunContext.refinement_params">refinement_params (BackendRunContext attribute)</a>
 
       <ul>
+        <li><a href="dara.schema.html#dara.schema.RefinementDocument.refinement_params">(RefinementDocument attribute)</a>
+</li>
         <li><a href="dara.jobs.html#dara.jobs.RefinementMaker.refinement_params">(RefinementMaker attribute)</a>
 </li>
       </ul></li>
@@ -1615,14 +1827,22 @@
 </li>
       <li><a href="dara.search.tree.html#dara.search.tree.remove_unnecessary_phases">remove_unnecessary_phases() (in module dara.search.tree)</a>
 </li>
+      <li><a href="dara.resources.html#dara.resources.DaraResourceBudget.resolve">resolve() (DaraResourceBudget method)</a>
+</li>
+      <li><a href="dara.html#dara.MachineConfig.resolved_max_parallel_jobs">resolved_max_parallel_jobs() (MachineConfig method)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.resolved_max_parallel_jobs">[1]</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dara.resources.html#dara.resources.DaraResourceBudget.resolve">resolve() (DaraResourceBudget method)</a>
+      <li><a href="dara.html#dara.MachineConfig.resolved_target_cpus">resolved_target_cpus() (MachineConfig method)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.resolved_target_cpus">[1]</a>
 </li>
       <li><a href="dara.server.setting.html#dara.server.setting.DaraServerSettings.resource_budget">resource_budget() (DaraServerSettings method)</a>
 </li>
       <li><a href="dara.server.setting.html#dara.server.setting.DaraServerSettings.resource_profile">resource_profile (DaraServerSettings attribute)</a>
+
+      <ul>
+        <li><a href="dara.html#dara.MachineConfig.resource_profile">(MachineConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.resource_profile">[1]</a>
 </li>
+      </ul></li>
       <li><a href="dara.schema.html#dara.schema.RefinementDocument.result">result (RefinementDocument attribute)</a>
 </li>
       <li><a href="dara.server.api_router.html#dara.server.api_router.result">result() (in module dara.server.api_router)</a>
@@ -1649,12 +1869,22 @@
         <li><a href="dara.jobs.html#dara.jobs.PhaseSearchMaker.run_final_refinement">(PhaseSearchMaker attribute)</a>
 </li>
       </ul></li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.FullProfPcrGenerator.run_fp2k">run_fp2k() (FullProfPcrGenerator method)</a>
+</li>
       <li><a href="dara.server.worker.html#dara.server.worker.run_job">run_job() (in module dara.server.worker)</a>
 </li>
       <li><a href="dara.eflech_worker.html#dara.eflech_worker.EflechWorker.run_peak_detection">run_peak_detection() (EflechWorker method)</a>
 </li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.run_refinement_backend">run_refinement_backend() (in module dara.refinement_backends)</a>
+</li>
       <li><a href="dara.bgmn_worker.html#dara.bgmn_worker.BGMNWorker.run_refinement_cmd">run_refinement_cmd() (BGMNWorker method)</a>
 </li>
+      <li><a href="dara.html#dara.run_search_match">run_search_match() (in module dara)</a>
+
+      <ul>
+        <li><a href="dara.search_match.html#dara.search_match.run_search_match">(in module dara.search_match)</a>
+</li>
+      </ul></li>
       <li><a href="dara.result.html#dara.result.LstResult.rwp">rwp (LstResult attribute)</a>
 
       <ul>
@@ -1669,6 +1899,8 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.sample_path">sample_path (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.sample_path">[1]</a>
+</li>
       <li><a href="dara.jobs.html#dara.jobs.RefinementMaker.save">save (RefinementMaker attribute)</a>
 </li>
       <li><a href="dara.search.peak_matcher.html#dara.search.peak_matcher.PeakMatcher.score">score() (PeakMatcher method)</a>
@@ -1689,9 +1921,17 @@
 </li>
       <li><a href="dara.search.tree.html#dara.search.tree.SearchTree.show">show() (SearchTree method)</a>
 </li>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.BackendRunContext.show_progress">show_progress (BackendRunContext attribute)</a>
+
+      <ul>
+        <li><a href="dara.jobs.html#dara.jobs.RefinementMaker.show_progress">(RefinementMaker attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dara.jobs.html#dara.jobs.RefinementMaker.show_progress">show_progress (RefinementMaker attribute)</a>
+      <li><a href="dara.html#dara.DaraSearchMatchConfig.skip_refinement_export">skip_refinement_export (DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.skip_refinement_export">[1]</a>
+</li>
+      <li><a href="dara.search_match.html#dara.search_match.slugify">slugify() (in module dara.search_match)</a>
 </li>
       <li><a href="dara.result.html#dara.result.PhaseResult.spacegroup_no">spacegroup_no (PhaseResult attribute)</a>
 </li>
@@ -1711,12 +1951,18 @@
 </li>
       <li><a href="dara.server.api_router.html#dara.server.api_router.submit">submit() (in module dara.server.api_router)</a>
 </li>
+      <li><a href="dara.search_match.html#dara.search_match.summarize_results">summarize_results() (in module dara.search_match)</a>
+</li>
+      <li><a href="dara.html#dara.ExternalCsvConfig.symprec">symprec (ExternalCsvConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.ExternalCsvConfig.symprec">[1]</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dara.html#dara.MachineConfig.target_cpus">target_cpus (MachineConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.MachineConfig.target_cpus">[1]</a>
+</li>
       <li><a href="dara.schema.html#dara.schema.PhaseSearchDocument.task_label">task_label (PhaseSearchDocument attribute)</a>
 
       <ul>
@@ -1731,10 +1977,10 @@
 </li>
       <li><a href="dara.xrd.html#dara.xrd.RawFile.to_raw_file">to_raw_file() (RawFile method)</a>
 </li>
-      <li><a href="dara.cif.html#dara.cif.Cif.to_scaled_structure">to_scaled_structure() (Cif method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dara.cif.html#dara.cif.Cif.to_scaled_structure">to_scaled_structure() (Cif method)</a>
+</li>
       <li><a href="dara.cif.html#dara.cif.Cif.to_structure">to_structure() (Cif method)</a>
 </li>
       <li><a href="dara.xrd.html#dara.xrd.XRDMLFile.to_xrdml_file">to_xrdml_file() (XRDMLFile method)</a>
@@ -1783,12 +2029,22 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.BackendRunContext.wavelength">wavelength (BackendRunContext attribute)</a>
+
+      <ul>
+        <li><a href="dara.html#dara.DaraSearchMatchConfig.wavelength">(DaraSearchMatchConfig attribute)</a>, <a href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig.wavelength">[1]</a>
+</li>
+      </ul></li>
       <li><a href="dara.server.worker.html#dara.server.worker.worker_process">worker_process() (in module dara.server.worker)</a>
 </li>
-      <li><a href="dara.prediction.core.html#dara.prediction.core.PhasePredictor.write_cifs_from_formulas">write_cifs_from_formulas() (PhasePredictor method)</a>
+      <li><a href="dara.refinement_backends.html#dara.refinement_backends.BackendRunContext.working_dir">working_dir (BackendRunContext attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dara.prediction.core.html#dara.prediction.core.PhasePredictor.write_cifs_from_formulas">write_cifs_from_formulas() (PhasePredictor method)</a>
+</li>
+      <li><a href="dara.search_match.html#dara.search_match.write_csv">write_csv() (in module dara.search_match)</a>
+</li>
       <li><a href="dara.search.peak_matcher.html#dara.search.peak_matcher.PeakMatcher.wrong_intensity">wrong_intensity (PeakMatcher property)</a>
 </li>
       <li><a href="dara.search.data_model.html#dara.search.data_model.PeakMatchingStrategy.wrong_intensity_coeff">wrong_intensity_coeff (PeakMatchingStrategy attribute)</a>

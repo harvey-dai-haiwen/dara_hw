@@ -56,7 +56,7 @@ pip install dara-xrd
 For the fastest way to experience Dara, launch the **web server** and use the browser-based interface:
 
 ```bash
-dara server
+uv run dara server
 ```
 
 Then open your browser and navigate to `http://localhost:8898`. You will have a full application with all the features of Dara, including data management, phase analysis, and refinement.
@@ -87,6 +87,7 @@ For source code and further information, please visit [http://www.bgmn.de](http:
 :maxdepth: 2
 :hidden:
 Installation<install>
+Local Deployment<deployment>
 Local Database Recovery<local_database_recovery>
 Web Server<web_server>
 Tutorials<tutorials>

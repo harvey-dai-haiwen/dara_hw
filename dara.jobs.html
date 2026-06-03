@@ -228,6 +228,7 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">Local Deployment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="local_database_recovery.html">Local Database Recovery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="web_server.html">Web Server</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -276,9 +277,12 @@
 <li class="toctree-l3"><a class="reference internal" href="dara.peak_detection.html">dara.peak_detection module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.plot.html">dara.plot module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.refine.html">dara.refine module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.refinement_backends.html">dara.refinement_backends module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.resources.html">dara.resources module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.result.html">dara.result module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.schema.html">dara.schema module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match.html">dara.search_match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match_cli.html">dara.search_match_cli module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.settings.html">dara.settings module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.structure_db.html">dara.structure_db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.utils.html">dara.utils module</a></li>
@@ -490,6 +494,8 @@
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.jobs.RefinementMaker"><code class="docutils literal notranslate"><span class="pre">RefinementMaker</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.jobs.RefinementMaker.backend"><code class="docutils literal notranslate"><span class="pre">RefinementMaker.backend</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.jobs.RefinementMaker.backend_options"><code class="docutils literal notranslate"><span class="pre">RefinementMaker.backend_options</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.jobs.RefinementMaker.make"><code class="docutils literal notranslate"><span class="pre">RefinementMaker.make()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.jobs.RefinementMaker.name"><code class="docutils literal notranslate"><span class="pre">RefinementMaker.name</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.jobs.RefinementMaker.refinement_params"><code class="docutils literal notranslate"><span class="pre">RefinementMaker.refinement_params</span></code></a></li>
@@ -577,7 +583,7 @@ the default parameters in the refinement.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="dara.jobs.RefinementMaker">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RefinementMaker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'refine'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refinement_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/jobs.html#RefinementMaker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.jobs.RefinementMaker" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RefinementMaker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'refine'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refinement_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bgmn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/jobs.html#RefinementMaker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.jobs.RefinementMaker" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Maker</span></code></p>
 <p>Maker to create a job for performing Rietveld refinement using BGMN.</p>
 <dl class="field-list simple">
@@ -585,6 +591,16 @@ the default parameters in the refinement.</p></li>
 <dd class="field-odd"><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The name of the job. This is automatically created if not provided.</p>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.jobs.RefinementMaker.backend">
+<span class="sig-name descname"><span class="pre">backend</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'bgmn'</span></em><a class="headerlink" href="#dara.jobs.RefinementMaker.backend" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.jobs.RefinementMaker.backend_options">
+<span class="sig-name descname"><span class="pre">backend_options</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.jobs.RefinementMaker.backend_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="dara.jobs.RefinementMaker.make">
 <span class="sig-name descname"><span class="pre">make</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xrd_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cifs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Aeris-fds-Pixcel1d-Medipix3'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/jobs.html#RefinementMaker.make"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.jobs.RefinementMaker.make" title="Link to this definition">#</a></dt>
@@ -683,6 +699,8 @@ the default parameters in the refinement.</p></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.jobs.RefinementMaker"><code class="docutils literal notranslate"><span class="pre">RefinementMaker</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.jobs.RefinementMaker.backend"><code class="docutils literal notranslate"><span class="pre">RefinementMaker.backend</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.jobs.RefinementMaker.backend_options"><code class="docutils literal notranslate"><span class="pre">RefinementMaker.backend_options</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.jobs.RefinementMaker.make"><code class="docutils literal notranslate"><span class="pre">RefinementMaker.make()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.jobs.RefinementMaker.name"><code class="docutils literal notranslate"><span class="pre">RefinementMaker.name</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.jobs.RefinementMaker.refinement_params"><code class="docutils literal notranslate"><span class="pre">RefinementMaker.refinement_params</span></code></a></li>

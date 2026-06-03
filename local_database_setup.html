@@ -1,0 +1,780 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Local Database Setup &#8212; Dara Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="_static/documentation_options.js?v=db04a367"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'local_database_setup';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="_static/logo.svg"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.2.0" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo-wide.svg" class="logo__image only-light" alt="Dara Documentation - Home"/>
+    <img src="_static/logo-wide-dark.svg" class="logo__image only-dark pst-js-only" alt="Dara Documentation - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/CederGroupHub/dara" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">Local Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="local_database_recovery.html">Local Database Recovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_server.html">Web Server</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/automated_refinement.html">1. Automated refinement with BGMN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/phase_search.html">2. Phase analysis with tree search</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">API Docs</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="dara.html">dara package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="dara.bgmn.html">dara.bgmn package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.bgmn.download_bgmn.html">dara.bgmn.download_bgmn module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.data.html">dara.data package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="dara.prediction.html">dara.prediction package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.prediction.base.html">dara.prediction.base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.prediction.core.html">dara.prediction.core module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.prediction.rn.html">dara.prediction.rn module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.prediction.rxn_ca.html">dara.prediction.rxn_ca module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="dara.search.html">dara.search package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.search.core.html">dara.search.core module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search.data_model.html">dara.search.data_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search.peak_matcher.html">dara.search.peak_matcher module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search.tree.html">dara.search.tree module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="dara.server.html">dara.server package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.server.api_router.html">dara.server.api_router module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.server.app.html">dara.server.app module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.server.setting.html">dara.server.setting module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.server.utils.html">dara.server.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.server.worker.html">dara.server.worker module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.bgmn_worker.html">dara.bgmn_worker module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.candidate_filter.html">dara.candidate_filter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.cif.html">dara.cif module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.cif2str.html">dara.cif2str module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.cli.html">dara.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.eflech_worker.html">dara.eflech_worker module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.external_candidates.html">dara.external_candidates module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.generate_control_file.html">dara.generate_control_file module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.jobs.html">dara.jobs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.peak_detection.html">dara.peak_detection module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.plot.html">dara.plot module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.refine.html">dara.refine module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.refinement_backends.html">dara.refinement_backends module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.resources.html">dara.resources module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.result.html">dara.result module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.schema.html">dara.schema module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match.html">dara.search_match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match_cli.html">dara.search_match_cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.settings.html">dara.settings module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.structure_db.html">dara.structure_db module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.utils.html">dara.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.xrd.html">dara.xrd module</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/CederGroupHub/dara" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/CederGroupHub/dara/blob/docs/local_database_setup.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/local_database_setup.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Local Database Setup</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runtime-contract">Runtime Contract</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cod">COD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#icsd">ICSD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#materials-project">Materials Project</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validation">Validation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#publication-hygiene">Publication Hygiene</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="local-database-setup">
+<h1>Local Database Setup<a class="headerlink" href="#local-database-setup" title="Link to this heading">#</a></h1>
+<p>This guide describes how to prepare local crystallographic mirrors for Dara
+search-match runs on the accelerate branch. The preferred handoff model is a
+separate database-entry repository called <code class="docutils literal notranslate"><span class="pre">CIF_index</span></code>, checked out locally as
+<code class="docutils literal notranslate"><span class="pre">D:\Haiwen\Databases\Structure_index</span></code> on this workstation. The mirrors
+themselves are private data and must not be committed.</p>
+<p>For from-zero setup, use the canonical deployment script first:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">setup_local_dara</span><span class="p">.</span><span class="n">py</span>
+<span class="n">uv</span> <span class="n">run</span> <span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">validate_local_setup</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-run-pytest</span> <span class="p">-</span><span class="n">-run-smoke</span>
+</pre></div>
+</div>
+<p>This page documents the database layout expected by that script and by Dara.</p>
+<section id="runtime-contract">
+<h2>Runtime Contract<a class="headerlink" href="#runtime-contract" title="Link to this heading">#</a></h2>
+<p>Dara’s database layer expects local CIF mirrors plus small metadata indexes:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Structure_index/
+  cod_cifs/        # optional local COD mirror
+  icsd_cifs/       # optional local ICSD mirror, license required
+  mp_cifs/         # optional local Materials Project CIF mirror
+  indexes/         # optional fast parquet indexes, mainly used by MP
+</pre></div>
+</div>
+<p>The default package paths are defined in <code class="docutils literal notranslate"><span class="pre">src/dara/settings.py</span></code>, but team
+machines should prefer a <code class="docutils literal notranslate"><span class="pre">~/.dara.yaml</span></code> pointing to the standalone
+<code class="docutils literal notranslate"><span class="pre">Structure_index</span></code> checkout:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">PATH_TO_STRUCTURE_INDEX</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">D:/Haiwen/Databases/Structure_index</span>
+</pre></div>
+</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">PATH_TO_STRUCTURE_INDEX</span></code> is set, Dara derives these local mirrors unless
+you explicitly override them:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>PATH_TO_COD  = &lt;PATH_TO_STRUCTURE_INDEX&gt;/cod_cifs
+PATH_TO_ICSD = &lt;PATH_TO_STRUCTURE_INDEX&gt;/icsd_cifs
+PATH_TO_MP   = &lt;PATH_TO_STRUCTURE_INDEX&gt;/mp_cifs
+</pre></div>
+</div>
+<p>You can also keep the explicit paths in <code class="docutils literal notranslate"><span class="pre">~/.dara.yaml</span></code> for older Dara checkouts:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">PATH_TO_COD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">D:/Haiwen/Databases/Structure_index/cod_cifs</span>
+<span class="nt">PATH_TO_ICSD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">D:/Haiwen/Databases/Structure_index/icsd_cifs</span>
+<span class="nt">PATH_TO_MP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">D:/Haiwen/Databases/Structure_index/mp_cifs</span>
+</pre></div>
+</div>
+<p>Environment variables also work because settings use the <code class="docutils literal notranslate"><span class="pre">dara_</span></code> prefix:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="nv">$env:dara_PATH_TO_STRUCTURE_INDEX</span> <span class="p">=</span> <span class="s2">&quot;D:\Haiwen\Databases\Structure_index&quot;</span>
+<span class="nv">$env:dara_PATH_TO_COD</span> <span class="p">=</span> <span class="s2">&quot;D:\Haiwen\Databases\Structure_index\cod_cifs&quot;</span>
+<span class="nv">$env:dara_PATH_TO_ICSD</span> <span class="p">=</span> <span class="s2">&quot;D:\Haiwen\Databases\Structure_index\icsd_cifs&quot;</span>
+<span class="nv">$env:dara_PATH_TO_MP</span> <span class="p">=</span> <span class="s2">&quot;D:\Haiwen\Databases\Structure_index\mp_cifs&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="cod">
+<h2>COD<a class="headerlink" href="#cod" title="Link to this heading">#</a></h2>
+<p>COD is public. To create a local mirror:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rsync<span class="w"> </span>-av<span class="w"> </span>--delete<span class="w"> </span>rsync://www.crystallography.net/cif/<span class="w"> </span>COD_2024/
+</pre></div>
+</div>
+<p>Then either move or point Dara to the mirror:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>cod_cifs/
+  1/00/00/1000000.cif
+  1/00/00/1000001.cif
+  ...
+</pre></div>
+</div>
+<p>Dara accepts both <code class="docutils literal notranslate"><span class="pre">cod_cifs/</span></code> and <code class="docutils literal notranslate"><span class="pre">cod_cifs/cif/</span></code> layouts.</p>
+<p>The tracked COD metadata file used for chemical-system lookup is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>src/dara/data/cod_filtered_info_2024.json.gz
+</pre></div>
+</div>
+<p>If the COD mirror changes substantially, rebuild this metadata from the local
+mirror:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">uv</span> <span class="n">run</span> <span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">filter_cod</span><span class="p">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>The script writes <code class="docutils literal notranslate"><span class="pre">cod_filtered_info_2024.json.gz</span></code> in the current working
+directory. Review it, then replace <code class="docutils literal notranslate"><span class="pre">src/dara/data/cod_filtered_info_2024.json.gz</span></code>
+only if you intentionally want a new metadata snapshot.</p>
+</section>
+<section id="icsd">
+<h2>ICSD<a class="headerlink" href="#icsd" title="Link to this heading">#</a></h2>
+<p>ICSD requires a paid license. Dara does not provide ICSD CIFs and does not
+download them. Use only a local copy permitted by your ICSD agreement.</p>
+<p>Supported layouts:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>icsd_cifs/
+  icsd_123456.cif
+  icsd_123457.cif
+</pre></div>
+</div>
+<p>or sharded numeric files:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>icsd_cifs/
+  cif/
+    0/03/87/38768.cif
+</pre></div>
+</div>
+<p>Dara resolves both layouts during search-match. The tracked ICSD metadata file
+used for chemical-system lookup is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>src/dara/data/icsd_filtered_info_2025_v3.json.gz
+</pre></div>
+</div>
+<p>If you intentionally rebuild the ICSD metadata snapshot, use:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">uv</span> <span class="n">run</span> <span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">filter_icsd</span><span class="p">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>Important: <code class="docutils literal notranslate"><span class="pre">scripts/filter_icsd.py</span></code> currently expects flat <code class="docutils literal notranslate"><span class="pre">icsd_*.cif</span></code> input.
+If your local ICSD mirror is sharded, either use the existing tracked metadata
+snapshot or create a temporary flat export before rebuilding the metadata file.</p>
+</section>
+<section id="materials-project">
+<h2>Materials Project<a class="headerlink" href="#materials-project" title="Link to this heading">#</a></h2>
+<p>Materials Project CIF downloading is not implemented in Dara. Prepare a local
+CIF mirror from your own permitted MP export.</p>
+<p>The preferred local layout is sharded by the database id:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>mp_cifs/
+  0/00/mp-9.cif
+  0/00/mp-90.cif
+  1/10/mp-1026684.cif
+  m/mv/mvc-11882.cif
+</pre></div>
+</div>
+<p>Dara’s <code class="docutils literal notranslate"><span class="pre">MPDatabase.get_file_path()</span></code> uses this routing. For direct local-folder
+searches you can also use <code class="docutils literal notranslate"><span class="pre">--no-database</span> <span class="pre">--additional-cif-dir</span></code>, but for
+<code class="docutils literal notranslate"><span class="pre">--database</span> <span class="pre">MP</span></code> the mirror should follow the sharded MP layout above.</p>
+<p>MP uses:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>src/dara/data/mp_struct_info.json.gz
+&lt;PATH_TO_STRUCTURE_INDEX&gt;/indexes/mp_index.jsonl.gz
+&lt;PATH_TO_STRUCTURE_INDEX&gt;/indexes/mp_index.parquet
+</pre></div>
+</div>
+<p>At runtime, Dara first tries
+<code class="docutils literal notranslate"><span class="pre">&lt;PATH_TO_STRUCTURE_INDEX&gt;/indexes/mp_index.jsonl.gz</span></code>, then
+<code class="docutils literal notranslate"><span class="pre">&lt;PATH_TO_STRUCTURE_INDEX&gt;/indexes/mp_index.parquet</span></code> if <code class="docutils literal notranslate"><span class="pre">pyarrow</span></code> is installed,
+then falls back to the legacy repo-local <code class="docutils literal notranslate"><span class="pre">indexes/mp_index.parquet</span></code>. If no
+durable index is present, Dara scans <code class="docutils literal notranslate"><span class="pre">mp_cifs/**/*.cif</span></code> and builds the
+chemical-system index in memory. That fallback is convenient but can be slow on a
+full MP mirror.</p>
+<p>Both JSONL and parquet rows use this schema:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>raw_db_id
+formula
+elements
+spacegroup
+energy_above_hull
+</pre></div>
+</div>
+<p>To build the portable JSONL index from the local MP-in-ICSD pickle:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python scripts/setup_local_dara.py --mp-pickle D:\Haiwen\Databases\df_MPinICSD_20250211_withstructure.pkl --build-mp-index
+</pre></div>
+</div>
+</section>
+<section id="validation">
+<h2>Validation<a class="headerlink" href="#validation" title="Link to this heading">#</a></h2>
+<p>After configuring mirrors, run focused database tests:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">uv</span> <span class="n">run</span> <span class="n">pytest</span>
+</pre></div>
+</div>
+<p>Then run a dry-run through the unified search-match entrypoint:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">uv</span> <span class="n">run</span> <span class="n">python</span> <span class="n">-m</span> <span class="n">dara</span><span class="p">.</span><span class="n">search_match_cli</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-xrd</span> <span class="n">tests</span><span class="p">/</span><span class="n">test_data</span><span class="p">/</span><span class="n">BiFeO3</span><span class="p">.</span><span class="n">xy</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-output-root</span> <span class="p">.</span><span class="n">tmp</span><span class="p">/</span><span class="n">db-dry-run</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-database</span> <span class="n">ICSD</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-must-element</span> <span class="n">Bi</span> <span class="p">-</span><span class="n">-must-element</span> <span class="n">Fe</span> <span class="p">-</span><span class="n">-possible-element</span> <span class="n">O</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-logical-threads</span> <span class="n">4</span> <span class="p">-</span><span class="n">-memory-gb</span> <span class="n">16</span> <span class="p">-</span><span class="n">-cpu-target-fraction</span> <span class="n">0</span><span class="p">.</span><span class="n">5</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-dry-run</span>
+</pre></div>
+</div>
+<p>For a local-CIF-only validation that does not touch ICSD/COD/MP mirrors:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">uv</span> <span class="n">run</span> <span class="n">python</span> <span class="n">-m</span> <span class="n">dara</span><span class="p">.</span><span class="n">search_match_cli</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-xrd</span> <span class="n">tests</span><span class="p">/</span><span class="n">test_data</span><span class="p">/</span><span class="n">BiFeO3</span><span class="p">.</span><span class="n">xy</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-output-root</span> <span class="p">.</span><span class="n">tmp</span><span class="p">/</span><span class="n">local-cif-dry-run</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-no-database</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-additional-cif-dir</span> <span class="n">tests</span><span class="p">/</span><span class="n">test_data</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-must-element</span> <span class="n">Bi</span> <span class="p">-</span><span class="n">-must-element</span> <span class="n">Fe</span> <span class="p">-</span><span class="n">-possible-element</span> <span class="n">O</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-logical-threads</span> <span class="n">4</span> <span class="p">-</span><span class="n">-memory-gb</span> <span class="n">16</span> <span class="p">-</span><span class="n">-cpu-target-fraction</span> <span class="n">0</span><span class="p">.</span><span class="n">5</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-dry-run</span>
+</pre></div>
+</div>
+<p>The dry-run should write:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;output-root&gt;/summary.json
+&lt;output-root&gt;/candidates/selected/*.cif
+</pre></div>
+</div>
+</section>
+<section id="publication-hygiene">
+<h2>Publication Hygiene<a class="headerlink" href="#publication-hygiene" title="Link to this heading">#</a></h2>
+<p>Do not commit local mirrors, rebuilt private metadata, scratch outputs, or
+machine-specific indexes unless the team explicitly agrees that the file is
+public and reproducible. ICSD CIFs must never be published from Dara or from
+<code class="docutils literal notranslate"><span class="pre">CIF_index</span></code>.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runtime-contract">Runtime Contract</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cod">COD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#icsd">ICSD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#materials-project">Materials Project</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validation">Validation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#publication-hygiene">Publication Hygiene</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Yuxing Fei, Matthew J. McDermott
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Ceder Group.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

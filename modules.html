@@ -224,6 +224,7 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">Local Deployment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="local_database_recovery.html">Local Database Recovery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="web_server.html">Web Server</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -272,9 +273,12 @@
 <li class="toctree-l3"><a class="reference internal" href="dara.peak_detection.html">dara.peak_detection module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.plot.html">dara.plot module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.refine.html">dara.refine module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.refinement_backends.html">dara.refinement_backends module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.resources.html">dara.resources module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.result.html">dara.result module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.schema.html">dara.schema module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match.html">dara.search_match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match_cli.html">dara.search_match_cli module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.settings.html">dara.settings module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.structure_db.html">dara.structure_db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.utils.html">dara.utils module</a></li>
@@ -590,6 +594,16 @@
 <li class="toctree-l4"><a class="reference internal" href="dara.refine.html#dara.refine.do_refinement_no_saving"><code class="docutils literal notranslate"><span class="pre">do_refinement_no_saving()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="dara.refinement_backends.html">dara.refinement_backends module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.refinement_backends.html#dara.refinement_backends.BackendRefinementError"><code class="docutils literal notranslate"><span class="pre">BackendRefinementError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.refinement_backends.html#dara.refinement_backends.BackendRunContext"><code class="docutils literal notranslate"><span class="pre">BackendRunContext</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.refinement_backends.html#dara.refinement_backends.FullProfPcrGenerator"><code class="docutils literal notranslate"><span class="pre">FullProfPcrGenerator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.refinement_backends.html#dara.refinement_backends.normalize_backend"><code class="docutils literal notranslate"><span class="pre">normalize_backend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.refinement_backends.html#dara.refinement_backends.parse_fullprof_prf"><code class="docutils literal notranslate"><span class="pre">parse_fullprof_prf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.refinement_backends.html#dara.refinement_backends.parse_fullprof_sum"><code class="docutils literal notranslate"><span class="pre">parse_fullprof_sum()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.refinement_backends.html#dara.refinement_backends.run_refinement_backend"><code class="docutils literal notranslate"><span class="pre">run_refinement_backend()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="dara.resources.html">dara.resources module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="dara.resources.html#dara.resources.DaraResourceBudget"><code class="docutils literal notranslate"><span class="pre">DaraResourceBudget</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="dara.resources.html#dara.resources.init_ray_for_dara"><code class="docutils literal notranslate"><span class="pre">init_ray_for_dara()</span></code></a></li>
@@ -610,6 +624,28 @@
 <li class="toctree-l3"><a class="reference internal" href="dara.schema.html">dara.schema module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="dara.schema.html#dara.schema.PhaseSearchDocument"><code class="docutils literal notranslate"><span class="pre">PhaseSearchDocument</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="dara.schema.html#dara.schema.RefinementDocument"><code class="docutils literal notranslate"><span class="pre">RefinementDocument</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match.html">dara.search_match module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match.html#dara.search_match.DaraSearchMatchConfig"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match.html#dara.search_match.ElementFilterConfig"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match.html#dara.search_match.ExternalCsvConfig"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match.html#dara.search_match.MachineConfig"><code class="docutils literal notranslate"><span class="pre">MachineConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match.html#dara.search_match.build_database_objects"><code class="docutils literal notranslate"><span class="pre">build_database_objects()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match.html#dara.search_match.collect_additional_cifs"><code class="docutils literal notranslate"><span class="pre">collect_additional_cifs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match.html#dara.search_match.export_refinement_artifacts"><code class="docutils literal notranslate"><span class="pre">export_refinement_artifacts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match.html#dara.search_match.extract_refinement_phases"><code class="docutils literal notranslate"><span class="pre">extract_refinement_phases()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match.html#dara.search_match.merge_rejected_counts"><code class="docutils literal notranslate"><span class="pre">merge_rejected_counts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match.html#dara.search_match.run_search_match"><code class="docutils literal notranslate"><span class="pre">run_search_match()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match.html#dara.search_match.slugify"><code class="docutils literal notranslate"><span class="pre">slugify()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match.html#dara.search_match.summarize_results"><code class="docutils literal notranslate"><span class="pre">summarize_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match.html#dara.search_match.write_csv"><code class="docutils literal notranslate"><span class="pre">write_csv()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match_cli.html">dara.search_match_cli module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match_cli.html#dara.search_match_cli.build_parser"><code class="docutils literal notranslate"><span class="pre">build_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match_cli.html#dara.search_match_cli.config_from_args"><code class="docutils literal notranslate"><span class="pre">config_from_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search_match_cli.html#dara.search_match_cli.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="dara.settings.html">dara.settings module</a><ul>
@@ -679,7 +715,84 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="dara.html#module-dara">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dara.html#module-dara">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.additional_cif_dirs"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.additional_cif_dirs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.additional_cifs"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.additional_cifs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.backend_options"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.backend_options</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.dara_root"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.dara_root</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.databases"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.databases</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.disable_structure_dedupe"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.disable_structure_dedupe</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.dry_run"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.dry_run</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.element_filter"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.element_filter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.external_csvs"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.external_csvs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.instrument_profile"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.instrument_profile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.keep_work"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.keep_work</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.machine"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.machine</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.max_phases"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.max_phases</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.max_results"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.max_results</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.output_root"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.output_root</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.precursors"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.precursors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.refinement_backend"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.refinement_backend</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.sample_path"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.sample_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.skip_refinement_export"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.skip_refinement_export</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSearchMatchConfig.wavelength"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.wavelength</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dara.html#dara.DaraSettings"><code class="docutils literal notranslate"><span class="pre">DaraSettings</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSettings.CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">DaraSettings.CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSettings.PATH_TO_COD"><code class="docutils literal notranslate"><span class="pre">DaraSettings.PATH_TO_COD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSettings.PATH_TO_ICSD"><code class="docutils literal notranslate"><span class="pre">DaraSettings.PATH_TO_ICSD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSettings.PATH_TO_MP"><code class="docutils literal notranslate"><span class="pre">DaraSettings.PATH_TO_MP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSettings.PATH_TO_STRUCTURE_INDEX"><code class="docutils literal notranslate"><span class="pre">DaraSettings.PATH_TO_STRUCTURE_INDEX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.DaraSettings.load_default_settings"><code class="docutils literal notranslate"><span class="pre">DaraSettings.load_default_settings</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dara.html#dara.ElementFilterConfig"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.ElementFilterConfig.any"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig.any</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.ElementFilterConfig.any_expression"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig.any_expression</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.ElementFilterConfig.must"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig.must</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.ElementFilterConfig.possible"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig.possible</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dara.html#dara.ExternalCsvConfig"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.ExternalCsvConfig.angle_tolerance"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.angle_tolerance</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.ExternalCsvConfig.cif_column"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.cif_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.ExternalCsvConfig.limit"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.limit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.ExternalCsvConfig.path"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.ExternalCsvConfig.symprec"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.symprec</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dara.html#dara.MachineConfig"><code class="docutils literal notranslate"><span class="pre">MachineConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.bgmn_threads"><code class="docutils literal notranslate"><span class="pre">MachineConfig.bgmn_threads</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.cpu_target_fraction"><code class="docutils literal notranslate"><span class="pre">MachineConfig.cpu_target_fraction</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.logical_threads"><code class="docutils literal notranslate"><span class="pre">MachineConfig.logical_threads</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.max_parallel_jobs"><code class="docutils literal notranslate"><span class="pre">MachineConfig.max_parallel_jobs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.memory_gb"><code class="docutils literal notranslate"><span class="pre">MachineConfig.memory_gb</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.native_threads"><code class="docutils literal notranslate"><span class="pre">MachineConfig.native_threads</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.peak_match_batch_size"><code class="docutils literal notranslate"><span class="pre">MachineConfig.peak_match_batch_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.peak_match_chunk_size"><code class="docutils literal notranslate"><span class="pre">MachineConfig.peak_match_chunk_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.peak_match_max_pending_batches"><code class="docutils literal notranslate"><span class="pre">MachineConfig.peak_match_max_pending_batches</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.physical_cores"><code class="docutils literal notranslate"><span class="pre">MachineConfig.physical_cores</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.ray_local_mode"><code class="docutils literal notranslate"><span class="pre">MachineConfig.ray_local_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.ray_object_store_memory_gb"><code class="docutils literal notranslate"><span class="pre">MachineConfig.ray_object_store_memory_gb</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.resolved_max_parallel_jobs"><code class="docutils literal notranslate"><span class="pre">MachineConfig.resolved_max_parallel_jobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.resolved_target_cpus"><code class="docutils literal notranslate"><span class="pre">MachineConfig.resolved_target_cpus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.resource_profile"><code class="docutils literal notranslate"><span class="pre">MachineConfig.resource_profile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.MachineConfig.target_cpus"><code class="docutils literal notranslate"><span class="pre">MachineConfig.target_cpus</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dara.html#dara.RefinementPhase"><code class="docutils literal notranslate"><span class="pre">RefinementPhase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.RefinementPhase.params"><code class="docutils literal notranslate"><span class="pre">RefinementPhase.params</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.RefinementPhase.path"><code class="docutils literal notranslate"><span class="pre">RefinementPhase.path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.html#dara.RefinementPhase.make"><code class="docutils literal notranslate"><span class="pre">RefinementPhase.make()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dara.html#dara.do_refinement"><code class="docutils literal notranslate"><span class="pre">do_refinement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.html#dara.do_refinement_no_saving"><code class="docutils literal notranslate"><span class="pre">do_refinement_no_saving()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.html#dara.run_search_match"><code class="docutils literal notranslate"><span class="pre">run_search_match()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

@@ -1,0 +1,1095 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>dara.search_match module &#8212; Dara Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="_static/documentation_options.js?v=db04a367"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'dara.search_match';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="_static/logo.svg"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="dara.search_match_cli module" href="dara.search_match_cli.html" />
+    <link rel="prev" title="dara.schema module" href="dara.schema.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.2.0" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo-wide.svg" class="logo__image only-light" alt="Dara Documentation - Home"/>
+    <img src="_static/logo-wide-dark.svg" class="logo__image only-dark pst-js-only" alt="Dara Documentation - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/CederGroupHub/dara" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">Local Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="local_database_recovery.html">Local Database Recovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_server.html">Web Server</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/automated_refinement.html">1. Automated refinement with BGMN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/phase_search.html">2. Phase analysis with tree search</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="modules.html">API Docs</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="dara.html">dara package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 has-children"><a class="reference internal" href="dara.bgmn.html">dara.bgmn package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.bgmn.download_bgmn.html">dara.bgmn.download_bgmn module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.data.html">dara.data package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="dara.prediction.html">dara.prediction package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.prediction.base.html">dara.prediction.base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.prediction.core.html">dara.prediction.core module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.prediction.rn.html">dara.prediction.rn module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.prediction.rxn_ca.html">dara.prediction.rxn_ca module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="dara.search.html">dara.search package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.search.core.html">dara.search.core module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search.data_model.html">dara.search.data_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search.peak_matcher.html">dara.search.peak_matcher module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.search.tree.html">dara.search.tree module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="dara.server.html">dara.server package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="dara.server.api_router.html">dara.server.api_router module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.server.app.html">dara.server.app module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.server.setting.html">dara.server.setting module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.server.utils.html">dara.server.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dara.server.worker.html">dara.server.worker module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.bgmn_worker.html">dara.bgmn_worker module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.candidate_filter.html">dara.candidate_filter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.cif.html">dara.cif module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.cif2str.html">dara.cif2str module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.cli.html">dara.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.eflech_worker.html">dara.eflech_worker module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.external_candidates.html">dara.external_candidates module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.generate_control_file.html">dara.generate_control_file module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.jobs.html">dara.jobs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.peak_detection.html">dara.peak_detection module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.plot.html">dara.plot module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.refine.html">dara.refine module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.refinement_backends.html">dara.refinement_backends module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.resources.html">dara.resources module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.result.html">dara.result module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.schema.html">dara.schema module</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">dara.search_match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match_cli.html">dara.search_match_cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.settings.html">dara.settings module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.structure_db.html">dara.structure_db module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.utils.html">dara.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.xrd.html">dara.xrd module</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/CederGroupHub/dara" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/CederGroupHub/dara/blob/docs/dara.search_match.rst?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/dara.search_match.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>dara.search_match module</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.additional_cif_dirs"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.additional_cif_dirs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.additional_cifs"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.additional_cifs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.backend_options"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.backend_options</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.dara_root"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.dara_root</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.databases"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.databases</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.disable_structure_dedupe"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.disable_structure_dedupe</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.dry_run"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.dry_run</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.element_filter"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.element_filter</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.external_csvs"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.external_csvs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.instrument_profile"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.instrument_profile</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.keep_work"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.keep_work</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.machine"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.machine</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.max_phases"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.max_phases</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.max_results"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.max_results</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.output_root"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.output_root</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.precursors"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.precursors</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.refinement_backend"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.refinement_backend</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.sample_path"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.sample_path</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.skip_refinement_export"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.skip_refinement_export</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.wavelength"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.wavelength</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ElementFilterConfig"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ElementFilterConfig.any"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig.any</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ElementFilterConfig.any_expression"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig.any_expression</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ElementFilterConfig.must"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig.must</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ElementFilterConfig.possible"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig.possible</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ExternalCsvConfig"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ExternalCsvConfig.angle_tolerance"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.angle_tolerance</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ExternalCsvConfig.cif_column"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.cif_column</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ExternalCsvConfig.limit"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.limit</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ExternalCsvConfig.path"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.path</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ExternalCsvConfig.symprec"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.symprec</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig"><code class="docutils literal notranslate"><span class="pre">MachineConfig</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.bgmn_threads"><code class="docutils literal notranslate"><span class="pre">MachineConfig.bgmn_threads</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.cpu_target_fraction"><code class="docutils literal notranslate"><span class="pre">MachineConfig.cpu_target_fraction</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.logical_threads"><code class="docutils literal notranslate"><span class="pre">MachineConfig.logical_threads</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.max_parallel_jobs"><code class="docutils literal notranslate"><span class="pre">MachineConfig.max_parallel_jobs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.memory_gb"><code class="docutils literal notranslate"><span class="pre">MachineConfig.memory_gb</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.native_threads"><code class="docutils literal notranslate"><span class="pre">MachineConfig.native_threads</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.peak_match_batch_size"><code class="docutils literal notranslate"><span class="pre">MachineConfig.peak_match_batch_size</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.peak_match_chunk_size"><code class="docutils literal notranslate"><span class="pre">MachineConfig.peak_match_chunk_size</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.peak_match_max_pending_batches"><code class="docutils literal notranslate"><span class="pre">MachineConfig.peak_match_max_pending_batches</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.physical_cores"><code class="docutils literal notranslate"><span class="pre">MachineConfig.physical_cores</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.ray_local_mode"><code class="docutils literal notranslate"><span class="pre">MachineConfig.ray_local_mode</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.ray_object_store_memory_gb"><code class="docutils literal notranslate"><span class="pre">MachineConfig.ray_object_store_memory_gb</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.resolved_max_parallel_jobs"><code class="docutils literal notranslate"><span class="pre">MachineConfig.resolved_max_parallel_jobs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.resolved_target_cpus"><code class="docutils literal notranslate"><span class="pre">MachineConfig.resolved_target_cpus()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.resource_profile"><code class="docutils literal notranslate"><span class="pre">MachineConfig.resource_profile</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.target_cpus"><code class="docutils literal notranslate"><span class="pre">MachineConfig.target_cpus</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.build_database_objects"><code class="docutils literal notranslate"><span class="pre">build_database_objects()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.collect_additional_cifs"><code class="docutils literal notranslate"><span class="pre">collect_additional_cifs()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.export_refinement_artifacts"><code class="docutils literal notranslate"><span class="pre">export_refinement_artifacts()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.extract_refinement_phases"><code class="docutils literal notranslate"><span class="pre">extract_refinement_phases()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.merge_rejected_counts"><code class="docutils literal notranslate"><span class="pre">merge_rejected_counts()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.run_search_match"><code class="docutils literal notranslate"><span class="pre">run_search_match()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.slugify"><code class="docutils literal notranslate"><span class="pre">slugify()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.summarize_results"><code class="docutils literal notranslate"><span class="pre">summarize_results()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.write_csv"><code class="docutils literal notranslate"><span class="pre">write_csv()</span></code></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-dara.search_match">
+<span id="dara-search-match-module"></span><h1>dara.search_match module<a class="headerlink" href="#module-dara.search_match" title="Link to this heading">#</a></h1>
+<p>High-level search-match workflow for programmatic and CLI use.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DaraSearchMatchConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_root=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dara_root=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">databases=('ICSD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precursors=()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_filter=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_cifs=()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_cif_dirs=()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">external_csvs=()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_structure_dedupe=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument_profile='Aeris-fds-Pixcel1d-Medipix3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength='Cu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_phases=4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_results=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refinement_backend='bgmn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend_options=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machine=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry_run=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_work=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_refinement_export=False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#DaraSearchMatchConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration for a complete Dara search-match workflow.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.additional_cif_dirs">
+<span class="sig-name descname"><span class="pre">additional_cif_dirs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code><span class="pre">,</span> <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.additional_cif_dirs" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.additional_cifs">
+<span class="sig-name descname"><span class="pre">additional_cifs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code><span class="pre">,</span> <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.additional_cifs" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.backend_options">
+<span class="sig-name descname"><span class="pre">backend_options</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">,</span> <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code><span class="pre">]</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.backend_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.dara_root">
+<span class="sig-name descname"><span class="pre">dara_root</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.dara_root" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.databases">
+<span class="sig-name descname"><span class="pre">databases</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><span class="pre">[</span><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code><span class="pre">[</span><code class="docutils literal notranslate"><span class="pre">'ICSD'</span></code><span class="pre">,</span> <code class="docutils literal notranslate"><span class="pre">'COD'</span></code><span class="pre">,</span> <code class="docutils literal notranslate"><span class="pre">'MP'</span></code><span class="pre">],</span> <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('ICSD',)</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.databases" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.disable_structure_dedupe">
+<span class="sig-name descname"><span class="pre">disable_structure_dedupe</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.disable_structure_dedupe" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.dry_run">
+<span class="sig-name descname"><span class="pre">dry_run</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.dry_run" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.element_filter">
+<span class="sig-name descname"><span class="pre">element_filter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#dara.search_match.ElementFilterConfig" title="dara.search_match.ElementFilterConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementFilterConfig</span></code></a></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.element_filter" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.external_csvs">
+<span class="sig-name descname"><span class="pre">external_csvs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><span class="pre">[</span><a class="reference internal" href="#dara.search_match.ExternalCsvConfig" title="dara.search_match.ExternalCsvConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExternalCsvConfig</span></code></a><span class="pre">,</span> <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.external_csvs" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.instrument_profile">
+<span class="sig-name descname"><span class="pre">instrument_profile</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> <span class="pre">|</span> <code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Aeris-fds-Pixcel1d-Medipix3'</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.instrument_profile" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.keep_work">
+<span class="sig-name descname"><span class="pre">keep_work</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.keep_work" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.machine">
+<span class="sig-name descname"><span class="pre">machine</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#dara.search_match.MachineConfig" title="dara.search_match.MachineConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">MachineConfig</span></code></a></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.machine" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.max_phases">
+<span class="sig-name descname"><span class="pre">max_phases</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.max_phases" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.max_results">
+<span class="sig-name descname"><span class="pre">max_results</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.max_results" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.output_root">
+<span class="sig-name descname"><span class="pre">output_root</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.output_root" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.precursors">
+<span class="sig-name descname"><span class="pre">precursors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">,</span> <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.precursors" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.refinement_backend">
+<span class="sig-name descname"><span class="pre">refinement_backend</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code><span class="pre">[</span><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code><span class="pre">[</span><code class="docutils literal notranslate"><span class="pre">'bgmn'</span></code><span class="pre">,</span> <code class="docutils literal notranslate"><span class="pre">'gsas'</span></code><span class="pre">,</span> <code class="docutils literal notranslate"><span class="pre">'fullprof'</span></code><span class="pre">],</span> <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'bgmn'</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.refinement_backend" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.sample_path">
+<span class="sig-name descname"><span class="pre">sample_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.sample_path" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.skip_refinement_export">
+<span class="sig-name descname"><span class="pre">skip_refinement_export</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.skip_refinement_export" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.DaraSearchMatchConfig.wavelength">
+<span class="sig-name descname"><span class="pre">wavelength</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> <span class="pre">|</span> <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cu'</span></em><a class="headerlink" href="#dara.search_match.DaraSearchMatchConfig.wavelength" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dara.search_match.ElementFilterConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ElementFilterConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">must</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">any</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">any_expression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">possible</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#ElementFilterConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.ElementFilterConfig" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Three-group chemistry filter for candidate CIF selection.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.ElementFilterConfig.any">
+<span class="sig-name descname"><span class="pre">any</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">,</span> <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#dara.search_match.ElementFilterConfig.any" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.ElementFilterConfig.any_expression">
+<span class="sig-name descname"><span class="pre">any_expression</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.search_match.ElementFilterConfig.any_expression" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.ElementFilterConfig.must">
+<span class="sig-name descname"><span class="pre">must</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">,</span> <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#dara.search_match.ElementFilterConfig.must" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.ElementFilterConfig.possible">
+<span class="sig-name descname"><span class="pre">possible</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">,</span> <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#dara.search_match.ElementFilterConfig.possible" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dara.search_match.ExternalCsvConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ExternalCsvConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cif_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symprec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#ExternalCsvConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.ExternalCsvConfig" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>External CSV containing one CIF text column.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.ExternalCsvConfig.angle_tolerance">
+<span class="sig-name descname"><span class="pre">angle_tolerance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5.0</span></em><a class="headerlink" href="#dara.search_match.ExternalCsvConfig.angle_tolerance" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.ExternalCsvConfig.cif_column">
+<span class="sig-name descname"><span class="pre">cif_column</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.search_match.ExternalCsvConfig.cif_column" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.ExternalCsvConfig.limit">
+<span class="sig-name descname"><span class="pre">limit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.search_match.ExternalCsvConfig.limit" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.ExternalCsvConfig.path">
+<span class="sig-name descname"><span class="pre">path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></em><a class="headerlink" href="#dara.search_match.ExternalCsvConfig.path" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.ExternalCsvConfig.symprec">
+<span class="sig-name descname"><span class="pre">symprec</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.1</span></em><a class="headerlink" href="#dara.search_match.ExternalCsvConfig.symprec" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MachineConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physical_cores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logical_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_gb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpu_target_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cpus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_profile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">native_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bgmn_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_parallel_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_match_chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_match_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_match_max_pending_batches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray_object_store_memory_gb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray_local_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#MachineConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.MachineConfig" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Machine and CPU target used to build a Dara resource budget.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.bgmn_threads">
+<span class="sig-name descname"><span class="pre">bgmn_threads</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#dara.search_match.MachineConfig.bgmn_threads" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.cpu_target_fraction">
+<span class="sig-name descname"><span class="pre">cpu_target_fraction</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.75</span></em><a class="headerlink" href="#dara.search_match.MachineConfig.cpu_target_fraction" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.logical_threads">
+<span class="sig-name descname"><span class="pre">logical_threads</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.search_match.MachineConfig.logical_threads" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.max_parallel_jobs">
+<span class="sig-name descname"><span class="pre">max_parallel_jobs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.search_match.MachineConfig.max_parallel_jobs" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.memory_gb">
+<span class="sig-name descname"><span class="pre">memory_gb</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.search_match.MachineConfig.memory_gb" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.native_threads">
+<span class="sig-name descname"><span class="pre">native_threads</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#dara.search_match.MachineConfig.native_threads" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.peak_match_batch_size">
+<span class="sig-name descname"><span class="pre">peak_match_batch_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.search_match.MachineConfig.peak_match_batch_size" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.peak_match_chunk_size">
+<span class="sig-name descname"><span class="pre">peak_match_chunk_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.search_match.MachineConfig.peak_match_chunk_size" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.peak_match_max_pending_batches">
+<span class="sig-name descname"><span class="pre">peak_match_max_pending_batches</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.search_match.MachineConfig.peak_match_max_pending_batches" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.physical_cores">
+<span class="sig-name descname"><span class="pre">physical_cores</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.search_match.MachineConfig.physical_cores" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.ray_local_mode">
+<span class="sig-name descname"><span class="pre">ray_local_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#dara.search_match.MachineConfig.ray_local_mode" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.ray_object_store_memory_gb">
+<span class="sig-name descname"><span class="pre">ray_object_store_memory_gb</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.search_match.MachineConfig.ray_object_store_memory_gb" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.resolved_max_parallel_jobs">
+<span class="sig-name descname"><span class="pre">resolved_max_parallel_jobs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#MachineConfig.resolved_max_parallel_jobs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.MachineConfig.resolved_max_parallel_jobs" title="Link to this definition">#</a></dt>
+<dd><p>Return concurrent refinement task count.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.resolved_target_cpus">
+<span class="sig-name descname"><span class="pre">resolved_target_cpus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#MachineConfig.resolved_target_cpus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.MachineConfig.resolved_target_cpus" title="Link to this definition">#</a></dt>
+<dd><p>Return target CPU count from explicit target or logical CPU fraction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.resource_profile">
+<span class="sig-name descname"><span class="pre">resource_profile</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code><span class="pre">[</span><code class="docutils literal notranslate"><span class="pre">'auto'</span></code><span class="pre">,</span> <code class="docutils literal notranslate"><span class="pre">'small'</span></code><span class="pre">,</span> <code class="docutils literal notranslate"><span class="pre">'medium'</span></code><span class="pre">,</span> <code class="docutils literal notranslate"><span class="pre">'large'</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'auto'</span></em><a class="headerlink" href="#dara.search_match.MachineConfig.resource_profile" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dara.search_match.MachineConfig.target_cpus">
+<span class="sig-name descname"><span class="pre">target_cpus</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dara.search_match.MachineConfig.target_cpus" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dara.search_match.build_database_objects">
+<span class="sig-name descname"><span class="pre">build_database_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dara_root</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#build_database_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.build_database_objects" title="Link to this definition">#</a></dt>
+<dd><p>Instantiate local Dara database mirrors.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dara.search_match.collect_additional_cifs">
+<span class="sig-name descname"><span class="pre">collect_additional_cifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dara_root</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#collect_additional_cifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.collect_additional_cifs" title="Link to this definition">#</a></dt>
+<dd><p>Collect user-provided CIF files and directories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dara.search_match.export_refinement_artifacts">
+<span class="sig-name descname"><span class="pre">export_refinement_artifacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#export_refinement_artifacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.export_refinement_artifacts" title="Link to this definition">#</a></dt>
+<dd><p>Write per-rank refinement plots and phase fractions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dara.search_match.extract_refinement_phases">
+<span class="sig-name descname"><span class="pre">extract_refinement_phases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">refinement_result</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#extract_refinement_phases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.extract_refinement_phases" title="Link to this definition">#</a></dt>
+<dd><p>Return normalized phase fractions and phase metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dara.search_match.merge_rejected_counts">
+<span class="sig-name descname"><span class="pre">merge_rejected_counts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">counts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#merge_rejected_counts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.merge_rejected_counts" title="Link to this definition">#</a></dt>
+<dd><p>Merge candidate rejection counters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dara.search_match.run_search_match">
+<span class="sig-name descname"><span class="pre">run_search_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_objects</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#run_search_match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.run_search_match" title="Link to this definition">#</a></dt>
+<dd><p>Run candidate selection, Dara search-match, and artifact export.</p>
+<p><code class="docutils literal notranslate"><span class="pre">database_objects</span></code> is mainly for tests or custom callers that want to
+provide database-like objects with <code class="docutils literal notranslate"><span class="pre">get_cifs_by_chemsys</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dara.search_match.slugify">
+<span class="sig-name descname"><span class="pre">slugify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#slugify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.slugify" title="Link to this definition">#</a></dt>
+<dd><p>Return a filesystem-safe slug.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dara.search_match.summarize_results">
+<span class="sig-name descname"><span class="pre">summarize_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#summarize_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.summarize_results" title="Link to this definition">#</a></dt>
+<dd><p>Summarize search results without serializing large in-memory objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dara.search_match.write_csv">
+<span class="sig-name descname"><span class="pre">write_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/search_match.html#write_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.search_match.write_csv" title="Link to this definition">#</a></dt>
+<dd><p>Write dict rows as CSV.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="dara.schema.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">dara.schema module</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="dara.search_match_cli.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">dara.search_match_cli module</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.additional_cif_dirs"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.additional_cif_dirs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.additional_cifs"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.additional_cifs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.backend_options"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.backend_options</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.dara_root"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.dara_root</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.databases"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.databases</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.disable_structure_dedupe"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.disable_structure_dedupe</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.dry_run"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.dry_run</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.element_filter"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.element_filter</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.external_csvs"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.external_csvs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.instrument_profile"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.instrument_profile</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.keep_work"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.keep_work</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.machine"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.machine</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.max_phases"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.max_phases</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.max_results"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.max_results</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.output_root"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.output_root</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.precursors"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.precursors</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.refinement_backend"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.refinement_backend</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.sample_path"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.sample_path</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.skip_refinement_export"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.skip_refinement_export</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.DaraSearchMatchConfig.wavelength"><code class="docutils literal notranslate"><span class="pre">DaraSearchMatchConfig.wavelength</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ElementFilterConfig"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ElementFilterConfig.any"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig.any</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ElementFilterConfig.any_expression"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig.any_expression</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ElementFilterConfig.must"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig.must</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ElementFilterConfig.possible"><code class="docutils literal notranslate"><span class="pre">ElementFilterConfig.possible</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ExternalCsvConfig"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ExternalCsvConfig.angle_tolerance"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.angle_tolerance</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ExternalCsvConfig.cif_column"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.cif_column</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ExternalCsvConfig.limit"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.limit</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ExternalCsvConfig.path"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.path</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.ExternalCsvConfig.symprec"><code class="docutils literal notranslate"><span class="pre">ExternalCsvConfig.symprec</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig"><code class="docutils literal notranslate"><span class="pre">MachineConfig</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.bgmn_threads"><code class="docutils literal notranslate"><span class="pre">MachineConfig.bgmn_threads</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.cpu_target_fraction"><code class="docutils literal notranslate"><span class="pre">MachineConfig.cpu_target_fraction</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.logical_threads"><code class="docutils literal notranslate"><span class="pre">MachineConfig.logical_threads</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.max_parallel_jobs"><code class="docutils literal notranslate"><span class="pre">MachineConfig.max_parallel_jobs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.memory_gb"><code class="docutils literal notranslate"><span class="pre">MachineConfig.memory_gb</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.native_threads"><code class="docutils literal notranslate"><span class="pre">MachineConfig.native_threads</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.peak_match_batch_size"><code class="docutils literal notranslate"><span class="pre">MachineConfig.peak_match_batch_size</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.peak_match_chunk_size"><code class="docutils literal notranslate"><span class="pre">MachineConfig.peak_match_chunk_size</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.peak_match_max_pending_batches"><code class="docutils literal notranslate"><span class="pre">MachineConfig.peak_match_max_pending_batches</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.physical_cores"><code class="docutils literal notranslate"><span class="pre">MachineConfig.physical_cores</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.ray_local_mode"><code class="docutils literal notranslate"><span class="pre">MachineConfig.ray_local_mode</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.ray_object_store_memory_gb"><code class="docutils literal notranslate"><span class="pre">MachineConfig.ray_object_store_memory_gb</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.resolved_max_parallel_jobs"><code class="docutils literal notranslate"><span class="pre">MachineConfig.resolved_max_parallel_jobs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.resolved_target_cpus"><code class="docutils literal notranslate"><span class="pre">MachineConfig.resolved_target_cpus()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.resource_profile"><code class="docutils literal notranslate"><span class="pre">MachineConfig.resource_profile</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.MachineConfig.target_cpus"><code class="docutils literal notranslate"><span class="pre">MachineConfig.target_cpus</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.build_database_objects"><code class="docutils literal notranslate"><span class="pre">build_database_objects()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.collect_additional_cifs"><code class="docutils literal notranslate"><span class="pre">collect_additional_cifs()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.export_refinement_artifacts"><code class="docutils literal notranslate"><span class="pre">export_refinement_artifacts()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.extract_refinement_phases"><code class="docutils literal notranslate"><span class="pre">extract_refinement_phases()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.merge_rejected_counts"><code class="docutils literal notranslate"><span class="pre">merge_rejected_counts()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.run_search_match"><code class="docutils literal notranslate"><span class="pre">run_search_match()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.slugify"><code class="docutils literal notranslate"><span class="pre">slugify()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.summarize_results"><code class="docutils literal notranslate"><span class="pre">summarize_results()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dara.search_match.write_csv"><code class="docutils literal notranslate"><span class="pre">write_csv()</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Yuxing Fei, Matthew J. McDermott
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Ceder Group.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

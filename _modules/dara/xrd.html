@@ -223,6 +223,7 @@
         </ul>
         <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deployment.html">Local Deployment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../local_database_recovery.html">Local Database Recovery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../web_server.html">Web Server</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -271,9 +272,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../dara.peak_detection.html">dara.peak_detection module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.plot.html">dara.plot module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.refine.html">dara.refine module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dara.refinement_backends.html">dara.refinement_backends module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.resources.html">dara.resources module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.result.html">dara.result module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.schema.html">dara.schema module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dara.search_match.html">dara.search_match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dara.search_match_cli.html">dara.search_match_cli module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.settings.html">dara.settings module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.structure_db.html">dara.structure_db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../dara.utils.html">dara.utils module</a></li>
@@ -406,6 +410,9 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;Agg&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xmltodict</span>

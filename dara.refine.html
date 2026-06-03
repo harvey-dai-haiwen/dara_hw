@@ -56,7 +56,7 @@
     <link rel="icon" href="_static/logo.svg"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="dara.resources module" href="dara.resources.html" />
+    <link rel="next" title="dara.refinement_backends module" href="dara.refinement_backends.html" />
     <link rel="prev" title="dara.plot module" href="dara.plot.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -228,6 +228,7 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">Local Deployment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="local_database_recovery.html">Local Database Recovery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="web_server.html">Web Server</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -276,9 +277,12 @@
 <li class="toctree-l3"><a class="reference internal" href="dara.peak_detection.html">dara.peak_detection module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.plot.html">dara.plot module</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">dara.refine module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.refinement_backends.html">dara.refinement_backends module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.resources.html">dara.resources module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.result.html">dara.result module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.schema.html">dara.schema module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match.html">dara.search_match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dara.search_match_cli.html">dara.search_match_cli module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.settings.html">dara.settings module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.structure_db.html">dara.structure_db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dara.utils.html">dara.utils module</a></li>
@@ -500,7 +504,7 @@
                   
   <section id="module-dara.refine">
 <span id="dara-refine-module"></span><h1>dara.refine module<a class="headerlink" href="#module-dara.refine" title="Link to this heading">#</a></h1>
-<p>Perform refinements with BGMN.</p>
+<p>Perform refinements with Dara refinement backends.</p>
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="dara.refine.RefinementPhase">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RefinementPhase</span></span><a class="reference internal" href="_modules/dara/refine.html#RefinementPhase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.refine.RefinementPhase" title="Link to this definition">#</a></dt>
@@ -536,7 +540,7 @@
 <dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#dara.refine.RefinementPhase.params" title="dara.refine.RefinementPhase.params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">params</span> <span class="pre">(dict[str,</span> <span class="pre">Any])</span></code></a></p></li>
-<li><p><a class="reference internal" href="#dara.refine.RefinementPhase.path" title="dara.refine.RefinementPhase.path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">path</span> <span class="pre">(pathlib.Path)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#dara.refine.RefinementPhase.path" title="dara.refine.RefinementPhase.path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">path</span> <span class="pre">(Path)</span></code></a></p></li>
 </ul>
 </dd>
 <dt class="field-even">Validators<span class="colon">:</span></dt>
@@ -588,8 +592,10 @@ with the path object with no specific parameters (the default parameters will be
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dara.refine.do_refinement">
-<span class="sig-name descname"><span class="pre">do_refinement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Cu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument_profile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Aeris-fds-Pixcel1d-Medipix3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">working_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refinement_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/refine.html#do_refinement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.refine.do_refinement" title="Link to this definition">#</a></dt>
-<dd><p>Refine the structure using BGMN.</p>
+<span class="sig-name descname"><span class="pre">do_refinement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Cu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument_profile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Aeris-fds-Pixcel1d-Medipix3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">working_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refinement_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bgmn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/refine.html#do_refinement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.refine.do_refinement" title="Link to this definition">#</a></dt>
+<dd><p>Refine structures with the selected backend.</p>
+<p>The default backend is BGMN and preserves the historical Dara behavior.
+GSAS-II and FullProf are opt-in confirmation backends.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="dara.result.html#dara.result.RefinementResult" title="dara.result.RefinementResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefinementResult</span></code></a></span></p>
@@ -599,8 +605,8 @@ with the path object with no specific parameters (the default parameters will be
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dara.refine.do_refinement_no_saving">
-<span class="sig-name descname"><span class="pre">do_refinement_no_saving</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Cu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument_profile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Aeris-fds-Pixcel1d-Medipix3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refinement_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/refine.html#do_refinement_no_saving"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.refine.do_refinement_no_saving" title="Link to this definition">#</a></dt>
-<dd><p>Refine the structure using BGMN in a temporary directory without saving.</p>
+<span class="sig-name descname"><span class="pre">do_refinement_no_saving</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Cu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument_profile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Aeris-fds-Pixcel1d-Medipix3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refinement_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bgmn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dara/refine.html#do_refinement_no_saving"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dara.refine.do_refinement_no_saving" title="Link to this definition">#</a></dt>
+<dd><p>Refine the structure in a temporary directory without saving.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="dara.result.html#dara.result.RefinementResult" title="dara.result.RefinementResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefinementResult</span></code></a></span></p>
@@ -631,11 +637,11 @@ with the path object with no specific parameters (the default parameters will be
       </div>
     </a>
     <a class="right-next"
-       href="dara.resources.html"
+       href="dara.refinement_backends.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">dara.resources module</p>
+        <p class="prev-next-title">dara.refinement_backends module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
