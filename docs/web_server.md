@@ -49,7 +49,7 @@ pip install dara
 
 **Command Line Interface:**
 ```bash
-dara server
+uv run dara server
 ```
 
 This starts the server with default settings:
@@ -65,10 +65,10 @@ Open your browser and navigate to: `http://localhost:8898`
 **With Command Line Arguments:**
 ```bash
 # Start on different host/port
-dara server --host 0.0.0.0 --port 9000
+uv run dara server --host 0.0.0.0 --port 9000
 
 # Use MongoDB backend
-dara server --database-backend mongodb --mongodb-host localhost --mongodb-port 27017
+uv run dara server --database-backend mongodb --mongodb-host localhost --mongodb-port 27017
 ```
 
 **With Environment Variables:**
@@ -84,7 +84,7 @@ export DARA_SERVER_MONGODB_USERNAME=dara_user
 export DARA_SERVER_MONGODB_PASSWORD=your_password
 
 # Start server
-dara server
+uv run dara server
 ```
 
 ---
@@ -101,7 +101,7 @@ dara server
 **Example:**
 ```bash
 # Allow external connections
-dara server --host 0.0.0.0 --port 8080
+uv run dara server --host 0.0.0.0 --port 8080
 ```
 
 ### Database Configuration
@@ -117,7 +117,7 @@ The server supports two database backends:
 **Example:**
 ```bash
 # Custom MontyDB location
-dara server --montydb-path /data/dara/montydb
+uv run dara server --montydb-path /data/dara/montydb
 ```
 
 #### MongoDB (Production)
@@ -133,7 +133,7 @@ dara server --montydb-path /data/dara/montydb
 **Example:**
 ```bash
 # MongoDB with authentication
-dara server \
+uv run dara server \
   --database-backend mongodb \
   --mongodb-host db.example.com \
   --mongodb-port 27017 \

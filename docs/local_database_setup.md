@@ -6,6 +6,15 @@ separate database-entry repository called `CIF_index`, checked out locally as
 `D:\Haiwen\Databases\Structure_index` on this workstation. The mirrors
 themselves are private data and must not be committed.
 
+For from-zero setup, use the canonical deployment script first:
+
+```powershell
+python scripts/setup_local_dara.py
+uv run python scripts/validate_local_setup.py --run-pytest --run-smoke
+```
+
+This page documents the database layout expected by that script and by Dara.
+
 ## Runtime Contract
 
 Dara's database layer expects local CIF mirrors plus small metadata indexes:
@@ -149,13 +158,19 @@ MP uses:
 
 ```text
 src/dara/data/mp_struct_info.json.gz
+<PATH_TO_STRUCTURE_INDEX>/indexes/mp_index.jsonl.gz
 <PATH_TO_STRUCTURE_INDEX>/indexes/mp_index.parquet
 ```
 
 At runtime, Dara first tries
+`<PATH_TO_STRUCTURE_INDEX>/indexes/mp_index.jsonl.gz`, then
 `<PATH_TO_STRUCTURE_INDEX>/indexes/mp_index.parquet` if `pyarrow` is installed,
-then falls back to the legacy repo-local `indexes/mp_index.parquet`. The parquet
-schema must contain:
+then falls back to the legacy repo-local `indexes/mp_index.parquet`. If no
+durable index is present, Dara scans `mp_cifs/**/*.cif` and builds the
+chemical-system index in memory. That fallback is convenient but can be slow on a
+full MP mirror.
+
+Both JSONL and parquet rows use this schema:
 
 ```text
 raw_db_id
@@ -165,16 +180,10 @@ spacegroup
 energy_above_hull
 ```
 
-If `indexes/mp_index.parquet` is missing, Dara scans `mp_cifs/**/*.cif` and
-builds the chemical-system index in memory. That fallback is convenient but can
-be slow on a full MP mirror.
-
-There is no formal MP index-builder CLI in the Dara repo yet. If you need a
-durable parquet index, update it in the `CIF_index` repository from your local
-CIF export with those five columns and write it to:
+To build the portable JSONL index from the local MP-in-ICSD pickle:
 
 ```text
-D:/Haiwen/Databases/Structure_index/indexes/mp_index.parquet
+python scripts/setup_local_dara.py --mp-pickle D:\Haiwen\Databases\df_MPinICSD_20250211_withstructure.pkl --build-mp-index
 ```
 
 ## Validation
@@ -182,7 +191,7 @@ D:/Haiwen/Databases/Structure_index/indexes/mp_index.parquet
 After configuring mirrors, run focused database tests:
 
 ```powershell
-uv run pytest tests/test_structure_db.py tests/test_api_router.py
+uv run pytest
 ```
 
 Then run a dry-run through the unified search-match entrypoint:

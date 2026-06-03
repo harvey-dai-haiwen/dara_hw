@@ -12,6 +12,7 @@ __MACOSX/
 *.so
 benchmarks/
 tools/
+custom-test-samples/
 # Distribution / packaging
 .Python
 build/
@@ -159,6 +160,29 @@ indexes/
 filtered_index_*.json.gz
 
 # Local diagnostics and scratch files
+metadata/
+searchmatch/
+rank_*/
+refinement_plot.html
+phase_fractions.csv
+phase_fractions.json
+refinement_summary.json
+summary.json
+details.json
+*.lst
+*.dia
+*.par
+*.gpx
+*.pcr
+*.prf
+*.sum
+*.out
+*.xy
+*.xye
+*.rasx
+*.raw
+*.brml
+!tests/test_data/**
 src/dara/data/BGMN-Templates/Devices/*_makegeq.log
 src/dara/data/BGMN-Templates/Devices/*_geomet.log
 src/dara/data/BGMN-Templates/Devices/*.get

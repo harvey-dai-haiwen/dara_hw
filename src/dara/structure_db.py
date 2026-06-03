@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import gzip
 import itertools
+import json
 import re
 from abc import ABCMeta, abstractmethod
 from collections import defaultdict
@@ -463,6 +465,10 @@ class MPDatabase(StructureDatabase):
         return self._preparsed_info
 
     def _load_preparsed_index(self) -> dict[str, list[tuple[str, str, int | str, float | None]]] | None:
+        json_index_path = self._get_json_index_path()
+        if json_index_path.exists():
+            return self._load_json_index(json_index_path)
+
         index_path = self._get_index_path()
         if pq is None or not index_path.exists():
             return None
@@ -484,6 +490,25 @@ class MPDatabase(StructureDatabase):
                 )
             )
 
+        return dict(indexed_data)
+
+    @staticmethod
+    def _load_json_index(index_path: Path) -> dict[str, list[tuple[str, str, int | str, float | None]]]:
+        indexed_data: dict[str, list[tuple[str, str, int | str, float | None]]] = defaultdict(list)
+        with gzip.open(index_path, "rt", encoding="utf-8") as handle:
+            for line in handle:
+                if not line.strip():
+                    continue
+                row = json.loads(line)
+                chemsys = "-".join(sorted({str(element) for element in row["elements"]}))
+                indexed_data[chemsys].append(
+                    (
+                        row["formula"],
+                        row["raw_db_id"],
+                        row.get("spacegroup"),
+                        row.get("energy_above_hull"),
+                    )
+                )
         return dict(indexed_data)
 
     def _scan_local_cifs(self) -> dict[str, list[tuple[str, str, int | str, float | None]]]:
@@ -508,6 +533,15 @@ class MPDatabase(StructureDatabase):
     def _get_index_path(self) -> Path:
         repo_root = Path(__file__).resolve().parents[2]
         index_name = "mp_index_test.parquet" if self.path.name == "mp_test_cifs" else "mp_index.parquet"
+        structure_index_path = DARA_SETTINGS.PATH_TO_STRUCTURE_INDEX / "indexes" / index_name
+        if structure_index_path.exists():
+            return structure_index_path
+
+        return repo_root / "indexes" / index_name
+
+    def _get_json_index_path(self) -> Path:
+        repo_root = Path(__file__).resolve().parents[2]
+        index_name = "mp_index_test.jsonl.gz" if self.path.name == "mp_test_cifs" else "mp_index.jsonl.gz"
         structure_index_path = DARA_SETTINGS.PATH_TO_STRUCTURE_INDEX / "indexes" / index_name
         if structure_index_path.exists():
             return structure_index_path

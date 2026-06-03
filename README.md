@@ -31,10 +31,19 @@ This repository is maintained with `uv` for local development. The recommended w
 ```bash
 uv python install 3.11
 uv sync --extra tests
-uv run pytest tests/test_structure_db.py tests/test_api_router.py
+uv run pytest
 ```
 
 The repository only needs the `uv`-managed `.venv` for development. Extra local environments such as Conda or ad hoc virtual environments are not required.
+
+For a full from-zero local deployment, including database root configuration,
+COD/ICSD/MP mirror conventions, and validation commands, see
+`docs/deployment.md`. The automated entrypoint is:
+
+```bash
+python scripts/setup_local_dara.py
+uv run python scripts/validate_local_setup.py --run-pytest --run-smoke
+```
 
 The release surfaces are:
 
@@ -94,7 +103,7 @@ Element filtering is intentionally strict:
 CLI example using only local folder CIFs:
 
 ```bash
-dara-search-match --xrd D:\sample\pattern.xy ^
+uv run dara-search-match --xrd D:\sample\pattern.xy ^
   --no-database ^
   --additional-cif-dir D:\sample\cifs ^
   --any-element Ni --any-element Sn --any-element Se ^
@@ -108,7 +117,7 @@ dara-search-match --xrd D:\sample\pattern.xy ^
 CLI example using ICSD plus an external CSV with CIF text:
 
 ```bash
-dara-search-match --xrd D:\sample\pattern.xy ^
+uv run dara-search-match --xrd D:\sample\pattern.xy ^
   --database ICSD ^
   --any-element Ni --any-element Sn --any-element Se ^
   --possible-element C --possible-element O ^
@@ -162,14 +171,14 @@ Expected output files:
 For a handoff-ready local checkout, validate these in order:
 
 1. `uv sync --extra tests`
-2. `uv run pytest tests/test_structure_db.py tests/test_api_router.py`
+2. `uv run pytest`
 3. `uv run python scripts/benchmark_custom_sample.py --sample-path <path-to-pattern.xy> --database cod --precursor <formula> --precursor <formula>`
 4. `uv build`
 
 ## Web Server
 Dara ships with a browser-based web server for an out-of-box experience of Dara. To launch the webserver, run
 ```bash
-dara server
+uv run dara server
 ```
 
 Then you can open http://localhost:8898 to see an application that can submit, manage, and view jobs.

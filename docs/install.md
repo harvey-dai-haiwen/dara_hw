@@ -33,7 +33,7 @@ git clone https://github.com/CederGroupHub/dara
 cd dara
 uv python install 3.11
 uv sync --extra tests
-uv run pytest tests/test_structure_db.py tests/test_api_router.py
+uv run pytest
 ```
 
 The expected local environment is the `uv`-managed `.venv`. Additional local Conda

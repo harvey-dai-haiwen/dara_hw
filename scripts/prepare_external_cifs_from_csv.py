@@ -71,8 +71,8 @@ def main() -> int:
         from dara.external_candidates import prepare_external_cifs_from_csv
     except ImportError as exc:
         parser.error(
-            "pymatgen is required for CSV CIF preprocessing. Run this script in Dara's uv environment "
-            "or in the Pymatgen_hw conda environment."
+            "pymatgen is required for CSV CIF preprocessing. Run this script from the local Dara uv environment, "
+            "for example: uv run python scripts/prepare_external_cifs_from_csv.py ..."
         )
         raise exc
 

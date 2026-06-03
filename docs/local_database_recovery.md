@@ -34,7 +34,7 @@ necessarily mean the mirror is damaged.
 Run the focused checks first:
 
 ```bash
-uv run pytest tests/test_structure_db.py tests/test_api_router.py
+uv run pytest
 ```
 
 ## Source datasets used for recovery
@@ -73,7 +73,7 @@ tree, so the local CIF mirror must remain consistent with the metadata snapshot.
 1. Restore or rebuild the raw local CIF mirrors from the original source datasets.
 2. Confirm the root directories referenced by Dara settings point to the recovered mirrors.
 3. Recreate the local environment with `uv sync --extra tests` if needed.
-4. Run `uv run pytest tests/test_structure_db.py tests/test_api_router.py`.
+4. Run `uv run pytest`.
 5. Run a real search-match validation against the database you repaired before trusting the mirror for broader `ALL` searches.
 
 ## Publication hygiene
