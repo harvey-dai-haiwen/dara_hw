@@ -9,8 +9,16 @@ themselves are private data and must not be committed.
 For from-zero setup, use the canonical deployment script first:
 
 ```powershell
-python scripts/setup_local_dara.py
+git lfs install
+python scripts/setup_local_dara.py --clone-cif-index --build-mp-index
 uv run python scripts/validate_local_setup.py --run-pytest --run-smoke
+```
+
+To debug database links and permissions without downloading the full COD archive
+or MP pickle:
+
+```powershell
+uv run python scripts/check_database_sources.py
 ```
 
 This page documents the database layout expected by that script and by Dara.
@@ -183,8 +191,12 @@ energy_above_hull
 To build the portable JSONL index from the local MP-in-ICSD pickle:
 
 ```text
-python scripts/setup_local_dara.py --mp-pickle D:\Haiwen\Databases\df_MPinICSD_20250211_withstructure.pkl --build-mp-index
+python scripts/setup_local_dara.py --build-mp-index
 ```
+
+After `CIF_index` is cloned with Git LFS enabled, the setup script automatically
+uses `<PATH_TO_STRUCTURE_INDEX>/indexes/df_MPinICSD_20250211_withstructure.pkl`.
+Pass `--mp-pickle PATH` only when the pickle lives elsewhere.
 
 ## Validation
 

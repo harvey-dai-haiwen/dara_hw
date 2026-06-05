@@ -508,8 +508,14 @@ separate database-entry repository called <code class="docutils literal notransl
 <code class="docutils literal notranslate"><span class="pre">D:\Haiwen\Databases\Structure_index</span></code> on this workstation. The mirrors
 themselves are private data and must not be committed.</p>
 <p>For from-zero setup, use the canonical deployment script first:</p>
-<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">setup_local_dara</span><span class="p">.</span><span class="n">py</span>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">lfs</span> <span class="n">install</span>
+<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">setup_local_dara</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-clone-cif-index</span> <span class="p">-</span><span class="n">-build-mp-index</span>
 <span class="n">uv</span> <span class="n">run</span> <span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">validate_local_setup</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-run-pytest</span> <span class="p">-</span><span class="n">-run-smoke</span>
+</pre></div>
+</div>
+<p>To debug database links and permissions without downloading the full COD archive
+or MP pickle:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">uv</span> <span class="n">run</span> <span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">check_database_sources</span><span class="p">.</span><span class="n">py</span>
 </pre></div>
 </div>
 <p>This page documents the database layout expected by that script and by Dara.</p>
@@ -643,9 +649,12 @@ energy_above_hull
 </pre></div>
 </div>
 <p>To build the portable JSONL index from the local MP-in-ICSD pickle:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python scripts/setup_local_dara.py --mp-pickle D:\Haiwen\Databases\df_MPinICSD_20250211_withstructure.pkl --build-mp-index
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python scripts/setup_local_dara.py --build-mp-index
 </pre></div>
 </div>
+<p>After <code class="docutils literal notranslate"><span class="pre">CIF_index</span></code> is cloned with Git LFS enabled, the setup script automatically
+uses <code class="docutils literal notranslate"><span class="pre">&lt;PATH_TO_STRUCTURE_INDEX&gt;/indexes/df_MPinICSD_20250211_withstructure.pkl</span></code>.
+Pass <code class="docutils literal notranslate"><span class="pre">--mp-pickle</span> <span class="pre">PATH</span></code> only when the pickle lives elsewhere.</p>
 </section>
 <section id="validation">
 <h2>Validation<a class="headerlink" href="#validation" title="Link to this heading">#</a></h2>

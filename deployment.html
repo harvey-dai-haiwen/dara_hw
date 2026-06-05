@@ -569,6 +569,32 @@ sync for you:</p>
   indexes/         # shareable metadata/index files
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">CIF_index</span></code> is a private GitHub repository. A new user or agent must have GitHub
+access to <code class="docutils literal notranslate"><span class="pre">harvey-dai-haiwen/CIF_index</span></code>; without access, GitHub may report
+<code class="docutils literal notranslate"><span class="pre">Repository</span> <span class="pre">not</span> <span class="pre">found</span></code> even when the URL is correct. Git LFS is also required
+because the MP pickle and SQLite indexes are stored as LFS objects.</p>
+<p>Check links and permissions without downloading full databases:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">lfs</span> <span class="n">install</span>
+<span class="n">uv</span> <span class="n">run</span> <span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">check_database_sources</span><span class="p">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>The check performs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">ls-remote</span></code> against the private <code class="docutils literal notranslate"><span class="pre">CIF_index</span></code> repository</p></li>
+<li><p>a temporary <code class="docutils literal notranslate"><span class="pre">GIT_LFS_SKIP_SMUDGE=1</span></code> clone to verify LFS pointers</p></li>
+<li><p>an HTTP HEAD request for the public COD archive</p></li>
+<li><p>local <code class="docutils literal notranslate"><span class="pre">Structure_index</span></code> inspection</p></li>
+</ul>
+<p>Fresh private-index checkout:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">lfs</span> <span class="n">install</span>
+<span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">setup_local_dara</span><span class="p">.</span><span class="n">py</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-structure-index</span> <span class="n">D</span><span class="p">:\</span><span class="n">Haiwen</span><span class="p">\</span><span class="n">Databases</span><span class="p">\</span><span class="n">Structure_index</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-clone-cif-index</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-build-mp-index</span>
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--skip-cif-index-lfs</span></code> only for link/debug tests; it leaves the large MP
+pickle as a pointer file and cannot build the MP JSONL index until <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span> <span class="pre">pull</span></code> is run.</p>
 <p>The setup script writes <code class="docutils literal notranslate"><span class="pre">~/.dara.yaml</span></code>:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">PATH_TO_STRUCTURE_INDEX</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">D:/Haiwen/Databases/Structure_index</span>
 <span class="nt">PATH_TO_COD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">D:/Haiwen/Databases/Structure_index/cod_cifs</span>
@@ -603,6 +629,8 @@ explicit flag:</p>
 <div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">setup_local_dara</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-download-cod</span>
 </pre></div>
 </div>
+<p>The COD archive is about 17 GB. For setup debugging, use
+<code class="docutils literal notranslate"><span class="pre">scripts/check_database_sources.py</span></code> instead of <code class="docutils literal notranslate"><span class="pre">--download-cod</span></code>.</p>
 <p>If the archive is already available locally:</p>
 <div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">setup_local_dara</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-cod-archive</span> <span class="n">D</span><span class="p">:\</span><span class="n">Haiwen</span><span class="p">\</span><span class="n">Databases</span><span class="p">\</span><span class="n">cod-cifs-mysql</span><span class="p">.</span><span class="n">txz</span>
 </pre></div>
@@ -642,7 +670,6 @@ mp_cifs/m/mv/mvc-11882.cif
 <p>The setup script can build a portable JSONL index that Dara can read without
 <code class="docutils literal notranslate"><span class="pre">pyarrow</span></code>:</p>
 <div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">setup_local_dara</span><span class="p">.</span><span class="n">py</span> <span class="p">`</span>
-  <span class="p">-</span><span class="n">-mp-pickle</span> <span class="n">D</span><span class="p">:\</span><span class="n">Haiwen</span><span class="p">\</span><span class="n">Databases</span><span class="p">\</span><span class="n">df_MPinICSD_20250211_withstructure</span><span class="p">.</span><span class="n">pkl</span> <span class="p">`</span>
   <span class="p">-</span><span class="n">-build-mp-index</span>
 </pre></div>
 </div>
@@ -650,6 +677,12 @@ mp_cifs/m/mv/mvc-11882.cif
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;Structure_index&gt;/indexes/mp_index.jsonl.gz
 </pre></div>
 </div>
+<p>When <code class="docutils literal notranslate"><span class="pre">CIF_index</span></code> has been cloned with LFS enabled, the setup script automatically
+uses:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;Structure_index&gt;/indexes/df_MPinICSD_20250211_withstructure.pkl
+</pre></div>
+</div>
+<p>You only need <code class="docutils literal notranslate"><span class="pre">--mp-pickle</span> <span class="pre">PATH</span></code> when the pickle is stored somewhere else.</p>
 <p>If the team wants to publish the large MP pickle inside the private <code class="docutils literal notranslate"><span class="pre">CIF_index</span></code>
 repo, copy it into the index repo and track it with Git LFS:</p>
 <div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">setup_local_dara</span><span class="p">.</span><span class="n">py</span> <span class="p">`</span>

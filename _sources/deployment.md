@@ -78,6 +78,39 @@ Structure_index/
   indexes/         # shareable metadata/index files
 ```
 
+`CIF_index` is a private GitHub repository. A new user or agent must have GitHub
+access to `harvey-dai-haiwen/CIF_index`; without access, GitHub may report
+`Repository not found` even when the URL is correct. Git LFS is also required
+because the MP pickle and SQLite indexes are stored as LFS objects.
+
+Check links and permissions without downloading full databases:
+
+```powershell
+git lfs install
+uv run python scripts/check_database_sources.py
+```
+
+The check performs:
+
+- `git ls-remote` against the private `CIF_index` repository
+- a temporary `GIT_LFS_SKIP_SMUDGE=1` clone to verify LFS pointers
+- an HTTP HEAD request for the public COD archive
+- local `Structure_index` inspection
+
+Fresh private-index checkout:
+
+```powershell
+git lfs install
+python scripts/setup_local_dara.py `
+  --structure-index D:\Haiwen\Databases\Structure_index `
+  --clone-cif-index `
+  --build-mp-index
+```
+
+Use `--skip-cif-index-lfs` only for link/debug tests; it leaves the large MP
+pickle as a pointer file and cannot build the MP JSONL index until `git lfs
+pull` is run.
+
 The setup script writes `~/.dara.yaml`:
 
 ```yaml
@@ -122,6 +155,9 @@ explicit flag:
 ```powershell
 python scripts/setup_local_dara.py --download-cod
 ```
+
+The COD archive is about 17 GB. For setup debugging, use
+`scripts/check_database_sources.py` instead of `--download-cod`.
 
 If the archive is already available locally:
 
@@ -176,7 +212,6 @@ The setup script can build a portable JSONL index that Dara can read without
 
 ```powershell
 python scripts/setup_local_dara.py `
-  --mp-pickle D:\Haiwen\Databases\df_MPinICSD_20250211_withstructure.pkl `
   --build-mp-index
 ```
 
@@ -185,6 +220,15 @@ This writes:
 ```text
 <Structure_index>/indexes/mp_index.jsonl.gz
 ```
+
+When `CIF_index` has been cloned with LFS enabled, the setup script automatically
+uses:
+
+```text
+<Structure_index>/indexes/df_MPinICSD_20250211_withstructure.pkl
+```
+
+You only need `--mp-pickle PATH` when the pickle is stored somewhere else.
 
 If the team wants to publish the large MP pickle inside the private `CIF_index`
 repo, copy it into the index repo and track it with Git LFS:
