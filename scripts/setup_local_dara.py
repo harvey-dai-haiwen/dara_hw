@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 COD_ARCHIVE_URL = "http://www.crystallography.net/archives/cod-cifs-mysql.txz"
+CIF_INDEX_REPO_URL = "https://github.com/harvey-dai-haiwen/CIF_index.git"
 MPINICSD_PICKLE_NAME = "df_MPinICSD_20250211_withstructure.pkl"
 
 
@@ -23,9 +24,9 @@ def default_structure_index() -> Path:
     return Path("~/Structure_index").expanduser()
 
 
-def run_command(command: list[str], cwd: Path | None = None) -> None:
+def run_command(command: list[str], cwd: Path | None = None, env: dict[str, str] | None = None) -> None:
     print("+ " + " ".join(command))
-    completed = subprocess.run(command, cwd=cwd, text=True, check=False)
+    completed = subprocess.run(command, cwd=cwd, env=env, text=True, check=False)
     if completed.returncode:
         raise SystemExit(completed.returncode)
 
@@ -55,6 +56,31 @@ def ensure_layout(root: Path) -> None:
         gitkeep = folder / ".gitkeep"
         if not gitkeep.exists():
             gitkeep.write_text("", encoding="utf-8")
+
+
+def clone_or_update_cif_index(args: argparse.Namespace, structure_index: Path) -> None:
+    if not args.clone_cif_index and not args.pull_cif_index:
+        return
+
+    if structure_index.exists() and any(structure_index.iterdir()) and not (structure_index / ".git").exists():
+        raise SystemExit(
+            f"{structure_index} already exists and is not a Git checkout. "
+            "Move it aside, pass a different --structure-index, or manage it manually."
+        )
+
+    if not (structure_index / ".git").exists():
+        if not args.clone_cif_index:
+            raise SystemExit(f"{structure_index} is not a Git checkout. Use --clone-cif-index first.")
+        structure_index.parent.mkdir(parents=True, exist_ok=True)
+        env = os.environ.copy()
+        if args.skip_cif_index_lfs:
+            env["GIT_LFS_SKIP_SMUDGE"] = "1"
+        run_command(["git", "clone", args.cif_index_repo, str(structure_index)], env=env)
+    elif args.pull_cif_index:
+        run_command(["git", "-C", str(structure_index), "pull", "--ff-only"])
+
+    if not args.skip_cif_index_lfs:
+        run_command(["git", "-C", str(structure_index), "lfs", "pull"])
 
 
 def write_dara_config(config_path: Path, structure_index: Path) -> None:
@@ -224,11 +250,7 @@ def build_mp_index_from_pickle(pickle_path: Path, output_path: Path, limit: int 
 
 
 def setup_mp(args: argparse.Namespace, structure_index: Path) -> None:
-    source = args.mp_pickle
-    if source is None:
-        default_source = Path(r"D:\Haiwen\Databases") / MPINICSD_PICKLE_NAME
-        if default_source.exists():
-            source = default_source
+    source = resolve_mp_pickle_source(args.mp_pickle, structure_index)
 
     if source is None:
         print("MP pickle not configured. You can add MP CIFs under mp_cifs/ and build an index later.")
@@ -249,6 +271,22 @@ def setup_mp(args: argparse.Namespace, structure_index: Path) -> None:
             structure_index / "indexes" / "mp_index.jsonl.gz",
             limit=args.mp_index_limit,
         )
+
+
+def resolve_mp_pickle_source(configured: Path | None, structure_index: Path) -> Path | None:
+    candidates = []
+    if configured is not None:
+        candidates.append(configured)
+    candidates.extend(
+        [
+            structure_index / "indexes" / MPINICSD_PICKLE_NAME,
+            Path(r"D:\Haiwen\Databases") / MPINICSD_PICKLE_NAME,
+        ]
+    )
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return configured
 
 
 def write_manifest(structure_index: Path) -> None:
@@ -295,6 +333,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--structure-index", type=Path, default=default_structure_index())
     parser.add_argument("--config-file", type=Path, default=Path("~/.dara.yaml"))
     parser.add_argument("--skip-uv-sync", action="store_true")
+    parser.add_argument("--clone-cif-index", action="store_true")
+    parser.add_argument("--pull-cif-index", action="store_true")
+    parser.add_argument("--skip-cif-index-lfs", action="store_true")
+    parser.add_argument("--cif-index-repo", default=CIF_INDEX_REPO_URL)
     parser.add_argument("--download-cod", action="store_true")
     parser.add_argument("--cod-archive", type=Path, default=None)
     parser.add_argument("--mp-pickle", type=Path, default=None)
@@ -313,6 +355,7 @@ def main() -> int:
     if not args.skip_uv_sync:
         run_command(["uv", "sync", "--extra", "tests"], cwd=repo_root)
 
+    clone_or_update_cif_index(args, structure_index)
     ensure_layout(structure_index)
     write_dara_config(args.config_file, structure_index)
     setup_cod(args, structure_index)

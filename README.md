@@ -45,6 +45,13 @@ python scripts/setup_local_dara.py
 uv run python scripts/validate_local_setup.py --run-pytest --run-smoke
 ```
 
+For database-link debugging without downloading the 17 GB COD archive or the
+717 MB MP pickle, run:
+
+```bash
+uv run python scripts/check_database_sources.py
+```
+
 The release surfaces are:
 
 - `pyproject.toml` for package builds and extras
