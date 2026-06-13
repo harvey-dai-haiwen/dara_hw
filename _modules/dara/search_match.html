@@ -517,6 +517,7 @@
     <span class="n">precursors</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
     <span class="n">element_filter</span><span class="p">:</span> <span class="n">ElementFilterConfig</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">ElementFilterConfig</span><span class="p">)</span>
     <span class="n">additional_cifs</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">pinned_cifs</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
     <span class="n">additional_cif_dirs</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
     <span class="n">external_csvs</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ExternalCsvConfig</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
     <span class="n">disable_structure_dedupe</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
@@ -573,6 +574,75 @@
             <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
             <span class="n">unique</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">unique</span></div>
+
+
+
+<div class="viewcode-block" id="collect_pinned_cifs">
+<a class="viewcode-back" href="../../dara.search_match.html#dara.collect_pinned_cifs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">collect_pinned_cifs</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">DaraSearchMatchConfig</span><span class="p">,</span> <span class="n">dara_root</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect user-provided CIF files that must appear in every solution.&quot;&quot;&quot;</span>
+    <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">_resolve_path</span><span class="p">(</span><span class="n">dara_root</span><span class="p">,</span> <span class="n">raw_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="k">for</span> <span class="n">raw_path</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">pinned_cifs</span><span class="p">]</span>
+    <span class="n">unique</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">seen</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pinned CIF does not exist: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">unique</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">unique</span></div>
+
+
+
+<div class="viewcode-block" id="remove_searchable_duplicates_of_pinned">
+<a class="viewcode-back" href="../../dara.search_match.html#dara.remove_searchable_duplicates_of_pinned">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_searchable_duplicates_of_pinned</span><span class="p">(</span>
+    <span class="n">pinned_paths</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">searchable_paths</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove ordinary candidates that duplicate pinned phases only.&quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.analysis.structure_matcher</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructureMatcher</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Structure</span>
+
+    <span class="n">matcher</span> <span class="o">=</span> <span class="n">StructureMatcher</span><span class="p">()</span>
+    <span class="n">parse_failures</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">pinned_structures</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">raw_path</span> <span class="ow">in</span> <span class="n">pinned_paths</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">raw_path</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">pinned_structures</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">path</span><span class="p">,</span> <span class="n">Structure</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">path</span><span class="p">)))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">parse_failures</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;pinned&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)})</span>
+
+    <span class="n">kept</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">duplicates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">raw_path</span> <span class="ow">in</span> <span class="n">searchable_paths</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">raw_path</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">structure</span> <span class="o">=</span> <span class="n">Structure</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">parse_failures</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;searchable&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)})</span>
+            <span class="k">continue</span>
+
+        <span class="n">match</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">pinned_path</span>
+                <span class="k">for</span> <span class="n">pinned_path</span><span class="p">,</span> <span class="n">pinned_structure</span> <span class="ow">in</span> <span class="n">pinned_structures</span>
+                <span class="k">if</span> <span class="n">matcher</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">pinned_structure</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+            <span class="p">),</span>
+            <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kept</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">duplicates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;searchable_path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span>
+                    <span class="s2">&quot;pinned_path&quot;</span><span class="p">:</span> <span class="n">match</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">kept</span><span class="p">,</span> <span class="n">duplicates</span><span class="p">,</span> <span class="n">parse_failures</span></div>
 
 
 
@@ -718,7 +788,7 @@
     <span class="n">dara_root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">output_root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">database_objects</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">dara.candidate_filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">CandidateElementFilter</span><span class="p">,</span> <span class="n">collect_database_cifs</span><span class="p">,</span> <span class="n">copy_selected_cifs</span><span class="p">,</span> <span class="n">filter_cif_paths</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">dara.external_candidates</span><span class="w"> </span><span class="kn">import</span> <span class="n">deduplicate_external_cifs</span><span class="p">,</span> <span class="n">prepare_external_cifs_from_csv</span>
 
@@ -731,6 +801,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
         <span class="n">element_filter</span><span class="o">.</span><span class="n">query_elements</span>
         <span class="ow">or</span> <span class="n">config</span><span class="o">.</span><span class="n">additional_cifs</span>
+        <span class="ow">or</span> <span class="n">config</span><span class="o">.</span><span class="n">pinned_cifs</span>
         <span class="ow">or</span> <span class="n">config</span><span class="o">.</span><span class="n">additional_cif_dirs</span>
         <span class="ow">or</span> <span class="n">config</span><span class="o">.</span><span class="n">external_csvs</span>
     <span class="p">):</span>
@@ -768,6 +839,12 @@
 
     <span class="n">database_selection</span> <span class="o">=</span> <span class="n">filter_cif_paths</span><span class="p">(</span><span class="n">database_candidate_paths</span><span class="p">,</span> <span class="n">element_filter</span><span class="p">)</span>
     <span class="n">external_selection</span> <span class="o">=</span> <span class="n">filter_cif_paths</span><span class="p">(</span><span class="n">external_candidate_paths</span><span class="p">,</span> <span class="n">element_filter</span><span class="p">)</span>
+    <span class="n">pinned_input_paths</span> <span class="o">=</span> <span class="n">collect_pinned_cifs</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dara_root</span><span class="p">)</span>
+    <span class="n">pinned_selection</span> <span class="o">=</span> <span class="n">filter_cif_paths</span><span class="p">(</span><span class="n">pinned_input_paths</span><span class="p">,</span> <span class="n">element_filter</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pinned_selection</span><span class="o">.</span><span class="n">selected_paths</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pinned_input_paths</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;One or more pinned CIFs could not be parsed or did not satisfy the element filter.&quot;</span>
+        <span class="p">)</span>
 
     <span class="n">dedupe_result</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">selected_external_paths</span> <span class="o">=</span> <span class="n">external_selection</span><span class="o">.</span><span class="n">selected_paths</span>
@@ -775,10 +852,26 @@
         <span class="n">dedupe_result</span> <span class="o">=</span> <span class="n">deduplicate_external_cifs</span><span class="p">(</span><span class="n">database_selection</span><span class="o">.</span><span class="n">selected_paths</span><span class="p">,</span> <span class="n">selected_external_paths</span><span class="p">)</span>
         <span class="n">selected_external_paths</span> <span class="o">=</span> <span class="n">dedupe_result</span><span class="o">.</span><span class="n">kept_external_paths</span>
 
+    <span class="n">searchable_paths</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">database_selection</span><span class="o">.</span><span class="n">selected_paths</span><span class="p">,</span> <span class="o">*</span><span class="n">selected_external_paths</span><span class="p">]</span>
+    <span class="n">pinned_searchable_duplicates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">pinned_searchable_parse_failures</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">pinned_selection</span><span class="o">.</span><span class="n">selected_paths</span> <span class="ow">and</span> <span class="n">searchable_paths</span><span class="p">:</span>
+        <span class="p">(</span>
+            <span class="n">searchable_paths</span><span class="p">,</span>
+            <span class="n">pinned_searchable_duplicates</span><span class="p">,</span>
+            <span class="n">pinned_searchable_parse_failures</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">remove_searchable_duplicates_of_pinned</span><span class="p">(</span>
+            <span class="n">pinned_selection</span><span class="o">.</span><span class="n">selected_paths</span><span class="p">,</span>
+            <span class="n">searchable_paths</span><span class="p">,</span>
+        <span class="p">)</span>
+
     <span class="n">selected_paths</span> <span class="o">=</span> <span class="n">copy_selected_cifs</span><span class="p">(</span>
-        <span class="p">[</span><span class="o">*</span><span class="n">database_selection</span><span class="o">.</span><span class="n">selected_paths</span><span class="p">,</span> <span class="o">*</span><span class="n">selected_external_paths</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">*</span><span class="n">searchable_paths</span><span class="p">,</span> <span class="o">*</span><span class="n">pinned_selection</span><span class="o">.</span><span class="n">selected_paths</span><span class="p">],</span>
         <span class="n">selected_dir</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">pinned_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pinned_selection</span><span class="o">.</span><span class="n">selected_paths</span><span class="p">)</span>
+    <span class="n">selected_searchable_paths</span> <span class="o">=</span> <span class="n">selected_paths</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">searchable_paths</span><span class="p">)]</span>
+    <span class="n">selected_pinned_paths</span> <span class="o">=</span> <span class="n">selected_paths</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">searchable_paths</span><span class="p">)</span> <span class="p">:]</span>
     <span class="n">selected_metadata</span> <span class="o">=</span> <span class="p">[{</span><span class="o">**</span><span class="n">item</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;database&quot;</span><span class="p">}</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">database_selection</span><span class="o">.</span><span class="n">selected_metadata</span><span class="p">]</span>
     <span class="n">external_kept_set</span> <span class="o">=</span> <span class="p">{</span><span class="n">path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">selected_external_paths</span><span class="p">}</span>
     <span class="n">selected_metadata</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
@@ -786,25 +879,47 @@
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">external_selection</span><span class="o">.</span><span class="n">selected_metadata</span>
         <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="ow">in</span> <span class="n">external_kept_set</span>
     <span class="p">)</span>
+    <span class="n">searchable_kept_set</span> <span class="o">=</span> <span class="p">{</span><span class="n">path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">searchable_paths</span><span class="p">}</span>
+    <span class="n">selected_metadata</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">selected_metadata</span> <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="ow">in</span> <span class="n">searchable_kept_set</span>
+    <span class="p">]</span>
+    <span class="n">selected_metadata</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+        <span class="p">{</span><span class="o">**</span><span class="n">item</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;pinned&quot;</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">pinned_selection</span><span class="o">.</span><span class="n">selected_metadata</span>
+    <span class="p">)</span>
 
     <span class="n">candidate_summary</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;databases&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">databases</span><span class="p">),</span>
         <span class="s2">&quot;precursors&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">precursors</span><span class="p">),</span>
         <span class="s2">&quot;element_filter&quot;</span><span class="p">:</span> <span class="n">element_filter</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(),</span>
-        <span class="s2">&quot;candidate_count_raw&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">database_candidate_paths</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">external_candidate_paths</span><span class="p">),</span>
+        <span class="s2">&quot;pinned_cifs&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">pinned_input_paths</span><span class="p">],</span>
+        <span class="s2">&quot;pinned_selected_paths&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">selected_pinned_paths</span><span class="p">],</span>
+        <span class="s2">&quot;pinned_count&quot;</span><span class="p">:</span> <span class="n">pinned_count</span><span class="p">,</span>
+        <span class="s2">&quot;candidate_count_raw&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">database_candidate_paths</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">external_candidate_paths</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">pinned_input_paths</span><span class="p">),</span>
         <span class="s2">&quot;candidate_count_database_raw&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">database_candidate_paths</span><span class="p">),</span>
         <span class="s2">&quot;candidate_count_external_raw&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">external_candidate_paths</span><span class="p">),</span>
+        <span class="s2">&quot;candidate_count_pinned_raw&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">pinned_input_paths</span><span class="p">),</span>
         <span class="s2">&quot;candidate_count_database_selected&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">database_selection</span><span class="o">.</span><span class="n">selected_paths</span><span class="p">),</span>
         <span class="s2">&quot;candidate_count_external_selected_before_dedupe&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">external_selection</span><span class="o">.</span><span class="n">selected_paths</span><span class="p">),</span>
         <span class="s2">&quot;candidate_count_external_selected&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_external_paths</span><span class="p">),</span>
+        <span class="s2">&quot;candidate_count_pinned_selected&quot;</span><span class="p">:</span> <span class="n">pinned_count</span><span class="p">,</span>
+        <span class="s2">&quot;candidate_count_searchable_selected&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_searchable_paths</span><span class="p">),</span>
         <span class="s2">&quot;candidate_count_selected&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_paths</span><span class="p">),</span>
-        <span class="s2">&quot;rejected_counts&quot;</span><span class="p">:</span> <span class="n">merge_rejected_counts</span><span class="p">(</span><span class="n">database_selection</span><span class="o">.</span><span class="n">rejected_counts</span><span class="p">,</span> <span class="n">external_selection</span><span class="o">.</span><span class="n">rejected_counts</span><span class="p">),</span>
+        <span class="s2">&quot;rejected_counts&quot;</span><span class="p">:</span> <span class="n">merge_rejected_counts</span><span class="p">(</span>
+            <span class="n">database_selection</span><span class="o">.</span><span class="n">rejected_counts</span><span class="p">,</span>
+            <span class="n">external_selection</span><span class="o">.</span><span class="n">rejected_counts</span><span class="p">,</span>
+            <span class="n">pinned_selection</span><span class="o">.</span><span class="n">rejected_counts</span><span class="p">,</span>
+        <span class="p">),</span>
         <span class="s2">&quot;selected_cifs&quot;</span><span class="p">:</span> <span class="n">selected_metadata</span><span class="p">,</span>
         <span class="s2">&quot;external_manifests&quot;</span><span class="p">:</span> <span class="n">external_manifests</span><span class="p">,</span>
         <span class="s2">&quot;structure_dedupe&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">disable_structure_dedupe</span><span class="p">,</span>
             <span class="s2">&quot;external_duplicate_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">dedupe_result</span><span class="o">.</span><span class="n">duplicates</span><span class="p">)</span> <span class="k">if</span> <span class="n">dedupe_result</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">&quot;parse_failures&quot;</span><span class="p">:</span> <span class="n">dedupe_result</span><span class="o">.</span><span class="n">parse_failures</span> <span class="k">if</span> <span class="n">dedupe_result</span> <span class="k">else</span> <span class="p">[],</span>
+            <span class="s2">&quot;searchable_duplicate_of_pinned_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">pinned_searchable_duplicates</span><span class="p">),</span>
+            <span class="s2">&quot;parse_failures&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="o">*</span><span class="p">(</span><span class="n">dedupe_result</span><span class="o">.</span><span class="n">parse_failures</span> <span class="k">if</span> <span class="n">dedupe_result</span> <span class="k">else</span> <span class="p">[]),</span>
+                <span class="o">*</span><span class="n">pinned_searchable_parse_failures</span><span class="p">,</span>
+            <span class="p">],</span>
             <span class="s2">&quot;external_duplicates&quot;</span><span class="p">:</span> <span class="p">[</span>
                 <span class="p">{</span>
                     <span class="s2">&quot;external_path&quot;</span><span class="p">:</span> <span class="n">duplicate</span><span class="o">.</span><span class="n">external_path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span>
@@ -813,9 +928,10 @@
                 <span class="p">}</span>
                 <span class="k">for</span> <span class="n">duplicate</span> <span class="ow">in</span> <span class="p">(</span><span class="n">dedupe_result</span><span class="o">.</span><span class="n">duplicates</span> <span class="k">if</span> <span class="n">dedupe_result</span> <span class="k">else</span> <span class="p">[])</span>
             <span class="p">],</span>
+            <span class="s2">&quot;searchable_duplicates_of_pinned&quot;</span><span class="p">:</span> <span class="n">pinned_searchable_duplicates</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="n">selected_paths</span><span class="p">,</span> <span class="n">candidate_summary</span>
+    <span class="k">return</span> <span class="n">selected_searchable_paths</span><span class="p">,</span> <span class="n">selected_pinned_paths</span><span class="p">,</span> <span class="n">candidate_summary</span>
 
 
 <div class="viewcode-block" id="run_search_match">
@@ -832,6 +948,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dara_root</span> <span class="o">=</span> <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">dara_root</span> <span class="ow">or</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">())</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
     <span class="n">sample_path</span> <span class="o">=</span> <span class="n">_resolve_path</span><span class="p">(</span><span class="n">dara_root</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">sample_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">pinned_cifs</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">config</span><span class="o">.</span><span class="n">max_phases</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The number of pinned CIFs must be less than max_phases because pinned phases are counted.&quot;</span><span class="p">)</span>
     <span class="n">output_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">output_root</span>
     <span class="k">if</span> <span class="n">output_root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">stamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">-%H%M%S&quot;</span><span class="p">)</span>
@@ -840,7 +958,7 @@
     <span class="n">output_root</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">resource_budget</span> <span class="o">=</span> <span class="n">_resource_budget_from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-    <span class="n">selected_paths</span><span class="p">,</span> <span class="n">candidate_summary</span> <span class="o">=</span> <span class="n">_prepare_candidates</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dara_root</span><span class="p">,</span> <span class="n">output_root</span><span class="p">,</span> <span class="n">database_objects</span><span class="p">)</span>
+    <span class="n">selected_paths</span><span class="p">,</span> <span class="n">pinned_paths</span><span class="p">,</span> <span class="n">candidate_summary</span> <span class="o">=</span> <span class="n">_prepare_candidates</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dara_root</span><span class="p">,</span> <span class="n">output_root</span><span class="p">,</span> <span class="n">database_objects</span><span class="p">)</span>
 
     <span class="n">summary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;planned&quot;</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">dry_run</span> <span class="k">else</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span>
@@ -885,6 +1003,7 @@
         <span class="n">results</span> <span class="o">=</span> <span class="n">search_phases</span><span class="p">(</span>
             <span class="n">pattern_path</span><span class="o">=</span><span class="n">sample_path</span><span class="p">,</span>
             <span class="n">phases</span><span class="o">=</span><span class="n">selected_paths</span><span class="p">,</span>
+            <span class="n">pinned_phases</span><span class="o">=</span><span class="n">pinned_paths</span><span class="p">,</span>
             <span class="n">max_phases</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">max_phases</span><span class="p">,</span>
             <span class="n">wavelength</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span>  <span class="c1"># type: ignore[arg-type]</span>
             <span class="n">instrument_profile</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">instrument_profile</span><span class="p">,</span>
