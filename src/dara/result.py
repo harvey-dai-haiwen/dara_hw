@@ -192,10 +192,16 @@ class RefinementResult(BaseModel):
         """
         weights = {}
         for phase, data in self.lst_data.phases_results.items():
-            weights[phase] = get_number(data.gewicht)
+            weight = get_number(data.gewicht)
+            try:
+                weights[phase] = float(weight)
+            except (TypeError, ValueError):
+                weights[phase] = 0.0
 
         if normalize:
             tot = np.sum(list(weights.values()))
+            if not np.isfinite(tot) or tot <= 0:
+                return {k: 0.0 for k in weights}
             weights = {k: v / tot for k, v in weights.items()}
         return weights
 

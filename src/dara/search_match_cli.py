@@ -34,6 +34,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--possible-element", action="append", default=[])
 
     parser.add_argument("--additional-cif", action="append", default=[])
+    parser.add_argument(
+        "--pinned-cif",
+        action="append",
+        default=[],
+        help="CIF phase that must be included in every search-match solution. Can be repeated.",
+    )
     parser.add_argument("--additional-cif-dir", action="append", default=[])
     parser.add_argument("--external-csv", action="append", default=[])
     parser.add_argument("--external-csv-cif-column", default=None)
@@ -108,6 +114,7 @@ def config_from_args(args: argparse.Namespace) -> DaraSearchMatchConfig:
             possible=tuple(args.possible_element),
         ),
         additional_cifs=tuple(Path(path) for path in args.additional_cif),
+        pinned_cifs=tuple(Path(path) for path in args.pinned_cif),
         additional_cif_dirs=tuple(Path(path) for path in args.additional_cif_dir),
         external_csvs=external_csvs,
         disable_structure_dedupe=args.disable_structure_dedupe,
@@ -142,6 +149,10 @@ def config_from_args(args: argparse.Namespace) -> DaraSearchMatchConfig:
 def main(argv: list[str] | None = None) -> int:
     """Run the CLI."""
     args = build_parser().parse_args(argv)
+    if len(args.pinned_cif) >= args.max_phases:
+        raise SystemExit(
+            "The number of --pinned-cif values must be less than --max-phases because pinned phases are counted."
+        )
     summary = run_search_match(config_from_args(args))
     print(json.dumps(summary, indent=2))
     return 0 if summary.get("status") in {"ok", "planned"} else 2

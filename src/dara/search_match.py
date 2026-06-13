@@ -94,6 +94,7 @@ class DaraSearchMatchConfig:
     precursors: tuple[str, ...] = ()
     element_filter: ElementFilterConfig = field(default_factory=ElementFilterConfig)
     additional_cifs: tuple[Path, ...] = ()
+    pinned_cifs: tuple[Path, ...] = ()
     additional_cif_dirs: tuple[Path, ...] = ()
     external_csvs: tuple[ExternalCsvConfig, ...] = ()
     disable_structure_dedupe: bool = False
@@ -144,6 +145,69 @@ def collect_additional_cifs(config: DaraSearchMatchConfig, dara_root: Path) -> l
             seen.add(key)
             unique.append(path)
     return unique
+
+
+def collect_pinned_cifs(config: DaraSearchMatchConfig, dara_root: Path) -> list[Path]:
+    """Collect user-provided CIF files that must appear in every solution."""
+    paths = [_resolve_path(dara_root, raw_path).resolve() for raw_path in config.pinned_cifs]
+    unique: list[Path] = []
+    seen: set[str] = set()
+    for path in paths:
+        if not path.exists():
+            raise FileNotFoundError(f"Pinned CIF does not exist: {path}")
+        key = path.as_posix().lower()
+        if key not in seen:
+            seen.add(key)
+            unique.append(path)
+    return unique
+
+
+def remove_searchable_duplicates_of_pinned(
+    pinned_paths: Iterable[Path | str],
+    searchable_paths: Iterable[Path | str],
+) -> tuple[list[Path], list[dict[str, str]], list[dict[str, str]]]:
+    """Remove ordinary candidates that duplicate pinned phases only."""
+    from pymatgen.analysis.structure_matcher import StructureMatcher
+    from pymatgen.core import Structure
+
+    matcher = StructureMatcher()
+    parse_failures: list[dict[str, str]] = []
+    pinned_structures: list[tuple[Path, Any]] = []
+    for raw_path in pinned_paths:
+        path = Path(raw_path)
+        try:
+            pinned_structures.append((path, Structure.from_file(path)))
+        except Exception as exc:
+            parse_failures.append({"path": path.as_posix(), "source": "pinned", "error": str(exc)})
+
+    kept: list[Path] = []
+    duplicates: list[dict[str, str]] = []
+    for raw_path in searchable_paths:
+        path = Path(raw_path)
+        try:
+            structure = Structure.from_file(path)
+        except Exception as exc:
+            parse_failures.append({"path": path.as_posix(), "source": "searchable", "error": str(exc)})
+            continue
+
+        match = next(
+            (
+                pinned_path
+                for pinned_path, pinned_structure in pinned_structures
+                if matcher.fit(pinned_structure, structure)
+            ),
+            None,
+        )
+        if match is None:
+            kept.append(path)
+        else:
+            duplicates.append(
+                {
+                    "searchable_path": path.as_posix(),
+                    "pinned_path": match.as_posix(),
+                }
+            )
+    return kept, duplicates, parse_failures
 
 
 def merge_rejected_counts(*counts: dict[str, int]) -> dict[str, int]:
@@ -273,7 +337,7 @@ def _prepare_candidates(
     dara_root: Path,
     output_root: Path,
     database_objects: Iterable[Any] | None,
-) -> tuple[list[Path], dict[str, Any]]:
+) -> tuple[list[Path], list[Path], dict[str, Any]]:
     from dara.candidate_filter import CandidateElementFilter, collect_database_cifs, copy_selected_cifs, filter_cif_paths
     from dara.external_candidates import deduplicate_external_cifs, prepare_external_cifs_from_csv
 
@@ -286,6 +350,7 @@ def _prepare_candidates(
     if not (
         element_filter.query_elements
         or config.additional_cifs
+        or config.pinned_cifs
         or config.additional_cif_dirs
         or config.external_csvs
     ):
@@ -323,6 +388,12 @@ def _prepare_candidates(
 
     database_selection = filter_cif_paths(database_candidate_paths, element_filter)
     external_selection = filter_cif_paths(external_candidate_paths, element_filter)
+    pinned_input_paths = collect_pinned_cifs(config, dara_root)
+    pinned_selection = filter_cif_paths(pinned_input_paths, element_filter)
+    if len(pinned_selection.selected_paths) != len(pinned_input_paths):
+        raise ValueError(
+            "One or more pinned CIFs could not be parsed or did not satisfy the element filter."
+        )
 
     dedupe_result = None
     selected_external_paths = external_selection.selected_paths
@@ -330,10 +401,26 @@ def _prepare_candidates(
         dedupe_result = deduplicate_external_cifs(database_selection.selected_paths, selected_external_paths)
         selected_external_paths = dedupe_result.kept_external_paths
 
+    searchable_paths = [*database_selection.selected_paths, *selected_external_paths]
+    pinned_searchable_duplicates: list[dict[str, str]] = []
+    pinned_searchable_parse_failures: list[dict[str, str]] = []
+    if pinned_selection.selected_paths and searchable_paths:
+        (
+            searchable_paths,
+            pinned_searchable_duplicates,
+            pinned_searchable_parse_failures,
+        ) = remove_searchable_duplicates_of_pinned(
+            pinned_selection.selected_paths,
+            searchable_paths,
+        )
+
     selected_paths = copy_selected_cifs(
-        [*database_selection.selected_paths, *selected_external_paths],
+        [*searchable_paths, *pinned_selection.selected_paths],
         selected_dir,
     )
+    pinned_count = len(pinned_selection.selected_paths)
+    selected_searchable_paths = selected_paths[: len(searchable_paths)]
+    selected_pinned_paths = selected_paths[len(searchable_paths) :]
     selected_metadata = [{**item, "source": "database"} for item in database_selection.selected_metadata]
     external_kept_set = {path.resolve() for path in selected_external_paths}
     selected_metadata.extend(
@@ -341,25 +428,47 @@ def _prepare_candidates(
         for item in external_selection.selected_metadata
         if Path(item["path"]).resolve() in external_kept_set
     )
+    searchable_kept_set = {path.resolve() for path in searchable_paths}
+    selected_metadata = [
+        item for item in selected_metadata if Path(item["path"]).resolve() in searchable_kept_set
+    ]
+    selected_metadata.extend(
+        {**item, "source": "pinned"}
+        for item in pinned_selection.selected_metadata
+    )
 
     candidate_summary = {
         "databases": list(config.databases),
         "precursors": list(config.precursors),
         "element_filter": element_filter.as_dict(),
-        "candidate_count_raw": len(database_candidate_paths) + len(external_candidate_paths),
+        "pinned_cifs": [path.as_posix() for path in pinned_input_paths],
+        "pinned_selected_paths": [path.as_posix() for path in selected_pinned_paths],
+        "pinned_count": pinned_count,
+        "candidate_count_raw": len(database_candidate_paths) + len(external_candidate_paths) + len(pinned_input_paths),
         "candidate_count_database_raw": len(database_candidate_paths),
         "candidate_count_external_raw": len(external_candidate_paths),
+        "candidate_count_pinned_raw": len(pinned_input_paths),
         "candidate_count_database_selected": len(database_selection.selected_paths),
         "candidate_count_external_selected_before_dedupe": len(external_selection.selected_paths),
         "candidate_count_external_selected": len(selected_external_paths),
+        "candidate_count_pinned_selected": pinned_count,
+        "candidate_count_searchable_selected": len(selected_searchable_paths),
         "candidate_count_selected": len(selected_paths),
-        "rejected_counts": merge_rejected_counts(database_selection.rejected_counts, external_selection.rejected_counts),
+        "rejected_counts": merge_rejected_counts(
+            database_selection.rejected_counts,
+            external_selection.rejected_counts,
+            pinned_selection.rejected_counts,
+        ),
         "selected_cifs": selected_metadata,
         "external_manifests": external_manifests,
         "structure_dedupe": {
             "enabled": not config.disable_structure_dedupe,
             "external_duplicate_count": len(dedupe_result.duplicates) if dedupe_result else 0,
-            "parse_failures": dedupe_result.parse_failures if dedupe_result else [],
+            "searchable_duplicate_of_pinned_count": len(pinned_searchable_duplicates),
+            "parse_failures": [
+                *(dedupe_result.parse_failures if dedupe_result else []),
+                *pinned_searchable_parse_failures,
+            ],
             "external_duplicates": [
                 {
                     "external_path": duplicate.external_path.as_posix(),
@@ -368,9 +477,10 @@ def _prepare_candidates(
                 }
                 for duplicate in (dedupe_result.duplicates if dedupe_result else [])
             ],
+            "searchable_duplicates_of_pinned": pinned_searchable_duplicates,
         },
     }
-    return selected_paths, candidate_summary
+    return selected_searchable_paths, selected_pinned_paths, candidate_summary
 
 
 def run_search_match(
@@ -385,6 +495,8 @@ def run_search_match(
     """
     dara_root = (config.dara_root or Path.cwd()).resolve()
     sample_path = _resolve_path(dara_root, config.sample_path).resolve()
+    if len(config.pinned_cifs) >= config.max_phases:
+        raise ValueError("The number of pinned CIFs must be less than max_phases because pinned phases are counted.")
     output_root = config.output_root
     if output_root is None:
         stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -393,7 +505,7 @@ def run_search_match(
     output_root.mkdir(parents=True, exist_ok=True)
 
     resource_budget = _resource_budget_from_config(config)
-    selected_paths, candidate_summary = _prepare_candidates(config, dara_root, output_root, database_objects)
+    selected_paths, pinned_paths, candidate_summary = _prepare_candidates(config, dara_root, output_root, database_objects)
 
     summary: dict[str, Any] = {
         "status": "planned" if config.dry_run else "running",
@@ -438,6 +550,7 @@ def run_search_match(
         results = search_phases(
             pattern_path=sample_path,
             phases=selected_paths,
+            pinned_phases=pinned_paths,
             max_phases=config.max_phases,
             wavelength=config.wavelength,  # type: ignore[arg-type]
             instrument_profile=config.instrument_profile,
