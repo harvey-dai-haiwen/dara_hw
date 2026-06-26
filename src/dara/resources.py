@@ -131,7 +131,7 @@ class DaraResourceBudget:
 
         bgmn_threads = min(total_cpus, max(1, int(self.bgmn_threads or default_bgmn_threads)))
         max_bgmn_tasks = max(1, int(self.max_bgmn_tasks or default_max_bgmn_tasks))
-        native_threads = max(1, int(self.native_threads or 6))
+        native_threads = max(1, int(self.native_threads or 8))
 
         return replace(
             self,

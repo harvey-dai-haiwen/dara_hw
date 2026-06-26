@@ -89,7 +89,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--threads",
         type=int,
-        default=6,
+        default=8,
         help="Thread cap for Python/native libraries controlled through environment variables.",
     )
     parser.add_argument(
@@ -101,7 +101,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--max-parallel-jobs",
         type=int,
-        default=4,
+        default=8,
         help="Maximum concurrent Ray search jobs.",
     )
     parser.add_argument(
