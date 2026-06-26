@@ -197,9 +197,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--wavelength", default="Cu")
     parser.add_argument("--max-phases", type=int, default=4)
     parser.add_argument("--max-results", type=int, default=10)
-    parser.add_argument("--threads", type=int, default=4)
-    parser.add_argument("--bgmn-threads", type=int, default=4)
-    parser.add_argument("--max-parallel-jobs", type=int, default=2)
+    parser.add_argument("--threads", type=int, default=6)
+    parser.add_argument("--bgmn-threads", type=int, default=2)
+    parser.add_argument("--max-parallel-jobs", type=int, default=4)
     parser.add_argument(
         "--refinement-backend",
         choices=["bgmn", "gsas", "fullprof"],

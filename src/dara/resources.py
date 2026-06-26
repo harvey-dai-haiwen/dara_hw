@@ -117,13 +117,13 @@ class DaraResourceBudget:
             default_batch_size = 500
             default_pending = 2
         elif profile == "large":
-            default_bgmn_threads = min(4, total_cpus)
+            default_bgmn_threads = min(2, total_cpus)
             default_max_bgmn_tasks = max(1, total_cpus // max(1, default_bgmn_threads))
             default_chunk_size = 100_000
             default_batch_size = 2_000
             default_pending = max(2, min(32, default_max_bgmn_tasks * 2))
         else:
-            default_bgmn_threads = min(4, max(1, total_cpus // 4) or 1)
+            default_bgmn_threads = min(2, max(1, total_cpus // 4) or 1)
             default_max_bgmn_tasks = max(1, total_cpus // max(1, default_bgmn_threads))
             default_chunk_size = 25_000
             default_batch_size = 1_000
@@ -131,7 +131,7 @@ class DaraResourceBudget:
 
         bgmn_threads = min(total_cpus, max(1, int(self.bgmn_threads or default_bgmn_threads)))
         max_bgmn_tasks = max(1, int(self.max_bgmn_tasks or default_max_bgmn_tasks))
-        native_threads = max(1, int(self.native_threads or 1))
+        native_threads = max(1, int(self.native_threads or 6))
 
         return replace(
             self,

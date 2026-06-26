@@ -38,9 +38,9 @@ class MachineConfig:
     cpu_target_fraction: float = 0.75
     target_cpus: int | None = None
     resource_profile: Literal["auto", "small", "medium", "large"] = "auto"
-    native_threads: int = 1
-    bgmn_threads: int = 4
-    max_parallel_jobs: int | None = None
+    native_threads: int = 6
+    bgmn_threads: int = 2
+    max_parallel_jobs: int = 4
     peak_match_chunk_size: int | None = None
     peak_match_batch_size: int | None = None
     peak_match_max_pending_batches: int | None = None

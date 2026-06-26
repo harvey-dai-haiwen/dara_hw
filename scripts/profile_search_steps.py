@@ -89,19 +89,19 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--threads",
         type=int,
-        default=1,
+        default=6,
         help="Thread cap for Python/native libraries controlled through environment variables.",
     )
     parser.add_argument(
         "--bgmn-threads",
         type=int,
-        default=4,
+        default=2,
         help="Thread count passed to Dara refinement (BGMN).",
     )
     parser.add_argument(
         "--max-parallel-jobs",
         type=int,
-        default=1,
+        default=4,
         help="Maximum concurrent Ray search jobs.",
     )
     parser.add_argument(

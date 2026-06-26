@@ -116,7 +116,7 @@ uv run dara-search-match --xrd D:\sample\pattern.xy ^
   --any-element Ni --any-element Sn --any-element Se ^
   --possible-element C --possible-element O ^
   --physical-cores 16 --logical-threads 32 --memory-gb 128 ^
-  --cpu-target-fraction 0.40 --bgmn-threads 4 --max-parallel-jobs 3 ^
+  --cpu-target-fraction 0.40 ^
   --instrument-profile monochromated_xrd ^
   --output-root D:\sample\metadata\dara\local-cif-search
 ```
@@ -158,8 +158,6 @@ summary = run_search_match(
             logical_threads=32,
             memory_gb=128,
             cpu_target_fraction=0.40,
-            bgmn_threads=4,
-            max_parallel_jobs=3,
         ),
     )
 )
